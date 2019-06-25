@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "i-modal": "../../dist/modal/index"
+  },
+  "navigationBarTitleText":"项目详情",
+  "enablePullDownRefresh": true
+}

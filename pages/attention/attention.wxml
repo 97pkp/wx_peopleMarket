@@ -1,0 +1,38 @@
+<!-- 我的关注列表页面 -->
+<view class='my-attention' wx:if='{{attentionList.length}}'>
+  <view class='attention-item' wx:for='{{attentionList}}' wx:key="{{index}}">
+    <view class='hours-list' bindtap='goInformation' data-project_id='{{item.id}}'>
+      <view class='img'>
+        <image mode="aspectFill" src='{{item.pictureurl==""?defaultImg:item.pictureurl}}' binderror="erroImage" data-index='{{index}}'></image>
+      </view>
+      <view class='hours-info'>
+        <view class='top-info'>
+          <view class='hours-name'>
+            <text>{{item.projectname_cswx}}</text>
+            <view class='sale'>
+              <text class='t3 all-sale' wx:if="{{item.issale}}"></text>
+            </view>
+          </view>
+          <view class='price'>主力均价：
+            <text wx:if="{{item.mainpriceType!=3}}">{{item.mainprice}}</text>
+            <text wx:if="{{item.mainpriceType==1}}">元/㎡</text>
+            <text wx:if="{{item.mainpriceType==2}}">万元/套</text>
+            <text wx:if="{{item.mainpriceType==3}}" style='color:#999999;'>价格待定</text>
+          </view>
+        </view>
+        <view class='bottom-info'>
+          <view class='tag'>
+            <text class="all-tag" wx:for='{{item.labels}}' wx:for-item='aLabel' wx:index='aindex' wx:key='{{aindex}}'>{{aLabel}}</text>
+          </view>
+          <view class='hours-address'>
+            <view class='icon'>
+              <image src='../../images/dingwei2.png'></image>
+            </view>
+            <text class=' province'>{{item.city_text}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<view class='null-tip' wx:else>暂无关注信息!</view>

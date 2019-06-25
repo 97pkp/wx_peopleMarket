@@ -1,0 +1,169 @@
+/* 户型列表页样式 */
+page{
+  background: #ffffff;
+}
+.house-type{
+  padding-left: 40rpx;
+  padding-right: 40rpx;
+}
+
+.house-type .top-sel{
+  height: 60rpx;
+  display: flex; 
+  margin-top: 31rpx;
+  margin-bottom: 60rpx;
+  justify-content: flex-start;
+}
+.house-type .top-sel>view{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 30rpx;
+  color: #333333;
+  font-family: 'PingFang-SC-Medium';
+  margin-right: 10rpx;
+}
+
+.house-type .top-sel>view:last-child{
+  margin-right: 0;
+}
+
+.house-type .top-sel>view>view{
+  width: 8rpx;
+  height: 8rpx;
+  background: #ffffff;
+  border-radius: 50%;
+}
+.house-type .top-sel> .active{
+  color: #20A0FF;
+}
+.house-type .top-sel>.active>view{
+  background: #20A0FF;
+}
+
+
+/* 户型样式 */
+.house-type .house-item{
+  border-bottom: 2rpx solid #E6E6E6;
+}
+
+.house-type .huxing {
+  margin-top: 28rpx;
+  padding-bottom: 32rpx;
+  
+}
+
+.house-type .huxing .tip {
+  height: 40rpx;
+  font-size: 28rpx;
+  color: #111;
+  font-family: 'PingFangTC-Medium';
+  line-height: 40rpx;
+}
+
+.house-type .huxing .img {
+  margin-top: 32rpx;
+  display: flex;
+}
+
+.house-type .huxing .img image {
+  width: 440rpx;
+  height: 332rpx;
+  border-radius: 6rpx;
+}
+
+.house-type .huxing .img .explain {
+  height: 100%;
+  padding-left: 18rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 212rpx;
+}
+
+.house-type .huxing .img .explain .totle {
+  display: flex;
+  width: 100%;
+  align-items:center;
+  color: #fb1414;
+  font-size: 34rpx;
+  font-family: 'PingFangTC-Light';
+  flex-wrap: wrap;
+}
+.house-type .huxing .img .explain .no-money{
+  color: #B4B9CB;
+  font-size: 36rpx;
+}
+.house-type .huxing .img .explain .totle text{
+  color:#333333;
+  font-size: 26rpx;
+}
+
+
+.house-type .huxing .img .explain>text:nth-of-type(1),.house-type .huxing .img .explain>text:nth-of-type(2) {
+  display: block;
+  height: 40rpx;
+  color: #333;
+  font-size: 28rpx;
+  font-family: 'PingFangTC-Light';
+  margin-top: 5rpx;
+}
+.house-type .huxing .img image{
+  width: 440rpx;
+  height: 332rpx;
+  border-radius: 6rpx;
+}
+.house-type .huxing .img .explain>.tags{
+  /* margin-top: 10rpx;
+  display: flex;
+  align-items: center; */
+}
+.house-type .huxing .img .explain .tags text{
+  /* margin-bottom: 10rpx; */
+  /* color: #8d91a2;
+  font-family: 'PingFangTC-Light';
+  font-size: 24rpx;
+  padding: 0 12rpx;
+  border: 1rpx solid #8d91a2;
+  border-radius: 6rpx;
+  line-height: 40rpx; */
+}
+
+.house-type .huxing .house-info .top{
+  display: flex;
+  margin-top: 30rpx;
+}
+.house-type .huxing .house-info .top>view{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}   
+.house-type .huxing .house-info .top>view:nth-of-type(1){
+  width: 280rpx;
+}
+.house-type .huxing .house-info .top>view:nth-of-type(2){
+  width:240rpx;
+}
+.house-type .huxing .house-info .top>view:nth-of-type(3){
+  flex: 1;
+}
+.house-type .huxing .house-info .top>view text:first-child{
+  margin-bottom: 4rpx;
+  font-size: 28rpx;
+  font-family: 'PingFang-SC-Regular';
+  color: #8D91A2;
+}
+.house-type .huxing .house-info .top>view text:last-child{
+  font-size: 30rpx;
+  font-family: 'PingFang-SC-Regular';
+  color: #333333;
+}
+.house-type .huxing .house-info .miaoshu{
+  font-size: 24rpx;
+  font-family: 'PingFang-SC-Regular';
+  color: #333333;
+  margin-top: 24rpx;
+}

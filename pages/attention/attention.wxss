@@ -1,0 +1,145 @@
+.attention-item {
+  background: #fff;
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.20);
+  padding: 20rpx 46rpx 0 46rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 列表块样式 */
+
+.my-attention .hours-list {
+  width: 658rpx;
+}
+
+.my-attention .hours-list .img {
+  width: 100%;
+  height: 328rpx;
+  border-radius: 14rpx;
+}
+
+.my-attention .hours-list .img image {
+  width: 100%;
+  height: 100%;
+  border-radius: 14rpx;
+}
+
+.my-attention .hours-list .hours-info {
+  width: 658rpx;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 12rpx;
+}
+
+.my-attention .hours-list .top-info {
+  display: flex;
+  height: 44rpx;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.my-attention .hours-list .hours-name {
+  display: flex;
+  align-items: center;
+}
+
+.my-attention .hours-list .hours-name>text {
+  font-family: 'PingFang-SC-Medium';
+  font-size: 28rpx;
+  color: #333;
+  margin-right: 16rpx;
+}
+
+.my-attention .hours-list .sale {
+  font-family: 'PingFangTC';
+  font-size: 18rpx;
+  color: #fff;
+  display: flex;
+}
+
+.my-attention .hours-list .sale text {
+  /* background: #20a0ff 60%; */
+}
+
+.my-attention .hours-list .sale .t3 {
+  display: block;
+  padding: 0 2rpx 0 11rpx;
+  border-radius: 4rpx;
+}
+
+.my-attention .hours-list .top-info .price {
+  font-family: 'PingFangTC-Regular';
+  font-size: 24rpx;
+  color: #999;
+  letter-spacing: 0.24rpx;
+}
+
+.my-attention .hours-list .top-info .price text:first-child {
+  color: #fb1414;
+}
+
+.my-attention .hours-list .bottom-info {
+  display: flex;
+  width: 100%;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 30rpx;
+}
+
+.my-attention .hours-list .bottom-info .tag {
+  flex-wrap: wrap;
+  width: calc(100% - 90rpx);
+  height: 50rpx;
+  overflow:hidden;
+}
+
+.my-attention .hours-list .bottom-info .tag text {
+  /* display: inline-block;
+  padding: 0 5rpx;
+  margin: 0 10rpx 0 0;
+  border-radius: 4rpx;
+  border: 1rpx solid #979797;
+  font-family: 'PingFangTC-Light';
+  font-size: 20rpx;
+  color: #333;
+  line-height: 28rpx;
+  letter-spacing: 0.2rpx;
+  text-align: center;
+  margin-bottom: 5rpx; */
+}
+
+.my-attention .hours-list .bottom-info .hours-address {
+  font-family: 'PingFangTC-Light';
+  font-size: 20rpx;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+.my-attention .hours-list .bottom-info .hours-address .icon {
+  width: 14rpx;
+  height: 18rpx;
+  margin-bottom: 7rpx;
+}
+
+.my-attention .hours-list .bottom-info .hours-address .icon image {
+  width: 100%;
+  height: 100%;
+}
+
+.my-attention .hours-list .bottom-info .hours-address text{
+  margin-left: 5rpx;
+}
+
+/* 无关注信息提示 */
+
+.null-tip {
+  width: 100%;
+  text-align: center;
+  margin-top: 300rpx;
+  font-family: 'PingFang-SC-Medium';
+  font-size: 28rpx;
+  color: #333;
+}

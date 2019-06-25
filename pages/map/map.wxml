@@ -1,0 +1,14 @@
+<!--pages/map/map.wxml-->
+
+
+<!-- <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" polyline="{{polyline}}" style='height:100%;width:100%;'></map> -->
+<map id="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" polyline="{{polyline}}" style='height:100%;width:100%;'></map>
+
+<cover-view class='btn-box'>
+  <button bindtap='showLine' wx:if="{{!isShowLine}}">显示路线</button>
+  <button bindtap='hideLine' wx:else>隐藏路线</button>
+  <button bindtap='openMap'>到这里去</button>
+</cover-view>
+
+
+

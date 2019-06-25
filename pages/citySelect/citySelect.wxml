@@ -1,0 +1,11 @@
+<!--pages/citySelect/citySelect.wxml-->
+<view class='vPack'>
+  <ul>
+    <li class='cityList' wx:for='{{cityListData}}' wx:key='{{index}}'>
+      <view style='line-height: 56rpx;color: #8d91a2; padding-left: 30rpx;'>{{item.key}}</view>
+      <view class='cityNameList'>
+        <span class="cityName {{selectCity==item.id ? 'selectColor':''}}" wx:for='{{item.item}}' wx:key='{{index}}' data-item='{{item}}' bindtap='cityChange'>{{item.city}}</span>
+      </view>
+    </li>
+  </ul>
+</view>

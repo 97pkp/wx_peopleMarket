@@ -1,0 +1,143 @@
+<!--pages/recommend/recommend.wxml-->
+<view>
+  <ul class='list'>
+    <li>
+      <span class='title required'>客户姓名</span>
+      <span class="inp">
+        <input placeholder-class="phcolor" type='text' bindinput='customNameBind' placeholder="请输入姓名" placeholder-style='color:#B4B9CB;'/>
+      </span>
+    </li>
+    <li>
+      <span class='title required'>性别</span>
+      <span class="">
+        <button class='genderSty' data-val='1' bindtap='genderChange'>
+          <icon wx:if="{{gender==1}}" type="success" size="14" />
+          <icon wx:else class='iconSty' />
+          <text style='margin-left:20rpx;font-size:28rpx;'>男</text>
+        </button>
+        <button class='genderSty' data-val='0' bindtap='genderChange'>
+          <icon wx:if="{{gender==0}}" type="success" size="14" />
+          <icon wx:else class='iconSty' />
+          <text style='margin-left:20rpx;font-size:28rpx;'>女</text>
+        </button>
+      </span>
+    </li>
+    <li>
+      <span class='title required'>客户电话</span>
+      <view class="section">
+        <view class='phone-type-box' wx:if="{{reportList.reportType=='中介'}}">
+          <picker bindchange="bindPickerChangePhoneType" value="{{phoneTypeIndex}}" range="{{arrayNum}}">
+            <view class="picker phoneType-header">
+              {{arrayNum[phoneTypeIndex]}}
+            </view>
+          </picker>
+          <image src='../../images/godown.png'></image>
+        </view>
+        <view class='phont-header-box'>
+          <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}" range-key='city'>
+            <view class="picker phone-header">
+              {{array[index].mobileFlag}}
+            </view>
+          </picker>
+          <image src='../../images/godown.png'></image>
+        </view>
+      </view>
+
+      <span class="inp">
+        <input placeholder-class="phcolor" bindinput='customPhoneBind' value='{{phoneText}}' placeholder="请输入客户电话" placeholder-style='color:#B4B9CB;' maxlength='{{11}}'/>
+      </span>
+    </li>
+    <li>
+      <span class='title required'>城市</span>
+      <span class="inp" bindtap='citySelcet'>
+        <input placeholder-class="phcolor" placeholder-style='color:#B4B9CB;' type='text' value="{{reportList.city}}" disabled  style='font-size:28rpx;'/>
+      </span>
+    </li>
+    <li>
+      <span class='title required'>推荐楼盘</span>
+      <span wx:if="{{recommentStr!==''}}" class="inp" style="text-align:left;display:block;" bindtap="setProject">{{recommentStr}}</span>
+      <span wx:if="{{recommentStr===''}}" class="place-sel" style="text-align:left;display:block;" bindtap="setProject">请选择</span>  
+    </li>
+    <li style="height:200rpx;margin-top:20rpx;margin-bottom:40rpx">
+      <textarea wx:if="{{!showBgpack && !visible2 && !visible && !showPicker}}" class='textsty' style='' bindinput='remarkBind' placeholder="{{placeholderText}}" placeholder-style='color:#B4B9CB;'/>
+      <view wx:else class='textsty' />
+    </li>
+    <li>
+      <span class='title'>推荐人</span>
+      <span class="" style='font-size:28rpx;color:#B4B9CB;'>{{reportList.reportName}}</span>
+    </li>
+    <li>
+      <span class='title'>推荐人电话</span>
+      <span class="" style='font-size:28rpx;color:#B4B9CB;'>{{reportList.reportMobile}}</span>
+    </li>
+    <li>
+      <span class='title'>推荐人身份</span>
+      <span class="" style='font-size:28rpx;color:#B4B9CB;'>{{reportList.reportType}}</span>
+    </li>
+  </ul>
+
+  <button class='bindSub' disabled='{{subDisabled}}' bindtap='bindSub'>确认推荐</button>
+</view>
+
+
+<i-modal visible="{{ visible }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
+  <view>暂无绑定用户信息</view>
+</i-modal>
+
+<i-modal visible="{{visible2}}" bind:ok="handleCloseOk" bind:cancel="handleCloseNo" ok-text="我的推荐" cancel-text="首页">
+  <view class='back-box'>
+    <view class='success-list' wx:if="{{successProjectArr.length}}"  wx:for="{{successProjectArr}}" wx:key="{{index}}">
+      <view class='icon_left'>
+        <image src='../../images/tjsuccess.png'></image>
+      </view>
+      <view class='tip_right'>
+        <view>{{item}}推荐成功</view>
+      </view>
+    </view>
+
+    <view class='error-list' wx:if="{{errorProjectArr.length}}" wx:for="{{errorProjectArr}}" wx:key="{{index}}">
+      <view class='icon_left'>
+        <image src='../../images/tjerror.png'></image>
+      </view>
+      <view class='tip_right'>
+        <view>{{item}}推荐失败</view>
+        <view>此客户已是该项目的客户</view>
+      </view>
+    </view>
+  </view>
+</i-modal>
+
+<i-message id="message" />
+
+
+<!------用户授权弹窗------>
+<view wx:if="{{showBgpack}}" class='bgpack'>
+  <view class='wicket'>
+    <view style='text-align:center;margin-bottom:16rpx;font-size:36rpx'>温馨提示</view>
+    <view style='text-align:center;color:#888;'>请允许小程序使用</view>
+    <view style='text-align:center;color:#888;'>用户信息</view>
+    <view style='margin-top:24px;border-top:rgba(0,0,0,0.10) 1px solid'>
+      <button bindtap="cancelTip">
+        取消
+      </button>
+      <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
+        允许
+      </button>
+    </view>
+  </view>
+</view>
+
+<view class='picker-view' wx:if="{{showPicker}}">
+  <view class='content'>
+    <view class='top'>
+      <text  bindtap='cancelPicker' data-type='0'>取消</text>
+      <text  bindtap='cancelPicker' data-type='1'>确认</text>
+    </view>
+    <view class='bottom'>
+      <view class='list' wx:for="{{arrayProject}}" wx:key="{{index}}" data-index="{{index}}" bindtap='selTheItem'>
+        <text>{{item.wxProjectName}}</text>
+        <image wx:if="{{item.isSel}}" src='../../images/fxOK.png'></image>
+      </view>
+    </view>
+  </view>
+</view>

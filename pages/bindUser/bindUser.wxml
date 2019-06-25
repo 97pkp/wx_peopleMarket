@@ -1,0 +1,97 @@
+<!--pages/bindUser/bindUser.wxml-->
+<view>
+  <ul class='bindList'>
+    <li>
+      <span class='title'>姓名</span>
+      <span class="inp">
+        <input placeholder-class="phcolor" value='{{userInfo.myName}}' type='text' placeholder="请输入姓名" disabled='{{!isEdit}}' bindinput='myNameBind' />
+      </span>
+    </li>
+    <li>
+      <span class='title'>性别</span>
+      <span class="" style='height:100rpx;float:right;' wx:if="{{isEdit}}">
+        <button class='genderSty' data-val='男' bindtap='genderChange'>
+          <icon wx:if="{{gender=='男'}}" type="success" size="14" />
+          <icon wx:else class='iconSty' />
+          <text style='margin-left:20rpx'>男</text>
+        </button>
+        <button class='genderSty' data-val='女' bindtap='genderChange'>
+          <icon wx:if="{{gender=='女'}}" type="success" size="14" />
+          <icon wx:else class='iconSty' />
+          <text style='margin-left:20rpx'>女</text>
+        </button>
+      </span>
+      <span class="inp" wx:if="{{!isEdit}}">
+        <input placeholder-class="phcolor" type='text' disabled value='{{userInfo.sex}}' />
+      </span>
+    </li>
+    <li style='position:relative'>
+      <span class='title'>手机号</span>
+      <span class="inp" style='width:{{isEdit? "400rpx":""}}'>
+        <input placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='11' placeholder="请输入手机号" bindinput='phoneBind' />
+      </span>
+      <div wx:if="{{isEdit}}">
+        <view wx-if='{{!noteResult}}'>
+          <span wx:if='{{isnote}}' class='noteCode' bindtap='getNoteCode'>获取验证码</span>
+          <span wx:else class='noteCode' bindtap='noteCodeModalShow'>({{downTime}}s)</span>
+        </view>
+        <span wx:if="{{noteResult}}" class='noteCode' style='color:#0aba07'>
+          <icon type="success" size="14" /> 成功
+        </span>
+      </div>
+    </li>
+
+    <li>
+      <span class='title'>经纪人类型</span>
+      <span style='float:right;'>
+        <picker mode="selector" bindchange="bindPickerChange" range-key="" value='{{arrayIndex}}' range="{{array}}" disabled="{{!isEdit}}">
+          <view class="picker">
+            <text wx:if="{{arrayIndex == null}}">请选择</text> {{array[arrayIndex]}}
+          </view>
+        </picker>
+      </span>
+    </li>
+
+    <li wx-if="{{arrayIndex == 1}}" style='margin-top:20rpx;'>
+      <span class='title'>身份证号</span>
+      <span class="inp">
+        <input placeholder-class="phcolor" type='idcard' value='{{userInfo.idno}}' placeholder="请输入身份证号" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
+      </span>
+    </li>
+    <li wx-if="{{arrayIndex == 2}}" style='margin-top:20rpx;'>
+      <span class='title'>渠道验证码</span>
+      <span class="inp">
+        <input placeholder-class="phcolor" type='number' value='{{userInfo.channelCode}}' placeholder="请输入渠道验证码" disabled="{{!isEdit}}" maxlength='11' bindinput='channelCodeBind' />
+      </span>
+    </li>
+    <li wx-if="{{arrayIndex == 2}}">
+      <span class='title'>留电渠道</span>
+      <span class="inp">
+        <input placeholder-class="phcolor" type='text' value='{{trench}}' placeholder="" disabled />
+      </span>
+    </li>
+    <li wx-if="{{arrayIndex == 2}}">
+      <span class='title'>中介账户</span>
+      <span class="inp">
+        <input placeholder-class="phcolor" type='text' value='{{showAgencyAccount}}' placeholder="" disabled />
+      </span>
+    </li>
+  </ul>
+
+  <button class='bindSub' wx:if='{{isEdit}}' bindtap='bindSub'>确定</button>
+  <button class='amendSub' wx:if='{{!isEdit}}' bindtap='amendSub'>修改</button>
+
+  <!-- 验证窗口 -->
+  <i-modal i-class='modalClass' style='top:-100rpx' visible="{{noteCodeVisible}}" bind:ok="noteCodeModalOk" bind:cancel="noteCodeModalClose">
+    <view style='font-size:32rpx;color:#111'>请输入手机验证码</view>
+    <view bindtap='noteCodeModalShow' style='font-size:36rpx;color:#111;margin:22rpx 0 20rpx;'>
+      <input style='width:0;height:0;float:left;' placeholder-class="phcolor" focus="{{noteCodeVisible}}" type='number' maxlength='{{noteCodeValLeng}}' bindinput='inpBind' />
+      <block wx:for="{{noteCodeValLeng}}" wx:key="item">
+        <input class='inpText' value='{{noteCodeVal[index]}}' disabled type='number' placeholder="—" />
+      </block>
+    </view>
+    <view style='font-siez:24rpx'>已发送:{{modalPhone}}</view>
+  </i-modal>
+</view>
+
+<i-message id="message" />

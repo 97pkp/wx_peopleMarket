@@ -1,0 +1,18 @@
+<!--pages/setting/setting.wxml-->
+<view>
+  <ul>
+    <li bindtap='showSetText' data-index='{{0}}'>经纪人使用帮助
+      <span class="iconImg">
+        <image src='../../images/right.png'></image>
+      </span>
+    </li>
+    <li bindtap='showSetText' data-index='{{1}}'>经纪人须知
+      <span class="iconImg">
+        <image src='../../images/right.png'></image>
+      </span>
+    </li>
+    <li>当前版本
+      <span class="iconImg">V{{versions}}</span>
+    </li>
+  </ul>
+</view>

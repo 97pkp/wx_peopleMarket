@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/recommend/recommend",
+    "pages/information/information",
+    "pages/oneself/oneself",
+    "pages/bindUser/bindUser",
+    "pages/setting/setting",
+    "pages/coupon/coupon",
+    "pages/mycoupon/mycoupon",
+    "pages/clients/client",
+    "pages/attention/attention",
+    "pages/housestype/housestype",
+    "pages/houseimg/houseimg",
+    "pages/cityList/cityList",
+    "pages/citySelect/citySelect",
+    "pages/brokertext/brokertext ",
+    "pages/map/map"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#f9fbff",
+    "navigationBarTitleText": "海客通",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#7F8389",
+    "selectedColor": "#20A0FF",
+    "backgroundColor": "#F7F7FA",
+    "borderStyle": "black",
+    "list": [
+      {
+        "iconPath": "images/home1.png",
+        "selectedIconPath": "images/home2.png",
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "iconPath": "images/self1.png",
+        "selectedIconPath": "images/self2.png",
+        "pagePath": "pages/oneself/oneself",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "为了更好的为你提供服务，需要授权小程序获取你的位置信息"
+    }
+  },
+  "usingComponents": {
+    "i-message": "dist/message/index",
+    "i-modal": "../../dist/modal/index"
+  },
+  "sitemapLocation": "sitemap63.json"
+}

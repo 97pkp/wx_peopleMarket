@@ -1,0 +1,118 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- header -->
+  <view class='city-sel'>
+    <view class='left-city'>
+      <view class='iconfont iconweizhi'></view>
+      <text>{{cityNametext}}</text>
+    </view>
+    <view class='right-check' bindtap='changeCity'>
+      <text>切换城市</text>
+      <view class='right-icon'><image src='../../images/right.png'></image></view>
+    </view>
+  </view>
+  <!-- banner -->
+  <view class='dot'>
+    <view wx:for="{{imgUrls}}" wx:key="{{index}}" class="{{swiperCurrent==index?'active':''}}" bindtap='changeImg' data-index='{{index}}'></view>
+  </view>
+  <swiper autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" current="{{swiperCurrent}}" bindanimationfinish="swiperChange" circular='true'>
+    <block wx:for="{{imgUrls}}" wx:key='{{index}}'>
+      <swiper-item>
+        <image mode="aspectFill" src="{{item.url==''?defaultImg:item.url}}" width="355" height="150" binderror="erroImage1" data-index='{{index}}'></image>
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 功能 -->
+  <view class='gongneng-box'>
+    <view class='goneneng'>
+      <view class='gn1' data-url='../recommend/recommend' bindtap='pageTobind'>
+        <image data-url='../recommend/recommend' src='../../images/recommend.png'></image>
+        <text data-url='../recommend/recommend'>我要推荐</text>
+      </view>
+      <view class='gn2' data-url='../clients/client' bindtap='pageTobind'>
+        <image data-url='../clients/client' src='../../images/client.png'></image>
+        <text data-url='../clients/client'>我的推荐</text>
+      </view>
+      <view class='gn3' wx:if='{{isHaveCoupon}}' data-url='../coupon/coupon' bindtap='pageTobind'>
+        <image data-url='../coupon/coupon' src='../../images/discounts.png'></image>
+        <text data-url='../coupon/coupon'>优惠券</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 楼盘信息标题 -->
+  <view class='hours build-info' wx:if="{{buildinfolist.length}}">
+    <text>楼盘信息</text>
+  </view>
+  <!-- 楼盘详情 -->
+  <view wx:if="{{buildinfolist.length}}" class='hours-list {{buildinfolist.length===index+1?"last-hourse-list":"hours-list"}}' bindtap='goInformation' data-project_id='{{item.projectid_id}}' data-imgurl='{{item.pictureurl}}' wx:for='{{buildinfolist}}' wx:key='index'>
+    <view class='img'>
+      <image mode="aspectFill" src='{{item.pictureurl==""?defaultImg:item.pictureurl}}' binderror="erroImage" data-index='{{index}}'></image>
+    </view>
+    <view class='hours-info'>
+      <view class='top-info'>
+        <view class='hours-name'>
+          <text>{{item.projectname_cswx}}</text>
+          <view class='sale'>
+            <text id="all-sale" class='t3 all-sale'>{{item.issale}}</text>
+          </view>
+        </view>
+        <view class='price'>主力均价：
+          <text wx:if="{{item.mainpriceType!==3}}">{{item.mainprice}}</text>
+          <text wx:if="{{item.mainpriceType==1}}">元/㎡</text>
+          <text wx:if="{{item.mainpriceType==2}}">万元/套</text>
+          <text wx:if="{{item.mainpriceType==3}}" style='color:#999999;'>价格待定</text>
+        </view>
+      </view>
+      <view class='bottom-info'>
+        <view class='tag'>
+          <text class='all-tag' wx:for='{{buildinfotaglist[index]}}' wx:key='{{index}}'>{{item}}</text>
+        </view>
+        <!-- <view class='hours-address'>
+          <text class='hours-address-icon iconfont iconweizhi'></text>
+          <text>{{item.city}}</text>
+        </view> -->
+      </view>
+    </view>
+  </view>
+
+  <!-- 周边信息标题 -->
+  <view class='hours rim-info {{buildinfolist.length?"":"no-build-list"}}' wx:if="{{rimbuildinfolist.length}}">
+    <text>周边信息</text>
+  </view>
+  <!-- 周边楼盘详情 -->
+  <view class='rim-list ' bindtap='goInformation' data-project_id='{{item.id}}' data-imgurl='{{item.pictureurl}}' wx:for='{{rimbuildinfolist}}' wx:key='index' wx:if="{{rimbuildinfolist.length}}">
+    <view class='img'>
+      <image mode="aspectFill" src="{{item.pictureurl==''?defaultImg:item.pictureurl}}"  binderror="erroImage2" data-index='{{index}}'></image>
+    </view>
+    <view class='hours-info'>
+      <view class='top-info'>
+        <view class='hours-name'>
+          <text>{{item.projectname_cswx}}</text>
+        </view>
+        <view class='price'>主力均价：
+          <text wx:if="{{item.mainpriceType!==3}}">{{item.mainprice}}</text>
+          <text wx:if="{{item.mainpriceType==1}}">元/㎡</text>
+          <text wx:if="{{item.mainpriceType==2}}">万元/套</text>
+          <text wx:if="{{item.mainpriceType==3}}" style='color:#999999;'>价格待定</text>
+        </view>
+      </view>
+      <view class='bottom-info'>
+        <view class='tag'>
+          <text class='all-tag' wx:for='{{rimbuildinfotaglist[index]}}' wx:key='{{index}}'>{{item}}</text>
+        </view>
+        <!-- <view class='hours-address'>
+          <text class='hours-address-icon iconfont iconweizhi'></text>
+          <text>{{item.city_text}}</text>
+        </view> -->
+      </view>
+    </view>
+  </view>
+</view>
+
+<i-message id="message" />
+<i-modal visible="{{ isPermit }}" show-ok='{{!isPermit}}' show-cancel='{{!isPermit}}' bind:ok="handleClose2" bind:cancel="handleClose2">
+  <view>无使用权限</view>
+  <navigator class='wxexit' open-type="exit" target="miniProgram">确定</navigator>
+</i-modal>

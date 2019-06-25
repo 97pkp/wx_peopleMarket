@@ -1,0 +1,24 @@
+<!-- 户型图页面 -->
+<view class='house-img-page'>
+  <view class='house-img'>
+    <swiper interval="{{interval}}" duration="{{duration}}" bindanimationfinish='changeImg' current='{{imgCurrent}}' data-selItem='{{selItem}}' bindtouchstart="imgTouchStart" bindtouchend='imgTouchEnd'>
+      <block wx:for="{{buildImgList[selItem].imgs}}" wx:key='{{index}}' style='transition:3s;'>
+        <swiper-item class='swiper-item'>
+          <view>
+            <image mode='widthFix' wx:if='{{item}}' src='{{item}}' bindtap='getBigImg' data-imglist='{{buildImgList[selItem].imgs}}' data-imgIndex='{{index}}' style='transition:0.3s;'></image>
+          </view>
+
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
+
+  <view class='tabbar'>
+    <view wx:for='{{buildImgList}}' wx:key='{{index}}' class='sel1' bindtap='selImg' data-num='{{index}}' wx:if='{{item.imgs.length}}'>
+      <view class='icon' wx:if='{{selItem===index}}'>
+        <image src='../../images/top.png'></image>
+      </view>
+      <view class="txt {{selItem===index?'active':''}}">{{item.name}}({{item.imgs.length}})</view>
+    </view>
+  </view>
+</view>

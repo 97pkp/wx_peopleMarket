@@ -1,0 +1,245 @@
+<!--pages/information/information.wxml-->
+<view class="information">
+  <!-- banner图 -->
+
+  <!-- <view class='num' wx:if='{{bannerlength>0}}'>
+    <text>{{bannerindex+1}}</text>/{{bannerlength}}
+  </view>
+  <view class='num' wx:else>
+    <text>{{bannerindex}}</text>/{{bannerlength}}
+  </view> -->
+  <view class='num' wx:if="{{bannerlength>0 && videoPath==''}}">
+    <text>{{bannerindex+1}}</text>/{{bannerlength}}
+  </view>
+  <view class='num' wx:if="{{bannerlength<=0 && videoPath==''}}">
+    <text>{{bannerindex}}</text>/{{bannerlength}}
+  </view>
+  <view class='num' wx:if="{{bannerlength>0 && videoPath!='' && !isVideo}}">
+    <text>{{bannerindex}}</text>/{{bannerlength}}
+  </view>
+  <view class='num' wx:if="{{bannerlength<=0 && videoPath!='' && !isVideo}}">
+    <text>{{bannerindex}}</text>/{{bannerlength}}
+  </view>
+
+  <view class='img-video-sel' bindtap='selImgVdo'>
+    <view class="video-tag {{isVideo?'fffBg':''}}" data-type='{{0}}' wx:if="{{videoPath!==''}}">视频</view>
+    <view class="img-tag {{!isVideo?'fffBg':''}}" data-type='{{1}}' wx:if="{{videoPath!==''}}">图片</view>
+  </view>
+ <!-- 视频播放元素 -->
+  <video wx:if="{{isFullView}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{true}}'  src="{{videoPath}}"  bindfullscreenchange="fullScreen"  bindended="closeVideo"  controls="{{true}}" show-center-play-btn='{{false}}' custom-cache='{{false}}' vslide-gesture-in-fullscreen='{{false}}'></video>
+  
+  <swiper wx:if="{{true}}" autoplay="{{false}}" interval="{{interval}}" duration="{{duration}}" bindchange='bannerChange' current='{{bannerindex}}'>
+    <!-- 视频展示块 -->
+    <block wx:if="{{videoPath!==''}}">
+      <swiper-item>
+        <view class='video-cover'>
+          <image src='{{imgUrls.length>0?imgUrls[0]:defaultImg}}'></image>
+          <view bindtap='startPlay' wx:if="{{!isFullView}}">
+            <image src='../../images/video.png'></image>
+          </view>
+          <!-- <video wx:if="{{true}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{false}}'  src="{{videoPath}}"  bindfullscreenchange="fullScreen" bindplay="startPlay"  bindended="closeVideo"  controls="{{true}}" show-center-play-btn='{{true}}' custom-cache='{{false}}' vslide-gesture-in-fullscreen='{{false}}' poster='{{auto}}'></video> -->
+          <!-- <video src='{{videoPath}}'></video> -->
+        </view>
+      </swiper-item>
+    </block>
+    <!-- 图片展示块 -->
+    <block wx:for="{{imgUrls}}" wx:key="{{index}}" >
+      <swiper-item>
+        <image class='main-img' mode="aspectFill" src='{{item==""?defaultImg:item}}' binderror="erroImage2" data-index='{{index}}' bindtap='goBuildimg'></image>
+      </swiper-item>
+    </block>
+  </swiper>
+  
+  <!-- 详情 -->
+  <view class='info'>
+    <view class='name-money'>
+      <view class='name'>
+        <text>{{projectname_cswx}}</text>
+        <view class='all-sale' wx:if='{{issale}}'>{{issale}}</view>
+      </view>
+      <view class='money'>
+        <view>主力均价:</view>
+        <text class='hours-money' wx:if="{{mainpriceType!==3}}">{{mainprice}}</text>
+        <view wx:if="{{mainpriceType===1}}">元/㎡</view>
+        <view wx:if="{{mainpriceType===2}}">万元/套</view>
+        <text wx:if="{{mainpriceType===3}}" style='color:#999999;margin-left:10rpx;font-size:32rpx;'>价格待定</text>
+        <view class='tanhao' bindtap="handleOpen2" data-type='{{0}}'>
+          <image src='../../images/tanhao.png'></image>
+        </view>
+      </view>
+    </view>
+
+    <!-- 标签 -->
+    <view class='tag' wx:if='{{labelsList.length}}'>
+      <view class="all-tag" wx:for='{{labelsList}}' wx:key='{{index}}'>{{item.labels}}</view>
+    </view>
+    <!-- 地址 -->
+    <view class='address' wx:if='{{salesaddr!="" || showhall!=""}}'>
+      <view class='add1' wx:if='{{salesaddr!=""}}'>
+        <text class='title1'>售楼处地址</text>
+        <text class='title2'>{{salesaddr}}</text>
+        <view bindtap='pageToMap' data-type='1'>导航
+          <image src='../../images/right.png'></image>
+        </view>
+      </view>
+      <view class='add2' wx:if='{{showhall!=""}}'>
+        <text class='title1'>展厅地址</text>
+        <text class='title2'>{{showhall}}</text>
+        <view bindtap='pageToMap' data-type='2'>导航
+          <image src='../../images/right.png'></image>
+        </view>
+      </view>
+    </view>
+    <!-- 优惠 -->
+    <view class='youhui'>
+      <view>
+        <image src='../../images/zhekou.png'></image>
+      </view>
+      <text wx:if='{{couponinfo}}'>{{couponinfo}}</text>
+      <text wx:else>暂无优惠</text>
+    </view>
+    <!-- 房型 -->
+    <view class='hours-type'>
+      <view class='top'>
+        <view>
+          <image src='../../images/hometype.png'></image>
+        </view>
+        <text>主力房型</text>
+      </view>
+      <view class='bottom-list'>
+        <view class='type type1' wx:for='{{mainhouseholdList}}' wx:key='{{index}}'>
+          <text>{{item.houserhold}}</text>
+          <text>{{item.area}}</text>
+          <text>{{item.layout}}</text>
+        </view>
+      </view>
+    </view>
+    <!-- 楼盘亮点 -->
+    <view class='hours-lightspot' wx:if='{{brightspotsList.length}}'>
+      <text class='title'>楼盘亮点</text>
+      <view class='overview' wx:if='{{lightspot}}'>
+        <text>亮点概述</text>
+        <text>{{lightspot}}</text>
+      </view>
+      <view class='other-list'>
+        <view wx:for='{{brightspotsList}}' wx:key='{{index}}' class="other-list-item" wx:if='{{islookall}}'>
+          <text>{{item.labels}}</text>
+          <view class='tip'>{{item.remark}}</view>
+        </view>
+        <view wx:for='{{spots}}' wx:key='{{index}}' class="other-list-item" wx:if='{{!islookall}}'>
+          <text>{{brightspotsList[index].labels}}</text>
+          <view class='tip'>{{brightspotsList[index].remark}}</view>
+        </view>
+      </view>
+      <view class='look-all' wx:if='{{ishaveall}}'>
+        <text bindtap='lookAll' wx:if='{{!islookall}}'>查看全部</text>
+        <text bindtap='lookAll' wx:else>关闭</text>
+      </view>
+    </view>
+    <!-- 户型 -->
+    <view class='huxing' wx:if='{{hourselist.length}}'>
+      <view class='top'>
+        <text>户型（{{hourselist.length}}）</text>
+        <view bindtap='goHousetype'>查看全部
+          <text class='iconfont iconjiantou'></text>
+        </view>
+      </view>
+      <view class='tip'>
+        <text>{{caption}}</text>
+      </view>
+      <view class='img' bindtap='goHousetype'>
+        <image mode="aspectFill" src="{{upload_file_path==''?defaultImg:upload_file_path}}" binderror="erroImage1" data-index='{{index}}'></image>
+        <view class='explain'>
+          <view class='totle' wx:if='{{price}}'>{{price}}
+            <text wx:if="{{pricetype==1}}">元/m²</text>
+            <text wx:if="{{pricetype==2}}">万元/套</text>
+          </view>
+          <view class='no-money' wx:else>暂无定价</view>
+          <text>户型优势</text>
+          <view class='house-tag' wx:for='{{pointList}}' wx:key='{{index}}'>
+            <text class='house-type-tag' wx:if='{{item}}'>{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <!-- 楼盘图 -->
+    <view class='hours-imgs' wx:if='{{isbuildsimg}}'>
+      <view class='top'>
+        <text class='title'>楼盘图</text>
+        <view bindtap='goBuildimg'>查看全部
+          <text class='iconfont iconjiantou'></text>
+        </view>
+      </view>
+      <view class='img-list' wx:for='{{buildsimg}}' wx:for-item='keyName' wx:for-index='value' wx:key='{{index}}' wx:if='{{keyName.imgs.length}}'>
+        <text>{{keyName.name}}（{{keyName.imgs.length}}）</text>
+        <view class="section section_gap" bindtap='goBuildimg' data-selIndex='{{value}}'>
+          <scroll-view class="scroll-view_H" scroll-x style="width: 100%">
+            <view class='imgs' style='width:{{440*keyName.imgs.length+20*(keyName.imgs.length-1)}}rpx'>
+              <image mode="aspectFill" wx:for='{{keyName.imgs}}' wx:for-item='aImg' wx:for-index='imgIndex' wx:key='{{imgIndex}}' src="{{aImg==''?defaultImg:aImg}}" binderror="erroImage3" data-index='{{imgIndex}}' data-name='{{keyName.name}}'></image>
+            </view>
+          </scroll-view>
+        </view>
+      </view>
+    </view>
+    <!-- 项目详情 -->
+    <view class='product-detail' wx:if='{{projectInfo.length}}'>
+      <text class='title'>项目详情</text>
+      <view class='detail-list'>
+        <view class='list1' wx:for='{{projectInfo}}' wx:key='{{index}}'>
+          <text class='txt1' wx:if='{{index<=projectInfoNum-1}}'>{{item.name}}</text>
+          <text class='txt2' wx:if='{{index<=projectInfoNum-1}}'>{{item.value}}</text>
+        </view>
+      </view>
+      <view class='get-more' bindtap='getMoreInfo' wx:if='{{isMoreInfo}}'>查看更多</view>
+    </view>
+  </view>
+  <!-- 免责分割线 -->
+  <view class='hr'></view>
+  <!-- 免责条款 -->
+  <view class='no-duty'>
+    <view>免责条款：</view>
+    <text>{{exemption}}</text>
+  </view>
+  <!-- 底部tabar -->
+  <view class='tabar'>
+    <view class='attention' bindtap='toAttention'>
+      <view>
+        <image wx:if='{{!isAttention}}' src='../../images/guanzhu.png'></image>
+        <image wx:else src='../../images/yjguanzhu.png'></image>
+      </view>
+      <text>关注</text>
+    </view>
+    <button class='shareBut' open-type="share">
+      <view style='height: 40rpx;width: 40rpx;margin:12rpx auto -6rpx;'>
+        <image src='../../images/fenxiang.png'></image>
+      </view>
+      <text>分享</text>
+    </button>
+    <view class='connect' bindtap='toPhone'>
+      联系我们
+    </view>
+  </view>
+  <!-- 悬浮窗 -->
+  <view class='floating'>
+    <view bindtap="handleOpen2" data-type='{{1}}'>佣金规则</view>
+    <view bindtap='goRecommend'>
+      <view class='icon'>
+        <image src='../../images/tuijian.png'></image>
+      </view>
+      <text>推荐</text>
+    </view>
+  </view>
+</view>
+
+<!-- 主力均价提示 -->
+<view class='model-view' wx:if='{{visible2}}'  >
+  <view class='shadow' catchtouchmove='stopMove'></view>
+  <view class='model-content'>
+    <view wx:if='{{mainpriceOrCommission===0 && mainpricedescription}}'>{{mainpricedescription}}</view>
+    <view wx:if='{{mainpriceOrCommission===0 && !mainpricedescription}}'>暂无价格提示</view>
+    <view wx:if='{{mainpriceOrCommission===1 && commissioninfo}}'>{{commissioninfo}}</view>
+    <view wx:if='{{mainpriceOrCommission===1 && !commissioninfo}}'>暂无佣金规则</view>
+    <view class='bottom' bindtap='handleClose2' catchtouchmove='stopMove'>关闭</view>
+  </view>
+</view>
+

@@ -1,0 +1,55 @@
+<!--pages/coupon /coupon.wxml-->
+<!-- 引入公有模板 -->
+<view class='coupon'>
+  <view class='coupons-list'>
+    <view class='coupon-item' wx:for='{{couponList}}' wx:key='{{index}}'>
+      <image src='../../images/reduced.png'></image>
+      <view class='info'>
+        <view class='num' wx:if='{{item.couponname}}'>
+          {{item.couponname}}<text>折</text>
+        </view>
+        <view class='num' wx:else>
+          <text>暂无优惠</text>
+        </view>
+        <view class='explain' bindtap='getCoupon' data-couponId='{{item.couponid}}' data-index='{{index}}'>
+          <view class='top'>
+            <view>
+              <text>{{item.city}}</text>
+              <text>·</text>
+              <text>{{item.projectName}}</text>
+            </view>
+            <text wx:if='{{item.receivedStatus}}' style="color:{{'#9699a9'}}">已领取</text>
+            <text wx:else>点击领取</text>
+          </view>
+          <view class='bottom'>
+            <view>使用规则：
+              <text>{{item.usageRule}}</text>
+            </view>
+            <view>使用期限：
+              <text>{{item.startDate}}-{{item.endDate}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+
+
+<!--用户授权弹窗 -->
+<view wx:if="{{showBgpack}}" class='bgpack'>
+  <view class='wicket'>
+    <view style='text-align:center;margin-bottom:16rpx;font-size:36rpx'>温馨提示</view>
+    <view style='text-align:center;color:#888;'>请允许小程序使用</view>
+    <view style='text-align:center;color:#888;'>用户信息</view>
+    <view style='margin-top:24px;border-top:rgba(0,0,0,0.10) 1px solid'>
+      <button bindtap="cancelTip">
+        取消
+      </button>
+      <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
+        允许
+      </button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,32 @@
+<!--pages/oneself/oneself.wxml-->
+<view class='pack'>
+  <view class='headInfo'>
+    <view>
+      <open-data class='userAvatar' type="userAvatarUrl"></open-data>
+    </view>
+    <view data-url='../bindUser/bindUser' bindtap='pageTobind'>
+      <view data-url='../bindUser/bindUser'>
+        <open-data data-url='../bindUser/bindUser' class='userNickName' type="userNickName"></open-data>
+        <image data-url='../bindUser/bindUser' class='iconR' src='../../images/right.png'></image>
+      </view>
+      <view data-url='../bindUser/bindUser' class='userTp'>{{brokertype}}</view>
+    </view>
+  </view>
+  <view>
+    <ul class='controlList'>
+      <li style='margin-top:20rpx;' data-url='../clients/client' bindtap='pageTobind'>
+        <image class='iconImg' data-url='../clients/client' src="../../images/myrecommend.png"></image>我的推荐</li>
+      <li data-url='../mycoupon/mycoupon' bindtap='pageTobind'>
+        <image class='iconImg' data-url='../mycoupon/mycoupon' src="../../images/myreduced.png"></image>我的优惠券</li>
+      <li style='border-bottom: 1rpx solid #e6e6e6;' data-url='../attention/attention' bindtap='pageTobind'>
+        <image class='iconImg' data-url='../attention/attention' src="../../images/guanzhu.png"></image>我的关注</li>
+      <li style='margin-top:20rpx;border-bottom: 1rpx solid #e6e6e6;' data-url='../setting/setting' bindtap='pageTobind'>
+        <image class='iconImg' data-url='../setting/setting' src="../../images/setting.png"></image>设置</li>
+    </ul>
+  </view>
+</view>
+
+<i-modal visible="{{ isPermit }}" show-ok='{{!isPermit}}' show-cancel='{{!isPermit}}' bind:ok="handleClose2" bind:cancel="handleClose2">
+    <view>无使用权限</view>
+    <navigator class='wxexit' open-type="exit" target="miniProgram">确定</navigator>
+</i-modal>

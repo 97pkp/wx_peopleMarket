@@ -1,0 +1,239 @@
+<!-- 客户列表页 -->
+<view class='clients'>
+  <!-- 人数显示 -->
+  <view class='top'>
+    <view>
+      <text>已推荐客户</text>
+      <view wx:if="{{peoplesArray.recommendNum}}">{{peoplesArray.recommendNum}}
+        <text>人</text>
+      </view>
+      <view wx:else>0
+        <text>人</text>
+      </view>
+    </view>
+    <view>
+      <text>已到访客户</text>
+      <view wx:if="{{peoplesArray.viewNum}}">{{peoplesArray.viewNum}}
+        <text>人</text>
+      </view>
+      <view wx:else>0
+        <text>人</text>
+      </view>
+    </view>
+    <view>
+      <text>已获得推荐佣金</text>
+      <view  wx:if="{{peoplesArray.totalCommissioninfo}}">{{peoplesArray.totalCommissioninfo}}
+        <text>元</text>
+      </view>
+      <view wx:else>0
+        <text>元</text>
+      </view>
+    </view>
+  </view>
+  <!-- 城市搜索 -->
+  <view class='city-search'>
+    <view class='search'>
+       <input 
+        class='search-input' 
+        value="{{ _val }}" 
+        placeholder="请输入姓名或手机号" 
+        bindinput='valueChange'
+        catchtap='hideDrawer'
+        wx:if="{{!showRight}}"
+        />
+        <view class='search-input' wx:else></view>
+    </view>
+    <view class='search-icon' bindtap='selItem'>
+      <image src='../../images/search.png'></image>
+    </view>
+    <view class='screen' bindtap='toggleRight'>
+      <text>筛选</text>
+    </view>
+  </view>
+  <!-- 客户列表 -->
+  <view class='client' wx:for='{{recommendPersonList}}' wx:key='{{index}}'>
+    <view class='cilent-info'>
+      <view class='name'>
+        <text>{{item.name}}</text>
+        <text>{{item.mobile}}</text>
+      </view>
+      <view>
+        <text wx:if='{{item.projectName}}'>{{item.projectName}}</text>
+        <text wx:else>{{item.cityName}}</text>
+      </view>
+    </view>
+    <view class='step'>
+      <view class='step-view'>
+        <view class='dot'>
+          <image src='../../images/duihao.png'></image>
+        </view>
+        <view class="striping {{item.lfDate?'plan-active':''}} connect1"></view>
+        <view class="dot {{item.lfDate?'plan-active':''}} connect1">
+          <image src='../../images/duihao.png'></image>
+        </view>
+        <view class="striping {{item.rgDate?'plan-active':''}} connect2"></view>
+        <view class="dot {{item.rgDate?'plan-active':''}} connect2">
+          <image src='../../images/duihao.png'></image>
+        </view>
+        <view class="striping {{item.cjDate && item.status ==1 ?'plan-active':''}} connect3"></view>
+        <view class="dot {{item.cjDate && item.status ==1 ?'plan-active':''}} connect3">
+          <image src='../../images/duihao.png'></image>
+        </view>
+      </view>
+      <!-- <view class='step-tip'>
+        <text>推荐</text>
+        <text>来访</text>
+        <text>认购</text>
+        <text>成交</text>
+      </view>
+      <view class='step-time'>
+        <text>{{item.tjDate}}</text>
+        <text>{{item.lfDate}}</text>
+        <text>{{item.rgDate}}</text>
+        <text wx:if="{{item.cjDate && item.commissioninfo !== null && item.commissioninfo !== '' && item.commissioninfo !== undefined && item.commissioninfo !== 'null'}}">{{item.cjDate}}</text>
+        <text wx:else></text>
+      </view> -->
+
+      <view class='step-info'>
+        <view class='step-tj'>
+          <text>推荐</text>
+          <text>{{item.tjDate}}</text>
+        </view>
+        <view class='step-lf'>
+          <text>来访</text>
+          <text>{{item.lfDate}}</text>
+        </view>
+        <view class='step-rg'>
+          <text>认购</text>
+          <text>{{item.rgDate}}</text>
+        </view>
+        <view class='step-cj'>
+          <text>成交</text>
+          <!-- <text wx:if="{{item.cjDate && item.commissioninfo !== null && item.commissioninfo !== '' && item.commissioninfo !== undefined && item.commissioninfo !== 'null'}}">{{item.cjDate}}</text> -->
+          <text wx:if="{{item.cjDate && item.status==1 }}">{{item.cjDate}}</text>
+        <text wx:else></text>
+        </view>
+      </view>
+
+
+
+
+    </view>
+    <view class='luck' wx:if="{{item.cjDate && item.commissioninfo !== null && item.commissioninfo !== '' && item.commissioninfo !== undefined}}">
+      <view class='icon'>
+        <image src='../../images/xingzhuang.png'></image>
+      </view>
+      <text>恭喜您，获得推荐佣金{{item.commissioninfo}}元</text>
+    </view>
+  </view>
+  <!-- 悬浮窗 -->
+  <view class='floating'>
+    <view bindtap='goRecommend'>
+      <view class='icon'>
+        <image src='../../images/tuijian.png'></image>
+      </view>
+      <text>推荐</text>
+    </view>
+  </view>
+</view>
+ <!-- 抽屉 -->
+<view class='drawer' wx:if='{{showRight}}' catchtouchmove='stopMove'>
+  <view class='shade' bindtap='hideDrawer'></view>
+  <view class='content' >
+    <view class='city'>
+      <view class='title'>城市</view>
+      <view class='city-list' bindtap='selCity'>
+        <view class="{{cityDefaultIndex===-1?'active':''}}" bindtap='allCity'>全部</view>
+        <view 
+          wx:for='{{cityInfo}}'
+          wx:key='{{index}}' 
+          data-cityTagId='{{index}}'
+          data-cityId='{{item.cityId}}'
+          class="{{cityDefaultIndex===index?'active':''}}"
+          >{{item.cityName}}</view>
+      </view>
+    </view>
+
+    <view class='project'>
+      <view class='title'>项目</view>
+      <view>
+        <view class="section">
+          <picker 
+            bindchange="bindPickerChange" 
+            value="{{index}}" 
+            range="{{showItemInfo}}" 
+            range-key='projectName'
+            mode = "selector"
+            >
+            <view class="picker">
+              <text wx:if='{{itemPakerIndex===null}}'></text>
+              <text wx:else>{{showItemInfo[itemPakerIndex].projectName}}</text>
+            </view>
+          </picker>
+        </view>
+        <image src='../../images/godown.png'></image>
+      </view>
+    </view>
+
+    <view class='time'>
+      <view class='title'>时间区间</view>
+      <view>
+        <view  class='start-time'>
+          <view class="section">
+            <picker
+              mode="date"
+              value="{{date}}"
+              start="2019-01-01"
+              end="2029-01-01"
+              bindchange="bindDateChangeStart"
+            >
+              <view class="picker">
+                <text wx:if='{{dataIntervalStart===null}}'>开始时间</text>
+                <text wx:else>{{dataIntervalStart}}</text>
+              </view>
+            </picker>
+          </view>
+          <image src='../../images/godown.png'></image>
+        </view>
+        <view class='end-time'>
+          <view class="section">
+            <picker
+              mode="date"
+              value="{{date}}"
+              start="2019-01-01"
+              end="2029-01-01"
+              bindchange="bindDateChangeEnd"
+            >
+              <view class="picker">
+                <text wx:if='{{dataIntervalEnd===null}}'>结束时间</text>
+                 <text wx:else>{{dataIntervalEnd}}</text>
+              </view>
+            </picker>
+          </view>
+          <image src='../../images/godown.png'></image>
+        </view>
+      </view>
+    </view>
+
+    <view class='plan'>
+      <view class='title'>进度</view>
+      <view bindtap='selPlan'>
+        <text 
+          wx:for='{{recommendInfo}}'
+          wx:key='{{index}}' 
+          data-planTagId='{{index}}'
+          class="{{planDefaultIndex===index?'active':''}}"
+          >{{item}}</text>
+      </view>
+    </view>
+
+    <view class='tabbar'>
+      <view class='reset' bindtap='reset'>重置</view>
+      <view class='ok' bindtap='submit'>确认</view>
+    </view>
+  </view>
+</view>
+
+<i-modal visible="{{ visible }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
+  <view>暂无绑定用户信息</view>
+</i-modal>
