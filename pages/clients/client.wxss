@@ -589,6 +589,7 @@
   background: #20a0ff;
   border-top: 2rpx solid #20a0ff;
 }
+/* 报备按钮 */
 .client-button{
   float: right;
   margin: 20rpx 0;

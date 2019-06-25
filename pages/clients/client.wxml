@@ -121,9 +121,9 @@
       </view>
       <text>恭喜您，获得推荐佣金{{item.commissioninfo}}元</text>
     </view>
-    <view class="client-button" wx:if="{{item.status=='0'}}">
+    <!-- <view class="client-button" wx:if="{{item.status=='0'}}">
      <button class="button-sub" form-type='submit' bindtap="toQuoteForClikc">重新报备</button>
-    </view>
+    </view> -->
   </view>
   <!-- 悬浮窗 -->
   <view class='floating'>
