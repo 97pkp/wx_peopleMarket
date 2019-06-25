@@ -27,16 +27,20 @@
   float: left;
   margin-right: 10rpx;
 }
+.phone-type-box picker,.phont-header-box picker{
+  display: flex;
+  flex: 1;
+}
+
 .phone-type-box image,.phont-header-box image{
   width: 16rpx;
   height: 10rpx;
 }
 
 .phone-header,.phoneType-header {
-  /* width: 80rpx; */
+  width: 80rpx;
   color: #b4b9cb;
   font-size: 28rpx;
-  margin-right: 8rpx;
 }
 
 .required::before {
@@ -101,6 +105,20 @@
 
 .genderSty::after {
   border: none;
+}
+
+.house-type-box{
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+.house-type-box picker{
+  width: 100%;
+  height: 100%;
+}
+.housetype-header-default{
+  font-size: 28rpx;
+  color: #b4b9cb;
 }
 
 /* 获取用户信息弹窗 */

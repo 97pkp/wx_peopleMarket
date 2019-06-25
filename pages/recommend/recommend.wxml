@@ -44,7 +44,7 @@
       </view>
 
       <span class="inp">
-        <input placeholder-class="phcolor" bindinput='customPhoneBind' value='{{phoneText}}' placeholder="请输入客户电话" placeholder-style='color:#B4B9CB;' maxlength='{{11}}'/>
+        <input placeholder-class="phcolor" bindinput='customPhoneBind' value='{{phoneText}}' placeholder="请输入客户电话" placeholder-style='color:#B4B9CB;' maxlength='{{numberMaxLength}}'/>
       </span>
     </li>
     <li>
@@ -57,6 +57,19 @@
       <span class='title required'>推荐楼盘</span>
       <span wx:if="{{recommentStr!==''}}" class="inp" style="text-align:left;display:block;" bindtap="setProject">{{recommentStr}}</span>
       <span wx:if="{{recommentStr===''}}" class="place-sel" style="text-align:left;display:block;" bindtap="setProject">请选择</span>  
+    </li>
+    <li>
+      <span class='title'>意向户型</span>
+      <view class='house-type-box'>
+        <picker bindchange="bindHouseTypeChange" value="{{houseHoldTypeListIndex}}" range="{{houseHoldTypeList}}" >
+          <view class="picker housetype-header" wx:if="{{isClickHouse}}">
+            {{houseHoldTypeList[houseHoldTypeListIndex]}}
+          </view>
+          <view class="picker housetype-header-default" wx:else>
+            {{"请选择"}}
+          </view>
+        </picker>
+      </view>
     </li>
     <li style="height:200rpx;margin-top:20rpx;margin-bottom:40rpx">
       <textarea wx:if="{{!showBgpack && !visible2 && !visible && !showPicker}}" class='textsty' style='' bindinput='remarkBind' placeholder="{{placeholderText}}" placeholder-style='color:#B4B9CB;'/>
@@ -111,7 +124,7 @@
 
 
 <!------用户授权弹窗------>
-<view wx:if="{{showBgpack}}" class='bgpack'>
+<view wx:if="{{showBgpack}}" class='bgpack' catchtouchmove='notouch'>
   <view class='wicket'>
     <view style='text-align:center;margin-bottom:16rpx;font-size:36rpx'>温馨提示</view>
     <view style='text-align:center;color:#888;'>请允许小程序使用</view>
@@ -121,6 +134,22 @@
         取消
       </button>
       <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
+        允许
+      </button>
+    </view>
+  </view>
+</view>
+<!-- 手机号授权 -->
+<view wx:if="{{showPhonepack}}" class='bgpack' catchtouchmove='notouch'>
+  <view class='wicket'>
+    <view style='text-align:center;margin-bottom:16rpx;font-size:36rpx'>温馨提示</view>
+    <view style='text-align:center;color:#888;'>请允许小程序使用</view>
+    <view style='text-align:center;color:#888;'>用户手机号</view>
+    <view style='margin-top:24px;border-top:rgba(0,0,0,0.10) 1px solid'>
+      <button bindtap="cancelTip">
+        取消
+      </button>
+      <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
         允许
       </button>
     </view>

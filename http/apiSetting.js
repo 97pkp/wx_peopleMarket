@@ -47,7 +47,11 @@ const serviceModule = {
     url: '/recommend/addAgencyCustom',
     method: 'post'
   },
-
+  
+  recommendGetHouseHoldType:{
+    url: '/recommend/getHouseHoldType',
+    method: 'post'
+  },
   // 根据用户及经纪人类型获取渠道(废弃)
   // recommendFindCanalByUser: {
   //   url: '/recommend/findCanalByUser',

@@ -13,11 +13,12 @@ Page({
   data: {
     showPicker:false,         //是否显示picker
     subDisabled:false,        //是否推荐成功
-    placeholderText: '请输入客户相关描述，如意向户型、面积等',    //placeholder文本提示
+    placeholderText: '请输入客户相关描述，如面积等',    //placeholder文本提示
     isCitySelect: false,      // 是否选择城市
     visible: false,           //是否显示绑定用户信息模态窗
     visible2: false,          //确认推荐模态窗
     showBgpack: false,        //是否显示授权窗口
+    showPhonepack:false,      //是否显示手机号授权窗口
     phoneText:'',
 
     successProjectArr:[],     //推荐成功的项目id
@@ -33,6 +34,7 @@ Page({
       mobileFlag: '+86', 
       openId: '',
       projectId: '',
+      intentHouseType: '',
       remark: '',
       reportMobile: '',
       reportName: '',
@@ -54,8 +56,60 @@ Page({
       { city: '澳门', mobileFlag: '+853' },
       { city: '台湾', mobileFlag: '+886' }
     ],
+    numberMaxLength:11,         //电话号最大长度
+    houseHoldTypeList:[],       //用户意向户型列表
+    houseHoldTypeListIndex:0,    //用户意向下标
+    isClickHouse:false,          //是否点击了意向户型
+    //用户详细信息
+    detailUserInfo:{
+      avatarUrl:'',
+      gender:'',
+      nickName:'',
+      userID:'',
+      openID:'',
+      wxID:'',
+      wxPhoneNumber:'',
+      nowPosition:'',
+      oldPosition:''
+    },
   },
 
+  //获取用户详细信息列表
+  getDetailUserInfo(){
+    let that=this
+    wx.getUserInfo({
+      success: function (res) {
+        let userData=res
+        that.setData({
+          'detailUserInfo.avatarUrl': userData.userInfo.avatarUrl,
+          'detailUserInfo.gender': userData.userInfo.gender,
+          'detailUserInfo.nickName': userData.userInfo.nickName,
+          'detailUserInfo.userID': app.globalData.userId,
+          'detailUserInfo.openID': app.globalData.openid,
+        })
+
+        //获取加密信息
+        let encryptedData = userData.encryptedData
+        let iv = userData.iv
+        console.log(encryptedData, iv)
+      }
+    })
+    let position = wx.getStorageSync("cityPromise")
+    if (position.positionCity){
+      that.setData({
+        'detailUserInfo.nowPosition': position.positionCity,
+        'detailUserInfo.oldPosition': ''
+      })
+    }else{
+      that.setData({
+        'detailUserInfo.nowPosition': '',
+        'detailUserInfo.oldPosition': ''
+      })
+    }
+    console.log("detailUserInfo:", that.data.detailUserInfo)
+    // 'detailUserInfo.wxID': '',
+    // 'detailUserInfo.wxPhoneNumber': '',
+  },
   // 获取微信用户信息
   onGotUserInfo(e) {
     wx.showTabBar()
@@ -70,9 +124,15 @@ Page({
       console.log(error)
     });
     this.setData({
-      showBgpack: false
+      showBgpack: false,
     })
   },
+  //获取手机号
+  getPhoneNumber(e){
+    let that=this
+    that.setData({ showPhonepack:false})
+  },
+
   //取消授权窗
   cancelTip(){
     this.setData({ showBgpack:false})
@@ -99,6 +159,7 @@ Page({
         }
       }
     })
+    that.getDetailUserInfo()
    
     if (app.globalData.isCheck) {
       let reportList = that.data.reportList
@@ -128,6 +189,7 @@ Page({
     } else {
       this.getRecommendGetProjectList()
     }
+    this.getHouseHoldType()
   },
 
   onShow: function() {
@@ -156,15 +218,14 @@ Page({
       if (this.data.index == 0) {
         var reg= /^(\d{3})\d{4}(\d{4})$/g;
         phone = phone.replace(reg, "$1****$2");
-        console.log(phone)
       } else if (this.data.index == 1) {
-        var reg = /(\d{2})\d{4}(\d{1})/g;
-        phone = phone.replace(reg, "$1****");
-      } else if (this.data.index == 2) {
         var reg = /(\d{3})\d{4}(\d{1})/g;
+        phone = phone.replace(reg, "$1****$2");
+      } else if (this.data.index == 2) {
+        var reg = /(\d{3})\d{4}/g;
         phone = phone.replace(reg, "$1****");
       } else if (this.data.index == 3) {
-        var reg = /(\d{2})\d{4}(\d{4})/g;
+        var reg = /(\d{3})\d{4}(\d{3})/g;
         phone = phone.replace(reg, "$1****$2");
       }
     }
@@ -191,6 +252,16 @@ Page({
       index: e.detail.value,
       'reportList.mobileFlag': this.data.array[e.detail.value].mobileFlag
     })
+    if (e.detail.value==0){
+      this.setData({ numberMaxLength: 11})
+    } else if (e.detail.value == 1){
+      this.setData({ numberMaxLength: 8 })
+    } else if (e.detail.value == 2) {
+      this.setData({ numberMaxLength: 7 })
+    } else if (e.detail.value == 3) {
+      this.setData({ numberMaxLength: 10 })
+    }
+      
   },
   //隐号全号选择
   bindPickerChangePhoneType(e){
@@ -203,6 +274,14 @@ Page({
       phoneText:''
     })
     this.getRecommendGetProjectList()
+  },
+  //意向户型选择
+  bindHouseTypeChange(e){
+    this.setData({
+      houseHoldTypeListIndex: e.detail.value,
+      isClickHouse: true,
+      'reportList.intentHouseType': this.data.houseHoldTypeList[e.detail.value]
+    })
   },
 
   // 城市选择
@@ -281,6 +360,18 @@ Page({
       console.log(error)
     })
   },
+  //获取意向户型
+  getHouseHoldType() {
+    let that=this
+    let promise = { openID: app.globalData.openid}
+    $http(apiSetting.recommendGetHouseHoldType, promise).then((data) => {
+      that.setData({
+        houseHoldTypeList: data.data
+      })
+    }, (error) => {
+      console.log(error)
+    })
+  },
 
   //选择推荐楼盘列表
   arrayProjectChange(e) {
@@ -337,7 +428,6 @@ Page({
       if (!data.code) {
         let successProjectId = data.data.successProjectId
         let errorProjectId = data.data.errorProjectId
-        console.log(successProjectId, errorProjectId)
         let arrayProject = that.data.arrayProject
         let successArr=[]
         let errorArr = []   
@@ -383,7 +473,7 @@ Page({
     })
     this.setData({
       visible2: false,
-      placeholderText: '请输入客户相关描述，如意向户型、面积等'
+      placeholderText: '请输入客户相关描述，如面积等'
     });
   },
   handleCloseNo() {
@@ -392,7 +482,7 @@ Page({
     })
     this.setData({
       visible2: false,
-      placeholderText: '请输入客户相关描述，如意向户型、面积等'
+      placeholderText: '请输入客户相关描述，如面积等'
     });
   },
   //弹出复选楼盘picker
@@ -434,5 +524,9 @@ Page({
       this.setData({ arrayProject: arrayProject})
       this.setData({ showPicker: false })
     }
+  },
+  //遮罩穿透空事件
+  notouch(){
+    return
   },
 })
