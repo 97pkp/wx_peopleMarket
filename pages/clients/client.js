@@ -207,6 +207,10 @@ Page({
       console.log(error)
     });
   },
+//报备
+  toQuoteForClikc(){
+
+  },
   //时间数据截取函数
   cutDate(list){
     if (list.length > 0) {

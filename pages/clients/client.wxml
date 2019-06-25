@@ -114,16 +114,15 @@
         <text wx:else></text>
         </view>
       </view>
-
-
-
-
     </view>
     <view class='luck' wx:if="{{item.cjDate && item.commissioninfo !== null && item.commissioninfo !== '' && item.commissioninfo !== undefined}}">
       <view class='icon'>
         <image src='../../images/xingzhuang.png'></image>
       </view>
       <text>恭喜您，获得推荐佣金{{item.commissioninfo}}元</text>
+    </view>
+    <view class="client-button" wx:if="{{item.status=='0'}}">
+     <button class="button-sub" form-type='submit' bindtap="toQuoteForClikc">重新报备</button>
     </view>
   </view>
   <!-- 悬浮窗 -->

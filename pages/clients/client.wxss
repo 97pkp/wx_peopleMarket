@@ -106,7 +106,7 @@
 /* 客户列表样式 */
 
 .client {
-  height: 380rpx;
+  height:400rpx;
   width: 670rpx;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1);
   padding: 0 40rpx;
@@ -588,4 +588,14 @@
   color: #fff;
   background: #20a0ff;
   border-top: 2rpx solid #20a0ff;
+}
+.client-button{
+  float: right;
+  margin: 20rpx 0;
+}
+.button-sub{
+ width:180rpx;
+background-color:#009DDA;
+color:#fff;
+font-size:30rpx;
 }
