@@ -106,7 +106,7 @@
 /* 客户列表样式 */
 
 .client {
-  height:400rpx;
+  height:380rpx;
   width: 670rpx;
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.1);
   padding: 0 40rpx;
