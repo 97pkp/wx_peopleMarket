@@ -163,6 +163,7 @@ swiper image {
 .hours-list, .rim-list {
   width: 658rpx;
   padding-bottom: 25rpx;
+  position: relative;
 }
 
 .hours-list .img, .rim-list .img {
@@ -336,4 +337,31 @@ swiper image {
 
 .bgpack button::after {
   border: none;
+}
+.img-icon-type{
+  position: absolute;
+  right:0;
+  top:0;
+}
+/* 热销 */
+.issale-hot{
+background:url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
+background-size:150rpx 150rpx;
+height:150rpx;
+width:150rpx;
+}
+/* 清盘 */
+.issale-liquidation{
+background:url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
+background-size:150rpx 150rpx;
+height:150rpx;
+width:150rpx;
+
+}
+/* 即将清盘 */
+.issale-the-liquidation{
+background:url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
+background-size:150rpx 150rpx;
+height:150rpx;
+width:150rpx;
 }

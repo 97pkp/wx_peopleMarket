@@ -48,14 +48,26 @@
   <!-- 楼盘详情 -->
   <view wx:if="{{buildinfolist.length}}" class='hours-list {{buildinfolist.length===index+1?"last-hourse-list":"hours-list"}}' bindtap='goInformation' data-project_id='{{item.projectid_id}}' data-imgurl='{{item.pictureurl}}' wx:for='{{buildinfolist}}' wx:key='index'>
     <view class='img'>
-      <image mode="aspectFill" src='{{item.pictureurl==""?defaultImg:item.pictureurl}}' binderror="erroImage" data-index='{{index}}'></image>
+      <image mode="aspectFill" src='{{item.pictureurl==""?defaultImg:item.pictureurl}}' binderror="erroImageerroImage" data-index='{{index}}'></image>
     </view>
+    <view class='img-icon-type' wx:if='{{item.issale !="" && item.issale != undefined}}'>
+      <block wx:if="{{item.issale=='热销'}}" >
+        <view class="issale-hot"></view>
+      </block>
+       <block wx:elif="{{item.issale=='清盘'}}" >
+            <view class="issale-liquidation"></view>
+      </block>
+       <block wx:else>
+          <view class="issale-the-liquidation"></view>
+      </block>
+    </view>
+
     <view class='hours-info'>
       <view class='top-info'>
         <view class='hours-name'>
           <text>{{item.projectname_cswx}}</text>
           <view class='sale'>
-            <text id="all-sale" class='t3 all-sale'>{{item.issale}}</text>
+            <text id="all-sale" class='t3 all-sale' wx:if="{{item.commissioninfo !='' && item.commissioninfo !=undefined}}">{{item.commissioninfo}}</text>
           </view>
         </view>
         <view class='price'>主力均价：
