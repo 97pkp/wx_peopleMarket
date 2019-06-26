@@ -79,7 +79,6 @@ Page({
   },
 
   onLoad: function(option) {
-    
     ifChange = option.ifChange;
     let that=this
     wx.showLoading({
