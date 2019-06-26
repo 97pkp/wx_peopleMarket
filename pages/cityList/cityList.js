@@ -71,7 +71,6 @@ Page({
 
   //城市选择
   cityChange(e) {
-    console.log(e)
     this.setData({
       selectCity: e.target.dataset.item.id,
       localCity: e.target.dataset.item

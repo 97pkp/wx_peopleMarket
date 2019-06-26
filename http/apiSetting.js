@@ -41,6 +41,11 @@ const serviceModule = {
     url: '/user/getHaikeAgencyInfo',
     method: 'post'
   },
+  //获取用户手机号
+  userGetWxPhone: {
+    url: '/user/getWxPhone',
+    method: 'post'
+  },
 
   // 推荐客户
   recommendAddAgencyCustom: {
@@ -52,6 +57,8 @@ const serviceModule = {
     url: '/recommend/getHouseHoldType',
     method: 'post'
   },
+
+  
   // 根据用户及经纪人类型获取渠道(废弃)
   // recommendFindCanalByUser: {
   //   url: '/recommend/findCanalByUser',

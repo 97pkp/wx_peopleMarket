@@ -388,13 +388,16 @@
 }
 
 .drawer .content .city-list view {
-  padding: 0 34rpx;
+  /* padding: 0 34rpx; */
+  /* padding: 0 24rpx; */
   height: 56rpx;
   background: #f7f7fa;
   line-height: 56rpx;
+  text-align: center;
   border-radius: 8rpx;
   margin-right: 20rpx;
   margin-bottom: 20rpx;
+  min-width: 120rpx;
 }
 .drawer .content .city-list view:nth-of-type(3n){
   margin-right: 0;

@@ -72,7 +72,7 @@
       </view>
     </li>
     <li style="height:200rpx;margin-top:20rpx;margin-bottom:40rpx">
-      <textarea wx:if="{{!showBgpack && !visible2 && !visible && !showPicker}}" class='textsty' style='' bindinput='remarkBind' placeholder="{{placeholderText}}" placeholder-style='color:#B4B9CB;'/>
+      <textarea wx:if="{{!showPhonepack && !showBgpack && !visible2 && !visible && !showPicker}}" class='textsty' style='' bindinput='remarkBind' placeholder="{{placeholderText}}" placeholder-style='color:#B4B9CB;'/>
       <view wx:else class='textsty' />
     </li>
     <li>

@@ -109,6 +109,7 @@ Page({
           app.globalData.token = data.data['vx-zhwx-token']
           app.globalData.openid = data.data.openid
           app.globalData.status = data.data.status
+          app.globalData.sessionKey = data.data.sessionKey
           if (data.data.isCheck == 0) {
             app.globalData.isCheck = true
           } else {

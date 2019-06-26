@@ -30,6 +30,7 @@ App({
     bindUserInfo: {},
     userId: null,
     transienceCity: {},
-    token: ''
+    token: '',
+    sessionKey: ''
   }
 })
