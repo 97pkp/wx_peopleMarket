@@ -373,7 +373,7 @@ Page({
     }
   },
 // 楼盘信息错误图片
-  erroImageerroImage(e){
+  erroImage3(e){
     if(e.type == 'error'){
       this.data.buildinfolist[e.target.dataset.index].pictureurl = this.data.defaultImg
       this.setData({
