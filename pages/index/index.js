@@ -9,7 +9,7 @@ const QQMapWX = require('../../utils/qqmap-wx-jssdk.min.js')
 const wxMap = new QQMapWX({
   key: mapKey
 });
-
+let ifChange;
 const {
   $Message
 } = require('../../dist/base/index');
@@ -79,6 +79,8 @@ Page({
   },
 
   onLoad: function(option) {
+    
+    ifChange = option.ifChange;
     let that=this
     wx.showLoading({
       title: '加载中',
@@ -138,10 +140,15 @@ Page({
     // })
     let that = this;
     // 判断本地是否有数据
-    if (app.globalData.storLocalCity) {
+    
+    if (app.globalData.storLocalCity && ifChange === undefined) {
+          that.getNowAddress()
+      // that.data.cityInfo.cityName = app.globalData.storLocalCity.city
+      // that.getCityFindBuildInfoByCity()
+    }else if (app.globalData.storLocalCity && ifChange == '1'){
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
       that.getCityFindBuildInfoByCity()
-    } else {
+    }else {
       wx.getSetting({
         success(res) {
           if (!res.authSetting['scope.userLocation']) {
@@ -235,6 +242,102 @@ Page({
       console.log(error)
       that.hideLoading()
     });
+  },
+
+  //获取缓存判断是否有该字段
+  getSessionCityList(city){
+    let that = this
+    let promise = {}
+    let cityPromise = wx.getStorageSync("cityPromise") || []
+    promise.currentCity = cityPromise.currentCity
+    promise.positionCity = cityPromise.positionCity
+    promise.loginby = app.globalData.userId
+    $http(apiSetting.cityFindCityItems, promise).then((data) => {
+      let cityList = data.data
+      if (city) {
+        for (let i = 0; i < cityList.length; i++) {
+          if (city.indexOf(cityList[i].city) !== -1) {
+            wx.showModal({
+              title: '定位城市提示',
+              content: '定位显示您当前的城市是"' + city +'",是否需要切换城市?',
+              showCancel:true,
+              cancelColor: '#999999',
+              confirmColor: '#77C4FF',
+              success(res) {
+                if (res.confirm) {
+                  wx.setStorageSync('storLocalCity', cityList[i])
+                  that.setData({ 'cityInfo.cityName': cityList[i].city })
+                  debugger
+                  app.globalData.storLocalCity = cityList[i]
+                  let _storage = wx.getStorageSync('cityPromise') || {}
+                  _storage.currentCity = cityList[i].city
+                  wx.setStorageSync('cityPromise', _storage)
+                  that.getCityFindBuildInfoByCity()
+                  return
+                } else if (res.cancel) {
+                  wx.hideLoading()
+                  return
+                }
+              }
+            })
+          }
+        }
+      };
+      if (that.data.cityInfo) {
+        that.setData({ 'cityInfo.cityName': cityList[0].city })
+        wx.setStorageSync('storLocalCity', cityList[0])
+        app.globalData.storLocalCity = cityList[0]
+        let _storage = wx.getStorageSync('cityPromise') || {}
+        _storage.currentCity = cityList[0].city
+        wx.setStorageSync('cityPromise', _storage)
+      }
+      that.getCityFindBuildInfoByCity()
+    }, (error) => {
+      console.log(error)
+      that.hideLoading()
+    });
+
+  },
+  //获取当前地址进行与缓存匹配
+  getNowAddress(){
+    let that = this
+    wx.getLocation({
+      type: 'wgs84',
+      success: function (res) {
+        that.data.cityInfo.latitude = res.latitude.toString()
+        that.data.cityInfo.longitude = res.longitude.toString()
+        //经纬度逆解析获取城市名
+        wxMap.reverseGeocoder({
+          location: {
+            latitude: that.data.cityInfo.latitude,
+            longitude: that.data.cityInfo.longitude
+          },
+          success: function (res) {
+            let city = res.result.address_component
+            let _storage = wx.getStorageSync('cityPromise') || {}
+            if (city.city != _storage.positionCity || city.city != _storage.currentCity){
+              that.getSessionCityList(city.city)
+            }else{
+             that.getCityFindBuildInfoByCity()
+            }
+            // wx.setStorageSync('cityPromise', _storage)
+            //传入城市，判断是否有城市字典
+            // that.getCityList(city.city)
+            // that.getCityFindBuildInfoByCity()
+          },
+          fail: function (res) {
+            // that.getCityFindBuildInfoByCity()
+            that.getCityList()
+          }
+        })
+      },
+      fail: function (res) {
+        // that.getCityList()
+      },
+      complete: function (res) {
+
+      }
+    })
   },
 
   // 获取轮播图及城市信息
