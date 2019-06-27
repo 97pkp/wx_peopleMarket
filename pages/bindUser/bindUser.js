@@ -420,7 +420,7 @@ Page({
       wx.hideLoading()
       app.globalData.bindUserInfo = data.data
       wx.reLaunch({
-        url: '../index/index'
+        url: '../index/index?ifChange=' + 1
       })
     })
   }

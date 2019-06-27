@@ -231,22 +231,38 @@ Page({
   },
   customPhoneBind(e) {
     let phone=e.detail.value
-    // this.setData({ 'reportList.customPhone': phone })
+    let cursor = e.detail.cursor
+    let phoneText=this.data.phoneText
     phone = phone.replace(/[^0-9\*]/g, "")
     if (this.data.phoneTypeIndex == 0){
-      if (this.data.index == 0) {
-        var reg= /^(\d{3})\d{4}(\d{4})$/g;
-        phone = phone.replace(reg, "$1****$2");
-      } else if (this.data.index == 1) {
-        var reg = /(\d{3})\d{4}(\d{1})/g;
-        phone = phone.replace(reg, "$1****$2");
-      } else if (this.data.index == 2) {
-        var reg = /(\d{3})\d{4}/g;
-        phone = phone.replace(reg, "$1****");
-      } else if (this.data.index == 3) {
-        var reg = /(\d{3})\d{4}(\d{3})/g;
-        phone = phone.replace(reg, "$1****$2");
+      if (cursor > phoneText.length){
+        var reg = /^\d{3}$/g;
+        phone = phone.replace(reg, phone+"****");
+        if (cursor == 4 || cursor == 5 || cursor == 6 || cursor == 7){
+          phone = phone.substring(0,3)+"****"
+        } 
       }
+      if (cursor == this.data.numberMaxLength){
+        let placeNum = phone.substring(3, 4)
+        if (placeNum==="****"){
+          return
+        }else{
+          phone = phone.substring(0, 3) + "****" + phone.substring(7)
+        }
+      }
+      // if (this.data.index == 0) {
+      //   var reg= /^(\d{3})\d{4}(\d{4})$/g;
+      //   phone = phone.replace(reg, "$1****$2");
+      // } else if (this.data.index == 1) {
+      //   var reg = /(\d{3})\d{4}(\d{1})/g;
+      //   phone = phone.replace(reg, "$1****$2");
+      // } else if (this.data.index == 2) {
+      //   var reg = /(\d{3})\d{4}/g;
+      //   phone = phone.replace(reg, "$1****");
+      // } else if (this.data.index == 3) {
+      //   var reg = /(\d{3})\d{4}(\d{3})/g;
+      //   phone = phone.replace(reg, "$1****$2");
+      // }
     }
     phone = phone.replace(/\s*/g, "")
     this.setData({ 'reportList.customPhone': phone,phoneText: phone})
@@ -498,7 +514,7 @@ Page({
   },
   handleCloseNo() {
     wx.reLaunch({
-      url: '../index/index'
+      url: '../index/index?ifChange=' + 1
     })
     this.setData({
       visible2: false,

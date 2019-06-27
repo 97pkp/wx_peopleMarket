@@ -50,7 +50,7 @@
     <view class='img'>
       <image mode="aspectFill" src='{{item.pictureurl==""?defaultImg:item.pictureurl}}' binderror="erroImage3" data-index='{{index}}'></image>
     </view>
-    <view class='img-icon-type' wx:if='{{item.issale !="" && item.issale != undefined}}'>
+    <!-- <view class='img-icon-type' wx:if='{{item.issale !="" && item.issale != undefined}}'>
       <block wx:if="{{item.issale=='热销'}}" >
         <view class="issale-hot"></view>
       </block>
@@ -60,14 +60,15 @@
        <block wx:else>
           <view class="issale-the-liquidation"></view>
       </block>
-    </view>
+    </view> -->
 
     <view class='hours-info'>
       <view class='top-info'>
         <view class='hours-name'>
           <text>{{item.projectname_cswx}}</text>
           <view class='sale'>
-            <text id="all-sale" class='t3 all-sale' wx:if="{{item.commissioninfo !='' && item.commissioninfo !=undefined}}">{{item.commissioninfo}}</text>
+            <!-- <text id="all-sale" class='t3 all-sale' wx:if="{{item.commissioninfo !='' && item.commissioninfo !=undefined}}">{{item.commissioninfo}}</text> -->
+            <text id="all-sale" class='t3 all-sale' wx:if="{{item.issale !='' && item.issale !=undefined}}">{{item.issale}}</text>
           </view>
         </view>
         <view class='price'>主力均价：

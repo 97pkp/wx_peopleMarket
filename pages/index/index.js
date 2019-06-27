@@ -340,7 +340,7 @@ Page({
         })
       },
       fail: function (res) {
-        // that.getCityList()
+        that.getCityList()
       },
       complete: function (res) {
 
