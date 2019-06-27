@@ -266,9 +266,11 @@ Page({
     promise.loginby = app.globalData.userId
     $http(apiSetting.cityFindCityItems, promise).then((data) => {
       let cityList = data.data
+      console.log(cityList)
       if (city) {
         for (let i = 0; i < cityList.length; i++) {
           if (city.indexOf(cityList[i].city) !== -1) {
+            console.log(cityList[i].city)
             wx.showModal({
               title: '定位城市提示',
               content: '定位显示您当前的城市是"' + city +'",是否需要切换城市?',
@@ -327,6 +329,7 @@ Page({
             longitude: that.data.cityInfo.longitude
           },
           success: function (res) {
+            console.log(res)
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             
