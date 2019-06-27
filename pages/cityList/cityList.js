@@ -129,7 +129,7 @@ Page({
   // 页面跳转
   pageTobind() {
     wx.reLaunch({
-      url: '../index/index'
+      url: '../index/index?ifChange='+1
     })
   }
 })
