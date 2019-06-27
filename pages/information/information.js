@@ -150,6 +150,7 @@ Page({
     this.videoContext = wx.createVideoContext('myvideo', this);
     this.videoContext.requestFullScreen({ direction: 0 });
     this.setData({ isFullView:true})
+    
   },
   //监听进入退出全屏
   fullScreen(e){
@@ -175,7 +176,7 @@ Page({
       if (data.data.length){
         let videoList = data.data[0]
         if (videoList.upload_file_path) {
-          that.setData({ videoPath: that.data.imgpath + videoList.upload_file_path, isVideo: true, auto: videoList.upload_file_path2})
+          that.setData({ videoPath: that.data.imgpath + videoList.upload_file_path, isVideo: true, auto: that.data.imgpath + videoList.upload_file_path2})
         } else {
           that.setData({ videoPath: '', isVideo: false })
         }
