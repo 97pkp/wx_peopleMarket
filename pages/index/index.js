@@ -267,7 +267,6 @@ Page({
                 if (res.confirm) {
                   wx.setStorageSync('storLocalCity', cityList[i])
                   that.setData({ 'cityInfo.cityName': cityList[i].city })
-                  debugger
                   app.globalData.storLocalCity = cityList[i]
                   let _storage = wx.getStorageSync('cityPromise') || {}
                   _storage.currentCity = cityList[i].city

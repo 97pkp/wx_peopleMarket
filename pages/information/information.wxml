@@ -26,7 +26,7 @@
     <view class="img-tag {{!isVideo?'fffBg':''}}" data-type='{{1}}' wx:if="{{videoPath!==''}}">图片</view>
   </view>
  <!-- 视频播放元素 -->
-  <video wx:if="{{isFullView}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{true}}'  src="{{videoPath}}"  bindfullscreenchange="fullScreen"  bindended="closeVideo"  controls="{{true}}" show-center-play-btn='{{false}}' custom-cache='{{false}}' vslide-gesture-in-fullscreen='{{false}}'></video>
+  <video wx:if="{{isFullView}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{true}}'  src="{{videoPath}}"  bindfullscreenchange="fullScreen"  bindended="closeVideo"  controls="{{true}}" show-center-play-btn='{{false}}' custom-cache='{{false}}' vslide-gesture-in-fullscreen='{{false}}' poster='{{auto}}'></video>
   
   <swiper wx:if="{{true}}" autoplay="{{false}}" interval="{{interval}}" duration="{{duration}}" bindchange='bannerChange' current='{{bannerindex}}'>
     <!-- 视频展示块 -->

@@ -170,12 +170,12 @@ Page({
   getShowVideo(project_id){
     let that=this
     // let promise = { project_id: "19C0E48235E2498FBCC3CF73E4E388DB" }
-    let promise = { project_id: project_id}
+    let promise = { project_id: project_id, picturetype:'视频'}
     $http(apiSetting.projectApiFindProjectVideoListById, promise).then((data) => {
       if (data.data.length){
         let videoList = data.data[0]
         if (videoList.upload_file_path) {
-          that.setData({ videoPath: that.data.imgpath + videoList.upload_file_path, isVideo: true })
+          that.setData({ videoPath: that.data.imgpath + videoList.upload_file_path, isVideo: true, auto: videoList.upload_file_path2})
         } else {
           that.setData({ videoPath: '', isVideo: false })
         }
