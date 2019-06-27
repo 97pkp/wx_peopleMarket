@@ -79,9 +79,14 @@ Page({
   },
 
   onLoad: function(option) {
-    if (option){
+    if (option !=undefined && JSON.stringify(option)!="{}"){
       ifChange = option.ifChange;
+    }else{
+      if(ifChange==2){
+        ifChange=1
+      }
     }
+
     let that=this
     wx.showLoading({
       title: '加载中',
@@ -538,7 +543,6 @@ Page({
       this.setData({
         imgUrls: this.data.imgUrls
       })
-      console.log(this.data.defaultImg)
     }
   },
 // 楼盘信息错误图片
@@ -564,6 +568,7 @@ Page({
   onPullDownRefresh() {
     // 显示导航栏加载框
     wx.showNavigationBarLoading()
+    ifChange=2
     this.onLoad()
   },
   // 停止刷新

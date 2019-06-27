@@ -312,7 +312,6 @@ Page({
 
   // 获取海客中介用户
   getUserGetHaikeAgencyInfo(val) {
-   
     let that = this
     let promise = {
       channelCode: val,
@@ -321,7 +320,10 @@ Page({
     that.setData({
       showAgencyAccount: '',
       trench: '',
+      'showTipCode.code': 0,
+      'showTipCode.message': '',
     })  
+    
     $http(apiSetting.userGetHaikeAgencyInfo, promise).then((data) => {
       if (data.code == 0) {
         that.data.userInfo.agencyAccount = data.data.agencyAccount
@@ -346,6 +348,7 @@ Page({
 
   // 用户信息提交
   bindSub() {
+    let _that=this
     // 是否填写姓名
     if (this.data.userInfo.myName == '') {
       $Message({
@@ -395,9 +398,15 @@ Page({
     if (this.data.arrayIndex == 2 && this.data.showTipCode.code!==0) {
       wx.showModal({
         title: '修改失败',
-        content: this.data.showTipCode.message,
+        content: '后台'+this.data.showTipCode.message,
         showCancel: false, 
-        confirmText: "关闭"
+        confirmText: "关闭",
+        success:function(){
+          // _that.setData({
+          //   // 'showTipCode.code': 0,
+          //   'showTipCode.message': '',
+          // })
+        }
       })
       return
     }
