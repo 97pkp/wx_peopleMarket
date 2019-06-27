@@ -99,6 +99,7 @@ Page({
         let promise = {
           code: res.code
         }
+        debugger
         let cityPromise = wx.getStorageSync("cityPromise")||[]
         promise.currentCity = cityPromise.currentCity
         promise.positionCity = cityPromise.positionCity
@@ -190,6 +191,7 @@ Page({
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
+            debugger
             _storage.currentCity = city.city
             wx.setStorageSync('cityPromise', _storage)
             //传入城市，判断是否有城市字典
@@ -215,6 +217,7 @@ Page({
     let that=this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise")||[]
+    debugger
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
@@ -234,6 +237,7 @@ Page({
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
+        debugger
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
@@ -249,6 +253,7 @@ Page({
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || []
+    debugger
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
@@ -269,6 +274,7 @@ Page({
                   that.setData({ 'cityInfo.cityName': cityList[i].city })
                   app.globalData.storLocalCity = cityList[i]
                   let _storage = wx.getStorageSync('cityPromise') || {}
+                  debugger
                   _storage.currentCity = cityList[i].city
                   wx.setStorageSync('cityPromise', _storage)
                   that.getCityFindBuildInfoByCity()
@@ -282,15 +288,17 @@ Page({
           }
         }
       };
-      if (that.data.cityInfo) {
+      if (that.data.cityInfo.cityName) {
+        debugger
         that.setData({ 'cityInfo.cityName': cityList[0].city })
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
+        debugger
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
-      that.getCityFindBuildInfoByCity()
+      that.getCitySessionFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
       that.hideLoading()
@@ -314,6 +322,7 @@ Page({
           success: function (res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
+            debugger
             if (city.city != _storage.positionCity || city.city != _storage.currentCity){
               that.getSessionCityList(city.city)
             }else{
@@ -339,6 +348,61 @@ Page({
     })
   },
 
+  getCitySessionFindBuildInfoByCity(){
+    let that = this
+    let promise = that.data.cityInfo
+    let cityPromise = wx.getStorageSync("cityPromise")
+    promise.currentCity = cityPromise.currentCity
+    promise.loginby = app.globalData.userId
+    promise.latitude = app.globalData.storLocalCity.cityy
+    promise.longitude = app.globalData.storLocalCity.cityx
+    $http(apiSetting.cityFindBuildInfoByCity, promise).then((data) => {
+      if (data.data.cityInfo) {
+        app.globalData.storLocalCity = data.data.cityInfo
+        that.setData({ cityNametext: data.data.cityInfo.city })
+      } else {
+        // app.globalData.storLocalCity = that.data.cityInfo.cityName
+        that.setData({ cityNametext: that.data.cityInfo.cityName })
+      }
+      //修改楼盘图路径
+      let _list1 = data.data.buildInfo
+      for (let i = 0; i < _list1.length; i++) {
+        _list1[i].pictureurl = this.data.imgpath + _list1[i].pictureurl
+        if (_list1[i].mainprice) {
+          _list1[i].mainprice = parseInt(_list1[i].mainprice)
+        }
+      }
+      let _list2 = data.data.rollImg
+      for (let i = 0; i < _list2.length; i++) {
+        _list2[i].url = this.data.imgpath + _list2[i].url
+      }
+
+      that.setData({
+        imgUrls: _list2,
+        buildinfolist: _list1,
+        isHaveCoupon: data.data.isHaveCoupon
+      })
+
+      let buildInfo = data.data.buildInfo
+      let _tagArr = []
+      for (let j = 0; j < buildInfo.length; j++) {
+        if (buildInfo[j].labels === undefined) {
+          _tagArr.push('')
+        } else {
+          _tagArr.push(buildInfo[j].labels.split(','))
+        }
+      }
+      this.setData({
+        buildinfotaglist: _tagArr
+      })
+
+      // 获取周边楼盘
+      this.getRimBuildInfo();
+
+    }, (error) => {
+      console.log(error)
+    });
+  },
   // 获取轮播图及城市信息
   getCityFindBuildInfoByCity() {
     let that = this
@@ -449,6 +513,7 @@ Page({
     let that = this
     let promise = { openid: val}
     let cityPromise = wx.getStorageSync("cityPromise") || []
+    debugger
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.userGetUserInfo, promise).then((data) => {
