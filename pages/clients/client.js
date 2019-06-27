@@ -358,6 +358,7 @@ Page({
   },
   //筛选条目获取
   getRecommendItemList(){
+    // let promise = { openID: "oGKIT0VEMi_ekApgB46JTUD2Ktx8"}
     let promise = { openID: app.globalData.openid }
     let cityPromise = wx.getStorageSync("cityPromise")
     promise.currentCity = cityPromise.currentCity

@@ -2,6 +2,8 @@
 const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
+import appid from '../../http/appID.js'
+
 const {
   $Message
 } = require('../../dist/base/index');
@@ -61,54 +63,26 @@ Page({
     houseHoldTypeListIndex:0,    //用户意向下标
     isClickHouse:false,          //是否点击了意向户型
     //用户详细信息
-    detailUserInfo:{
-      avatarUrl:'',
-      gender:'',
-      nickName:'',
-      userID:'',
-      openID:'',
-      wxID:'',
-      wxPhoneNumber:'',
-      nowPosition:'',
-      oldPosition:''
-    },
+    // detailUserInfo:{
+    //   avatarUrl:'',
+    //   gender:'',
+    //   nickName:'',
+    //   userID:'',
+    //   openID:'',
+    //   wxID:'',
+    //   wxPhoneNumber:'',
+    //   nowPosition:'',
+    //   oldPosition:''
+    // },
   },
 
-  //获取用户详细信息列表
-  getDetailUserInfo(){
+  //获取定位信息列表
+  getLocation(){
     let that=this
-    wx.getUserInfo({
-      success: function (res) {
-        let userData=res
-        that.setData({
-          'detailUserInfo.avatarUrl': userData.userInfo.avatarUrl,
-          'detailUserInfo.gender': userData.userInfo.gender,
-          'detailUserInfo.nickName': userData.userInfo.nickName,
-          'detailUserInfo.userID': app.globalData.userId,
-          'detailUserInfo.openID': app.globalData.openid,
-        })
-
-        //获取加密信息
-        let encryptedData = userData.encryptedData
-        let iv = userData.iv
-        console.log(encryptedData, iv)
-      }
-    })
+    let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
     let position = wx.getStorageSync("cityPromise")
-    if (position.positionCity){
-      that.setData({
-        'detailUserInfo.nowPosition': position.positionCity,
-        'detailUserInfo.oldPosition': ''
-      })
-    }else{
-      that.setData({
-        'detailUserInfo.nowPosition': '',
-        'detailUserInfo.oldPosition': ''
-      })
-    }
-    console.log("detailUserInfo:", that.data.detailUserInfo)
-    // 'detailUserInfo.wxID': '',
-    // 'detailUserInfo.wxPhoneNumber': '',
+    wxDetailUserInfo.nowPosition = position.positionCity
+    wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
   },
   // 获取微信用户信息
   onGotUserInfo(e) {
@@ -117,20 +91,37 @@ Page({
       return
     }
     wx.setStorageSync('wxUserInfo', e.detail.userInfo)
-    let promise = { openID: app.globalData.openid, wxname: e.detail.userInfo.nickName}
-    $http(apiSetting.userUpdateUserInfo, promise).then((data) => {
-      
-    }, (error) => {
-      console.log(error)
-    });
     this.setData({
       showBgpack: false,
+      showPhonepack: true
     })
+    this.getLocation()
   },
   //获取手机号
   getPhoneNumber(e){
     let that=this
     that.setData({ showPhonepack:false})
+    if (e.detail.errMsg =='getPhoneNumber:ok'){
+      let promise={
+        encryptedData: e.detail.encryptedData,
+        iv: e.detail.iv,
+        sessionKey: app.globalData.sessionKey,
+        openID: app.globalData.openid,
+        appid: appid
+      }
+      $http(apiSetting.userGetWxPhone, promise).then((data) => {
+        let phoneData=JSON.parse(data.data)
+        // this.setData({ 'detailUserInfo.wxPhoneNumber': phoneData.phoneNumber})
+        let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
+        wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
+        wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
+        that.userUpdata(wxDetailUserInfo)
+      }, (error) => {
+        console.log(error)
+      });
+    }else{
+      that.setData({ showPhonepack: true})
+    }
   },
 
   //取消授权窗
@@ -154,13 +145,23 @@ Page({
             return
           }
           that.setData({
-            showBgpack: true
+            showBgpack: true,
           })
         }
       }
     })
-    that.getDetailUserInfo()
-   
+
+    let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
+    if (JSON.stringify(wxDetailUserInfo)!=="{}"){
+      if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
+        that.setData({ showPhonepack: false })
+        // that.userUpdata(wxDetailUserInfo)
+      } else {
+        that.setData({ showPhonepack: true })
+      }
+    }
+  
+    //判断是否绑定用户信息
     if (app.globalData.isCheck) {
       let reportList = that.data.reportList
       reportList.openId = app.globalData.bindUserInfo.wxid
@@ -207,13 +208,31 @@ Page({
       }
     }
   },
+  //用户数据更新
+  userUpdata(data){
+    let wxDetailUserInfo=data
+    let wxUserInfo = wx.getStorageSync('wxUserInfo')
+    let promise = {
+      openID: app.globalData.openid,
+      wxname: wxUserInfo.nickName,
+      wxmobile: wxDetailUserInfo.wxPhoneNumber,
+      wxsex: wxUserInfo.gender,
+      headurl: wxUserInfo.avatarUrl
+    }
+    $http(apiSetting.userUpdateUserInfo, promise).then((data) => {
+
+    }, (error) => {
+      console.log(error)
+    });
+  },
 
   customNameBind(e) {
     this.data.reportList.customName = e.detail.value
   },
   customPhoneBind(e) {
     let phone=e.detail.value
-    phone = phone.replace(/[^0-9|\*]/g, "")
+    // this.setData({ 'reportList.customPhone': phone })
+    phone = phone.replace(/[^0-9\*]/g, "")
     if (this.data.phoneTypeIndex == 0){
       if (this.data.index == 0) {
         var reg= /^(\d{3})\d{4}(\d{4})$/g;
@@ -230,7 +249,8 @@ Page({
       }
     }
     phone = phone.replace(/\s*/g, "")
-    this.setData({ 'reportList.customPhone': phone, phoneText: phone})
+    this.setData({ 'reportList.customPhone': phone,phoneText: phone})
+    // this.setData({phoneText: phone })
   },
   remarkBind(e) {
     this.data.reportList.remark = e.detail.value
@@ -457,7 +477,7 @@ Page({
         });
         this.setData({
           subDisabled: false,
-          visible2: true,
+          // visible2: true,
           'errorProjectArr[0]': this.data.recommentStr
         })
       }
