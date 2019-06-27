@@ -79,7 +79,9 @@ Page({
   },
 
   onLoad: function(option) {
-    ifChange = option.ifChange;
+    if (option){
+      ifChange = option.ifChange;
+    }
     let that=this
     wx.showLoading({
       title: '加载中',
