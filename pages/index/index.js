@@ -99,7 +99,7 @@ Page({
         let promise = {
           code: res.code
         }
-        debugger
+        
         let cityPromise = wx.getStorageSync("cityPromise")||[]
         promise.currentCity = cityPromise.currentCity
         promise.positionCity = cityPromise.positionCity
@@ -191,7 +191,7 @@ Page({
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
-            debugger
+            
             _storage.currentCity = city.city
             wx.setStorageSync('cityPromise', _storage)
             //传入城市，判断是否有城市字典
@@ -217,7 +217,7 @@ Page({
     let that=this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise")||[]
-    debugger
+    
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
@@ -237,7 +237,7 @@ Page({
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
-        debugger
+        
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
@@ -253,7 +253,7 @@ Page({
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || []
-    debugger
+    
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
@@ -274,7 +274,7 @@ Page({
                   that.setData({ 'cityInfo.cityName': cityList[i].city })
                   app.globalData.storLocalCity = cityList[i]
                   let _storage = wx.getStorageSync('cityPromise') || {}
-                  debugger
+                  
                   _storage.currentCity = cityList[i].city
                   wx.setStorageSync('cityPromise', _storage)
                   that.getCityFindBuildInfoByCity()
@@ -289,12 +289,12 @@ Page({
         }
       };
       if (that.data.cityInfo.cityName) {
-        debugger
+        
         that.setData({ 'cityInfo.cityName': cityList[0].city })
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
-        debugger
+        
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
@@ -322,7 +322,7 @@ Page({
           success: function (res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
-            debugger
+            
             if (city.city != _storage.positionCity || city.city != _storage.currentCity){
               that.getSessionCityList(city.city)
             }else{
@@ -513,7 +513,7 @@ Page({
     let that = this
     let promise = { openid: val}
     let cityPromise = wx.getStorageSync("cityPromise") || []
-    debugger
+    
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.userGetUserInfo, promise).then((data) => {
