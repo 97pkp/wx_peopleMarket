@@ -31,8 +31,8 @@
     <!-- 视频展示块 -->
     <block wx:if="{{videoPath!==''}}">
       <swiper-item>
-        <view class='video-cover' wx:if="{{!isFullView}}">
-          <image src='{{auto}}'></image>
+        <view class='video-cover' wx:if="{{1}}">
+          <image src='{{auto}}' binderror="erroVideoImage"></image>
           <view bindtap='startPlay' wx:if="{{!isFullView}}">
             <image src='../../images/video.png'></image>
           </view>

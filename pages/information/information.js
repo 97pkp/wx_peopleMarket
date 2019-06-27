@@ -906,6 +906,8 @@ Page({
         }
       }
 
+
+
       // if(name=='实景图'){
       //   this.data.buildsimg[0].imgs[index] = this.data.defaultImg
       //   this.setData({
@@ -931,6 +933,14 @@ Page({
       //     'buildsimg[3]': this.data.buildsimg[3]
       //   })
       // }
+    }
+  },
+  //视频封面错误
+  erroVideoImage(e){
+    if (e.type == 'error') {
+      this.setData({
+        auto: this.data.defaultImg
+      })
     }
   },
 

@@ -235,21 +235,40 @@ Page({
     let phoneText=this.data.phoneText
     phone = phone.replace(/[^0-9\*]/g, "")
     if (this.data.phoneTypeIndex == 0){
-      if (cursor > phoneText.length){
-        var reg = /^\d{3}$/g;
-        phone = phone.replace(reg, phone+"****");
-        if (cursor == 4 || cursor == 5 || cursor == 6 || cursor == 7){
-          phone = phone.substring(0,3)+"****"
-        } 
-      }
-      if (cursor == this.data.numberMaxLength){
-        let placeNum = phone.substring(3, 4)
-        if (placeNum==="****"){
-          return
-        }else{
-          phone = phone.substring(0, 3) + "****" + phone.substring(7)
+      if (this.data.index==0){
+        if (cursor > phoneText.length) {
+          var reg = /^\d{3}$/g;
+          phone = phone.replace(reg, phone + "****");
+          if (cursor == 4 || cursor == 5 || cursor == 6 || cursor == 7) {
+            phone = phone.substring(0, 3) + "****"
+          }
+        }
+        if (cursor == this.data.numberMaxLength) {
+          let placeNum = phone.substring(3, 4)
+          if (placeNum === "****") {
+            return
+          } else {
+            phone = phone.substring(0, 3) + "****" + phone.substring(7)
+          }
+        }
+      }else{
+        if (cursor > phoneText.length) {
+          var reg = /^\d{2}$/g;
+          phone = phone.replace(reg, phone + "****");
+          if (cursor == 3 || cursor == 4 || cursor == 5 || cursor == 6) {
+            phone = phone.substring(0, 2) + "****"
+          }
+        }
+        if (cursor == this.data.numberMaxLength) {
+          let placeNum = phone.substring(2, 4)
+          if (placeNum === "****") {
+            return
+          } else {
+            phone = phone.substring(0, 2) + "****" + phone.substring(6)
+          }
         }
       }
+      
       // if (this.data.index == 0) {
       //   var reg= /^(\d{3})\d{4}(\d{4})$/g;
       //   phone = phone.replace(reg, "$1****$2");
@@ -293,7 +312,7 @@ Page({
     } else if (e.detail.value == 1){
       this.setData({ numberMaxLength: 8 })
     } else if (e.detail.value == 2) {
-      this.setData({ numberMaxLength: 7 })
+      this.setData({ numberMaxLength: 8 })
     } else if (e.detail.value == 3) {
       this.setData({ numberMaxLength: 10 })
     }

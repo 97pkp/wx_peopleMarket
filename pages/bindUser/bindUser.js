@@ -26,6 +26,11 @@ Page({
     },
     trench:'',                //留电渠道
     showAgencyAccount: '',    //中介账户
+    //渠道验证码失败
+    showTipCode: {
+      code:0,
+      message:''
+    },              
     noteCodeVisible: false,   // 验证码窗
     noteCodeVal: null,
     noteCodeValLeng: 4,
@@ -307,11 +312,16 @@ Page({
 
   // 获取海客中介用户
   getUserGetHaikeAgencyInfo(val) {
+   
     let that = this
     let promise = {
       channelCode: val,
       openid: app.globalData.openid
     }
+    that.setData({
+      showAgencyAccount: '',
+      trench: '',
+    })  
     $http(apiSetting.userGetHaikeAgencyInfo, promise).then((data) => {
       if (data.code == 0) {
         that.data.userInfo.agencyAccount = data.data.agencyAccount
@@ -327,9 +337,9 @@ Page({
           type: 'warning'
         });
         that.setData({
-          showAgencyAccount:'',
-          trench:''
-        })
+          'showTipCode.code': data.code,
+          'showTipCode.message': data.message
+        })  
       }
     })
   },
@@ -381,6 +391,15 @@ Page({
         });
         return
       }
+    }
+    if (this.data.arrayIndex == 2 && this.data.showTipCode.code!==0) {
+      wx.showModal({
+        title: '修改失败',
+        content: this.data.showTipCode.message,
+        showCancel: false, 
+        confirmText: "关闭"
+      })
+      return
     }
 
     let that = this
