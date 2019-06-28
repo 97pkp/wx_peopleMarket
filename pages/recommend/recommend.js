@@ -77,89 +77,89 @@ Page({
   },
 
   //获取定位信息列表
-  getLocation(){
-    let that=this
-    let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
-    let position = wx.getStorageSync("cityPromise")
-    wxDetailUserInfo.nowPosition = position.positionCity
-    wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
-  },
+  // getLocation(){
+  //   let that=this
+  //   let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
+  //   let position = wx.getStorageSync("cityPromise")
+  //   wxDetailUserInfo.nowPosition = position.positionCity
+  //   wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
+  // },
   // 获取微信用户信息
-  onGotUserInfo(e) {
-    wx.showTabBar()
-    if (!e.detail.userInfo) {
-      return
-    }
-    wx.setStorageSync('wxUserInfo', e.detail.userInfo)
-    this.setData({
-      showBgpack: false,
-      showPhonepack: true
-    })
-    this.getLocation()
-  },
+  // onGotUserInfo(e) {
+  //   wx.showTabBar()
+  //   if (!e.detail.userInfo) {
+  //     return
+  //   }
+  //   wx.setStorageSync('wxUserInfo', e.detail.userInfo)
+  //   this.setData({
+  //     showBgpack: false,
+  //     showPhonepack: true
+  //   })
+  //   this.getLocation()
+  // },
   //获取手机号
-  getPhoneNumber(e){
-    let that=this
-    that.setData({ showPhonepack:false})
-    if (e.detail.errMsg =='getPhoneNumber:ok'){
-      let promise={
-        encryptedData: e.detail.encryptedData,
-        iv: e.detail.iv,
-        sessionKey: app.globalData.sessionKey,
-        openID: app.globalData.openid,
-        appid: appid
-      }
-      $http(apiSetting.userGetWxPhone, promise).then((data) => {
-        let phoneData=JSON.parse(data.data)
-        // this.setData({ 'detailUserInfo.wxPhoneNumber': phoneData.phoneNumber})
-        let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
-        wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
-        wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
-        that.userUpdata(wxDetailUserInfo)
-      }, (error) => {
-        console.log(error)
-      });
-    }else{
-      that.setData({ showPhonepack: true})
-    }
-  },
+  // getPhoneNumber(e){
+  //   let that=this
+  //   that.setData({ showPhonepack:false})
+  //   if (e.detail.errMsg =='getPhoneNumber:ok'){
+  //     let promise={
+  //       encryptedData: e.detail.encryptedData,
+  //       iv: e.detail.iv,
+  //       sessionKey: app.globalData.sessionKey,
+  //       openID: app.globalData.openid,
+  //       appid: appid
+  //     }
+  //     $http(apiSetting.userGetWxPhone, promise).then((data) => {
+  //       let phoneData=JSON.parse(data.data)
+  //       // this.setData({ 'detailUserInfo.wxPhoneNumber': phoneData.phoneNumber})
+  //       let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
+  //       wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
+  //       wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
+  //       that.userUpdata(wxDetailUserInfo)
+  //     }, (error) => {
+  //       console.log(error)
+  //     });
+  //   }else{
+  //     that.setData({ showPhonepack: true})
+  //   }
+  // },
 
   //取消授权窗
-  cancelTip(){
-    this.setData({ showBgpack:false})
-    wx.navigateBack({
-      delta: 1
-    })
-  },
+  // cancelTip(){
+  //   this.setData({ showBgpack:false})
+  //   wx.navigateBack({
+  //     delta: 1
+  //   })
+  // },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
     let that = this;
     //用户信息授权
-    wx.getSetting({
-      success(res) {
-        if (!res.authSetting['scope.userInfo']) {
-          wx.hideTabBar()
-          if (that.data.visible){
-            return
-          }
-          that.setData({
-            showBgpack: true,
-          })
-        }
-      }
-    })
+    // wx.getSetting({
+    //   success(res) {
+    //     if (!res.authSetting['scope.userInfo']) {
+    //       wx.hideTabBar()
+    //       if (that.data.visible){
+    //         return
+    //       }
+    //       that.setData({
+    //         showBgpack: true,
+    //       })
+    //     }
+    //   }
+    // })
 
-    let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
-    if (JSON.stringify(wxDetailUserInfo)!=="{}"){
-      if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
-        that.setData({ showPhonepack: false })
-        // that.userUpdata(wxDetailUserInfo)
-      } else {
-        that.setData({ showPhonepack: true })
-      }
-    }
+    // let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
+    // if (JSON.stringify(wxDetailUserInfo)!=="{}"){
+    //   if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
+    //     that.setData({ showPhonepack: false })
+    //     // that.userUpdata(wxDetailUserInfo)
+    //   } else {
+    //     that.setData({ showPhonepack: true })
+    //   }
+    // }
   
     //判断是否绑定用户信息
     if (app.globalData.isCheck) {
@@ -177,7 +177,7 @@ Page({
       }
     } else {
       that.setData({
-        visible: true,
+        // visible: true,
         placeholderText: ''
       })
     }

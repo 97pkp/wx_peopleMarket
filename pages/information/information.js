@@ -2,12 +2,13 @@
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import fileUrl from '../../http/fileServeUrl.js'
+import appid from '../../http/appID.js'
+
 const app = getApp()
 
 Page({
   data: {
     defaultImg: '../../images/defaultImg.png',    
-    showBgpack: false,       // 授权窗口
     //视频路径
     videoPath:'',
     isFullView:false,       //视频全屏播放
@@ -143,6 +144,14 @@ Page({
       login_by: '',         //用户登录id
       project_id: '',       //项目id
     },
+
+    isClickAttention: false,    //是否点击关注
+    //用户信息弹窗变量
+    showBgpack: false,       //是否显示用户信息授权窗口
+    showPhonepack: false,    //是否显示手机号授权窗口
+    showBindUserInfo: false, //是否显示绑定用户信息窗口
+    // navigateCode:null,       //跳转页面码
+    pageUrl: '',             // 跳转路径
   },
 
   //点击播放视频
@@ -649,7 +658,12 @@ Page({
 
 
   //关注 按钮事件
-  toAttention() {
+  toAttention(){
+    this.setData({ isClickAttention:true})
+    this.Users()
+  },
+  
+  attentionProject() {
     this.setData({
       isAttention: !this.data.isAttention
     })
@@ -661,6 +675,7 @@ Page({
       $http(apiSetting.projectApiInsertMyConc, promise).then((data) => {
         
       }, (error) => {
+        this.setData({ isAttention:false})
         console.log(error)
       });
     } else {   //isAttention为false,则发起取消关注请求
@@ -671,9 +686,11 @@ Page({
       $http(apiSetting.projectApiUpdateMyConc, promise).then((data) => {
         console.log(data)
       }, (error) => {
+        this.setData({ isAttention: true })
         console.log(error)
       });
     }
+    this.setData({ isClickAttention:false})
   },
   //判断是否已经关注
   isAttentionProject() {
@@ -780,9 +797,11 @@ Page({
   
   //去推荐
   goRecommend() {
-    wx.navigateTo({
-      url: '../recommend/recommend?project_id=' + this.data.project_id,
-    })
+    this.setData({ pageUrl: '../recommend/recommend?project_id=' + this.data.project_id})
+    this.Users()
+    // wx.navigateTo({
+    //   url: '../recommend/recommend?project_id=' + this.data.project_id,
+    // })
   },
 
   toPhone() {
@@ -970,5 +989,138 @@ Page({
     wx.hideNavigationBarLoading();
     // 停止下拉动作
     wx.stopPullDownRefresh();
+  },
+
+  //用户信息获取
+  Users() {
+    let that = this
+    //检查用户信息授权
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userInfo']) {
+          wx.hideTabBar()
+          // if (that.data.visible) {
+          //   return
+          // }
+          that.setData({showBgpack: true})
+        } else {
+          //获取缓存信息验证手机号授权
+          let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+          if (JSON.stringify(wxDetailUserInfo) !== "{}") {
+            if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
+              that.setData({ showPhonepack: false })
+              //若验证手机号已经授权，去判断受否绑定用户信息
+              if (app.globalData.isCheck) {
+                that.setData({ showBindUserInfo: false })
+                console.log('111')
+                if (that.data.isClickAttention){
+                  that.attentionProject()
+                }else{
+                  console.log(222)
+                  wx.navigateTo({
+                    url: that.data.pageUrl,
+                  })
+                }
+              } else {
+                that.setData({
+                  showBindUserInfo: true,
+                })
+              }
+            } else {
+              that.setData({ showPhonepack: true })
+            }
+          }else{
+            that.setData({ showPhonepack: true })
+          }
+        }
+      }
+    })
+  },
+  // 获取微信用户信息
+  onGotUserInfo(e) {
+    wx.showTabBar()
+    if (!e.detail.userInfo) {
+      return
+    }
+    wx.setStorageSync('wxUserInfo', e.detail.userInfo)
+    this.setData({
+      showBgpack: false,
+      showPhonepack: true
+    })
+    this.getLocation()
+  },
+  //获取手机号
+  getPhoneNumber(e) {
+    let that = this
+    that.setData({ showPhonepack: false })
+    if (e.detail.errMsg == 'getPhoneNumber:ok') {
+      let promise = {
+        encryptedData: e.detail.encryptedData,
+        iv: e.detail.iv,
+        sessionKey: app.globalData.sessionKey,
+        openID: app.globalData.openid,
+        appid: appid
+      }
+      console.log()
+      $http(apiSetting.userGetWxPhone, promise).then((data) => {
+        let phoneData = JSON.parse(data.data)
+        let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+        wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
+        wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
+        // that.userUpdata(wxDetailUserInfo)
+        // that.setData({ showBindUserInfo: true })
+        //若验证手机号已经授权，去判断受否绑定用户信息
+        console.log(app.globalData.isCheck)
+        if (app.globalData.isCheck) {
+          that.setData({ showBindUserInfo: false })
+          console.log("cac")
+          if (that.data.isClickAttention) {
+            console.log("nnn")
+            that.attentionProject()
+          }else{
+            wx.navigateTo({
+              url: that.data.pageUrl,
+            })
+          }
+        } else {
+          that.setData({
+            showBindUserInfo: true,
+          })
+        }
+      }, (error) => {
+        console.log(error)
+      });
+    } else {
+      that.setData({ showPhonepack: true })
+      let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+      wxDetailUserInfo.wxPhoneNumber = ''
+      wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
+    }
+  },
+  //获取定位信息列表
+  getLocation() {
+    let that = this
+    let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+    let position = wx.getStorageSync("cityPromise")
+    wxDetailUserInfo.nowPosition = position.positionCity
+    wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
+  },
+
+  //取消授权窗
+  cancelTip() {
+    this.setData({ showBgpack: false, showPhonepack: false })
+  },
+  //绑定用户信息弹窗按钮
+  visibleOk() {
+    wx.navigateTo({
+      url: "../bindUser/bindUser"
+    })
+  },
+  visibleOkClose() {
+    this.setData({ showBindUserInfo: false })
+  },
+  //滑动事件
+  notouch() {
+    return
   }
 })
