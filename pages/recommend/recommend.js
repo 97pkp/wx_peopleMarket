@@ -26,6 +26,7 @@ Page({
     successProjectArr:[],     //推荐成功的项目id
     errorProjectArr:[],       //未推荐成功项目
     recommentStr: '',         //推荐项目名
+    projectIndexArr:[],        //选择推荐的项目下标
 
     // 请求参数列表
     reportList: {
@@ -43,12 +44,12 @@ Page({
       reportType: '',
       sex: ''
     },
-    city_id: '',      //城市id
-    gender: 1,        //性别
+    city_id: '',             //城市id
+    gender: 1,               //性别
     arrayProject: [], 
     arrayProjectIndex: null,
-    phoneTypeIndex: 0,     //隐号全号默认选择下标
-    index: 0,            //客户电话区号选择默认下标   
+    phoneTypeIndex: 1,       //隐号全号默认选择下标
+    index: 0,                //客户电话区号选择默认下标   
     arrayNum: ["隐号", "全号"],   //隐号/全号选择 
     referType:'全号',
     // 区号：+86(港:+852,澳:+853,台:+886)
@@ -547,6 +548,13 @@ Page({
   //选择项目
   selTheItem(e){
     let index=e.currentTarget.dataset.index
+    let selIndexArr = this.data.projectIndexArr
+    if(selIndexArr.indexOf(index)==-1){
+      selIndexArr.push(index)
+    }else{
+      selIndexArr.splice(selIndexArr.indexOf(index),1)
+    }
+    this.setData({ projectIndexArr: selIndexArr})
     let _arrayProjectItem = "arrayProject[" + index + "].isSel"
     this.setData({ [_arrayProjectItem]: !this.data.arrayProject[index].isSel})
   },
@@ -569,15 +577,20 @@ Page({
       strId = strId.substring(0, strId.length - 1)
       this.setData({ recommentStr:str})
       this.setData({ 'reportList.projectId': strId})
-      this.setData({ showPicker: false })
+      this.setData({ showPicker: false, projectIndexArr:[] })
     }else if(type=='0'){
       let arrayProject = this.data.arrayProject
-      for (let i = 0; i < arrayProject.length;i++){
-        arrayProject[i].isSel=false
+      let _selIndexArr = this.data.projectIndexArr
+      _selIndexArr.sort((a,b)=>{
+        return a-b
+      })
+      for (let i = 0; i < _selIndexArr.length;i++){
+        arrayProject[_selIndexArr[i]].isSel = !arrayProject[_selIndexArr[i]].isSel
       }
-      this.setData({ recommentStr:''})
-      this.setData({ arrayProject: arrayProject})
-      this.setData({ showPicker: false })
+      this.setData({ arrayProject: arrayProject})     
+      // this.setData({ recommentStr:''})
+      // this.setData({ arrayProject: arrayProject})
+      this.setData({ showPicker: false, projectIndexArr:[]})
     }
   },
   //遮罩穿透空事件

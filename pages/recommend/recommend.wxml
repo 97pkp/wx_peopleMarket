@@ -156,7 +156,7 @@
   </view>
 </view> -->
 
-<view class='picker-view' wx:if="{{showPicker}}">
+<view class='picker-view' wx:if="{{showPicker}}" catchtap='cancelPicker' data-type='0' catchtouchmove='notouch'>
   <view class='content'>
     <view class='top'>
       <text  bindtap='cancelPicker' data-type='0'>取消</text>

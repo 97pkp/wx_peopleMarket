@@ -109,6 +109,20 @@ Page({
     //   url: pageUrl
     // })
   },
+
+  //跳转绑定信息页
+  pageTobindUser(e){
+    wx.navigateTo({
+      url: '../bindUser/bindUser',
+    })
+  },
+ //跳转设置页
+  pageTobindSet(e){
+    wx.navigateTo({
+      url: '../setting/setting',
+    })
+  },
+
   //用户信息获取
   Users() {
     let that = this

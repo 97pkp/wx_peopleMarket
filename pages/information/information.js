@@ -1016,7 +1016,6 @@ Page({
                 if (that.data.isClickAttention){
                   that.attentionProject()
                 }else{
-                  console.log(222)
                   wx.navigateTo({
                     url: that.data.pageUrl,
                   })

@@ -18,16 +18,16 @@ const {
 Page({
   data: {
     defaultImg:'../../images/defaultImg.png',     //默认图才能相对路径
-    isLoading:false,    //是否加载数据中
-    isHaveCoupon: true, // 是否显示优惠券
-    isPermit: false,    // 是否有使用权限
+    isLoading:false,       //是否加载数据中
+    isHaveCoupon: true,    //是否显示优惠券
+    isPermit: false,       //是否有使用权限
     imgpath: fileUrl,   
     cityNametext: '',
-    imgUrls: [],        //轮播图数组
+    imgUrls: [],           //轮播图数组
     autoplay: true,
     interval: 5000,
     duration: 1000,
-    swiperCurrent: 0,   //轮播图下标
+    swiperCurrent: 0,      //轮播图下标
     
     // 查询城市参数
     cityInfo: {
@@ -58,8 +58,9 @@ Page({
     showBgpack: false,       //是否显示用户信息授权窗口
     showPhonepack: false,    //是否显示手机号授权窗口
     showBindUserInfo: false, //是否显示绑定用户信息窗口
-    // navigateCode:null,       //跳转页面码
+    // navigateCode:null,    //跳转页面码
     pageUrl: '',             // 跳转路径
+    isBuildClick: false       //是楼盘列表点击
   },
   // 切换城市
   changeCity() {
@@ -82,13 +83,15 @@ Page({
   goInformation(e) {
     let project_id = e.currentTarget.dataset.project_id
     // let imgurl = e.currentTarget.dataset.imgurl
-    wx.navigateTo({
-      url: '../information/information?project_id=' + project_id   //+ '&&imgurl=' + imgurl
-    })
+    // wx.navigateTo({
+    //   url: '../information/information?project_id=' + project_id   //+ '&&imgurl=' + imgurl
+    // })
+
+    this.setData({ pageUrl: '../information/information?project_id=' + project_id, isBuildClick:true })
+    this.Users()
   },
 
   onLoad: function(option) {
-    
     if (option !=undefined && JSON.stringify(option)!="{}"){
       ifChange = option.ifChange;
     }else{
@@ -159,7 +162,6 @@ Page({
     wx.showTabBar()
     let that = this;
     // 判断本地是否有数据
-    
     if (app.globalData.storLocalCity && ifChange === undefined) {
       that.getNowAddress()
       // that.data.cityInfo.cityName = app.globalData.storLocalCity.city
@@ -209,7 +211,6 @@ Page({
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
-            
             _storage.currentCity = city.city
             wx.setStorageSync('cityPromise', _storage)
             //传入城市，判断是否有城市字典
@@ -271,7 +272,6 @@ Page({
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
-    console.log(cityPromise.positionCity)
     if ('positionCity' in cityPromise && cityPromise.positionCity.indexOf(cityPromise.currentCity)!=-1){
       that.getCityFindBuildInfoByCity()
       return
@@ -310,7 +310,7 @@ Page({
             })
           }
         }
-      };
+      }
       if (that.data.cityInfo.cityName) {
         that.setData({ 'cityInfo.cityName': cityList[0].city })
         wx.setStorageSync('storLocalCity', cityList[0])
@@ -344,7 +344,8 @@ Page({
           success: function (res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
-            
+            _storage.positionCity = city.city
+            wx.setStorageSync('cityPromise', _storage)
             if (city.city != _storage.positionCity || city.city != _storage.currentCity){
               that.getSessionCityList(city.city)
             }else{
@@ -532,7 +533,6 @@ Page({
       })
     }, (error) => {
       console.log(error)
-
     });
   },
 
@@ -628,19 +628,27 @@ Page({
           if (JSON.stringify(wxDetailUserInfo) !== "{}") {
             if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
               that.setData({ showPhonepack: false })
-              //若验证手机号已经授权，去判断受否绑定用户信息
-              if (app.globalData.isCheck) {
-                that.setData({ showBindUserInfo:false})
+              that.userUpdata()
+              //楼盘列表点击，不用授权绑定信息；其他点击，需要授权绑定信息
+              if (that.data.isBuildClick){
+                that.setData({ isBuildClick:false})
                 wx.navigateTo({
                   url: that.data.pageUrl,
                 })
-              } else {
-                // wx.hideTabBar()
-                that.setData({
-                  showBindUserInfo: true,
-                })
+              }else{
+                //若验证手机号已经授权，去判断受否绑定用户信息
+                if (app.globalData.isCheck) {
+                  that.setData({ showBindUserInfo: false })
+                  wx.navigateTo({
+                    url: that.data.pageUrl,
+                  })
+                } else {
+                  // wx.hideTabBar()
+                  that.setData({
+                    showBindUserInfo: true,
+                  })
+                }
               }
-              that.userUpdata()
             } else {
               // wx.hideTabBar()
               that.setData({ showPhonepack: true })
@@ -659,6 +667,7 @@ Page({
       return
     }
     wx.setStorageSync('wxUserInfo', e.detail.userInfo)
+    this.userUpdata()
     this.setData({
       showBgpack: false,
       showPhonepack: true
@@ -683,16 +692,24 @@ Page({
         wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
         wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
         that.userUpdata()
-        if (app.globalData.isCheck) {
-          // wx.showTabBar()
-          that.setData({ showBindUserInfo: false })
+        if (that.data.isBuildClick){
+          that.setData({ isBuildClick:false})
           wx.navigateTo({
             url: that.data.pageUrl,
           })
-        } else {
-          that.setData({showBindUserInfo: true})
+        }else{
+          if (app.globalData.isCheck) {
+            // wx.showTabBar()
+            that.setData({ showBindUserInfo: false })
+            wx.navigateTo({
+              url: that.data.pageUrl,
+            })
+          } else {
+            that.setData({ showBindUserInfo: true })
+          }
         }
       }, (error) => {
+        that.userUpdata()
         console.log(error)
       });
     } else {
@@ -734,9 +751,12 @@ Page({
     let promise = {
       openID: app.globalData.openid,
       wxname: wxUserInfo.nickName,
-      wxmobile: wxDetailUserInfo.wxPhoneNumber,
       wxsex: wxUserInfo.gender,
-      headurl: wxUserInfo.avatarUrl
+      headurl: wxUserInfo.avatarUrl,
+      wxmobile: ''
+    }
+    if (wxDetailUserInfo.wxPhoneNumber!=''){
+      promise.wxmobile = wxDetailUserInfo.wxPhoneNumber
     }
     $http(apiSetting.userUpdateUserInfo, promise).then((data) => {
 

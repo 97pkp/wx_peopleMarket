@@ -4,7 +4,7 @@
     <view>
       <open-data class='userAvatar' type="userAvatarUrl"></open-data>
     </view>
-    <view data-url='../bindUser/bindUser' bindtap='pageTobind'>
+    <view data-url='../bindUser/bindUser' bindtap='pageTobindUser'>
       <view data-url='../bindUser/bindUser'>
         <open-data data-url='../bindUser/bindUser' class='userNickName' type="userNickName"></open-data>
         <image data-url='../bindUser/bindUser' class='iconR' src='../../images/right.png'></image>
@@ -20,7 +20,7 @@
         <image class='iconImg' data-url='../mycoupon/mycoupon' src="../../images/myreduced.png"></image>我的优惠券</li>
       <li style='border-bottom: 1rpx solid #e6e6e6;' data-url='../attention/attention' bindtap='pageTobind'>
         <image class='iconImg' data-url='../attention/attention' src="../../images/guanzhu.png"></image>我的关注</li>
-      <li style='margin-top:20rpx;border-bottom: 1rpx solid #e6e6e6;' data-url='../setting/setting' bindtap='pageTobind'>
+      <li style='margin-top:20rpx;border-bottom: 1rpx solid #e6e6e6;' data-url='../setting/setting' bindtap='pageTobindSet'>
         <image class='iconImg' data-url='../setting/setting' src="../../images/setting.png"></image>设置</li>
     </ul>
   </view>
