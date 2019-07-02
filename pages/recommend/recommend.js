@@ -13,20 +13,17 @@ Page({
    * 页面的初始数据
    */
   data: {
-    showPicker:false,         //是否显示picker
-    subDisabled:false,        //是否推荐成功
-    placeholderText: '请输入客户相关描述，如面积等',    //placeholder文本提示
-    isCitySelect: false,      // 是否选择城市
-    visible: false,           //是否显示绑定用户信息模态窗
-    visible2: false,          //确认推荐模态窗
-    showBgpack: false,        //是否显示授权窗口
-    showPhonepack:false,      //是否显示手机号授权窗口
-    phoneText:'',
+    showPicker: false, //是否显示picker
+    subDisabled: false, //是否推荐成功
+    placeholderText: '请输入客户相关描述，如面积等', //备注信息placeholder文本提示
+    isCitySelect: false, // 是否选择城市
+    visible2: false, //确认推荐模态窗
+    phoneText: '', //客户电话显示
 
-    successProjectArr:[],     //推荐成功的项目id
-    errorProjectArr:[],       //未推荐成功项目
-    recommentStr: '',         //推荐项目名
-    projectIndexArr:[],        //选择推荐的项目下标
+    successProjectArr: [], //推荐成功的项目id
+    errorProjectArr: [], //未推荐成功项目
+    recommentStr: '', //推荐项目名
+    projectIndexArr: [], //选择推荐的项目下标
 
     // 请求参数列表
     reportList: {
@@ -34,7 +31,7 @@ Page({
       customName: '',
       customPhone: '',
       hkProjectId: '',
-      mobileFlag: '+86', 
+      mobileFlag: '+86',
       openId: '',
       projectId: '',
       intentHouseType: '',
@@ -44,124 +41,42 @@ Page({
       reportType: '',
       sex: ''
     },
-    city_id: '',             //城市id
-    gender: 1,               //性别
-    arrayProject: [], 
+    city_id: '', //城市id
+    gender: 1, //性别
+    arrayProject: [],
     arrayProjectIndex: null,
-    phoneTypeIndex: 1,       //隐号全号默认选择下标
-    index: 0,                //客户电话区号选择默认下标   
-    arrayNum: ["隐号", "全号"],   //隐号/全号选择 
-    referType:'全号',
+    phoneTypeIndex: 1, //隐号全号默认选择下标
+    index: 0, //客户电话区号选择默认下标   
+    arrayNum: ["隐号", "全号"], //隐号/全号选择 
     // 区号：+86(港:+852,澳:+853,台:+886)
-    array:[
-      { city: '大陆', mobileFlag:'+86'},
-      { city: '香港', mobileFlag: '+852'},
-      { city: '澳门', mobileFlag: '+853' },
-      { city: '台湾', mobileFlag: '+886' }
+    array: [{
+        city: '大陆',
+        mobileFlag: '+86'
+      },
+      {
+        city: '香港',
+        mobileFlag: '+852'
+      },
+      {
+        city: '澳门',
+        mobileFlag: '+853'
+      },
+      {
+        city: '台湾',
+        mobileFlag: '+886'
+      }
     ],
-    numberMaxLength:11,         //电话号最大长度
-    houseHoldTypeList:[],       //用户意向户型列表
-    houseHoldTypeListIndex:0,    //用户意向下标
-    isClickHouse:false,          //是否点击了意向户型
-    //用户详细信息
-    // detailUserInfo:{
-    //   avatarUrl:'',
-    //   gender:'',
-    //   nickName:'',
-    //   userID:'',
-    //   openID:'',
-    //   wxID:'',
-    //   wxPhoneNumber:'',
-    //   nowPosition:'',
-    //   oldPosition:''
-    // },
+    numberMaxLength: 11, //电话号最大长度
+    houseHoldTypeList: [], //用户意向户型列表
+    houseHoldTypeListIndex: 0, //用户意向下标
+    isClickHouse: false, //是否点击了意向户型
   },
 
-  //获取定位信息列表
-  // getLocation(){
-  //   let that=this
-  //   let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
-  //   let position = wx.getStorageSync("cityPromise")
-  //   wxDetailUserInfo.nowPosition = position.positionCity
-  //   wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
-  // },
-  // 获取微信用户信息
-  // onGotUserInfo(e) {
-  //   wx.showTabBar()
-  //   if (!e.detail.userInfo) {
-  //     return
-  //   }
-  //   wx.setStorageSync('wxUserInfo', e.detail.userInfo)
-  //   this.setData({
-  //     showBgpack: false,
-  //     showPhonepack: true
-  //   })
-  //   this.getLocation()
-  // },
-  //获取手机号
-  // getPhoneNumber(e){
-  //   let that=this
-  //   that.setData({ showPhonepack:false})
-  //   if (e.detail.errMsg =='getPhoneNumber:ok'){
-  //     let promise={
-  //       encryptedData: e.detail.encryptedData,
-  //       iv: e.detail.iv,
-  //       sessionKey: app.globalData.sessionKey,
-  //       openID: app.globalData.openid,
-  //       appid: appid
-  //     }
-  //     $http(apiSetting.userGetWxPhone, promise).then((data) => {
-  //       let phoneData=JSON.parse(data.data)
-  //       // this.setData({ 'detailUserInfo.wxPhoneNumber': phoneData.phoneNumber})
-  //       let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
-  //       wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
-  //       wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
-  //       that.userUpdata(wxDetailUserInfo)
-  //     }, (error) => {
-  //       console.log(error)
-  //     });
-  //   }else{
-  //     that.setData({ showPhonepack: true})
-  //   }
-  // },
-
-  //取消授权窗
-  // cancelTip(){
-  //   this.setData({ showBgpack:false})
-  //   wx.navigateBack({
-  //     delta: 1
-  //   })
-  // },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
     let that = this;
-    //用户信息授权
-    // wx.getSetting({
-    //   success(res) {
-    //     if (!res.authSetting['scope.userInfo']) {
-    //       wx.hideTabBar()
-    //       if (that.data.visible){
-    //         return
-    //       }
-    //       that.setData({
-    //         showBgpack: true,
-    //       })
-    //     }
-    //   }
-    // })
-
-    // let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo")||{}
-    // if (JSON.stringify(wxDetailUserInfo)!=="{}"){
-    //   if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
-    //     that.setData({ showPhonepack: false })
-    //     // that.userUpdata(wxDetailUserInfo)
-    //   } else {
-    //     that.setData({ showPhonepack: true })
-    //   }
-    // }
-  
     //判断是否绑定用户信息
     if (app.globalData.isCheck) {
       let reportList = that.data.reportList
@@ -173,12 +88,13 @@ Page({
       that.setData({
         reportList: reportList
       })
-      if (app.globalData.bindUserInfo.brokertype!="中介"){
-        this.setData({ phoneTypeIndex:1})
+      if (app.globalData.bindUserInfo.brokertype != "中介") {
+        this.setData({
+          phoneTypeIndex: 1
+        })
       }
     } else {
       that.setData({
-        // visible: true,
         placeholderText: ''
       })
     }
@@ -209,34 +125,17 @@ Page({
       }
     }
   },
-  //用户数据更新
-  userUpdata(data){
-    let wxDetailUserInfo=data
-    let wxUserInfo = wx.getStorageSync('wxUserInfo')
-    let promise = {
-      openID: app.globalData.openid,
-      wxname: wxUserInfo.nickName,
-      wxmobile: wxDetailUserInfo.wxPhoneNumber,
-      wxsex: wxUserInfo.gender,
-      headurl: wxUserInfo.avatarUrl
-    }
-    $http(apiSetting.userUpdateUserInfo, promise).then((data) => {
-
-    }, (error) => {
-      console.log(error)
-    });
-  },
 
   customNameBind(e) {
     this.data.reportList.customName = e.detail.value
   },
   customPhoneBind(e) {
-    let phone=e.detail.value
+    let phone = e.detail.value
     let cursor = e.detail.cursor
-    let phoneText=this.data.phoneText
+    let phoneText = this.data.phoneText
     phone = phone.replace(/[^0-9\*]/g, "")
-    if (this.data.phoneTypeIndex == 0){
-      if (this.data.index==0){
+    if (this.data.phoneTypeIndex == 0) {
+      if (this.data.index == 0) {
         if (cursor > phoneText.length) {
           var reg = /^\d{3}$/g;
           phone = phone.replace(reg, phone + "****");
@@ -252,7 +151,7 @@ Page({
             phone = phone.substring(0, 3) + "****" + phone.substring(7)
           }
         }
-      }else{
+      } else {
         if (cursor > phoneText.length) {
           var reg = /^\d{2}$/g;
           phone = phone.replace(reg, phone + "****");
@@ -269,24 +168,12 @@ Page({
           }
         }
       }
-      
-      // if (this.data.index == 0) {
-      //   var reg= /^(\d{3})\d{4}(\d{4})$/g;
-      //   phone = phone.replace(reg, "$1****$2");
-      // } else if (this.data.index == 1) {
-      //   var reg = /(\d{3})\d{4}(\d{1})/g;
-      //   phone = phone.replace(reg, "$1****$2");
-      // } else if (this.data.index == 2) {
-      //   var reg = /(\d{3})\d{4}/g;
-      //   phone = phone.replace(reg, "$1****");
-      // } else if (this.data.index == 3) {
-      //   var reg = /(\d{3})\d{4}(\d{3})/g;
-      //   phone = phone.replace(reg, "$1****$2");
-      // }
     }
     phone = phone.replace(/\s*/g, "")
-    this.setData({ 'reportList.customPhone': phone,phoneText: phone})
-    // this.setData({phoneText: phone })
+    this.setData({
+      'reportList.customPhone': phone,
+      phoneText: phone
+    })
   },
   remarkBind(e) {
     this.data.reportList.remark = e.detail.value
@@ -308,31 +195,39 @@ Page({
       index: e.detail.value,
       'reportList.mobileFlag': this.data.array[e.detail.value].mobileFlag
     })
-    if (e.detail.value==0){
-      this.setData({ numberMaxLength: 11})
-    } else if (e.detail.value == 1){
-      this.setData({ numberMaxLength: 8 })
+    if (e.detail.value == 0) {
+      this.setData({
+        numberMaxLength: 11
+      })
+    } else if (e.detail.value == 1) {
+      this.setData({
+        numberMaxLength: 8
+      })
     } else if (e.detail.value == 2) {
-      this.setData({ numberMaxLength: 8 })
+      this.setData({
+        numberMaxLength: 8
+      })
     } else if (e.detail.value == 3) {
-      this.setData({ numberMaxLength: 10 })
+      this.setData({
+        numberMaxLength: 10
+      })
     }
-      
+
   },
   //隐号全号选择
-  bindPickerChangePhoneType(e){
+  bindPickerChangePhoneType(e) {
     if (this.data.phoneTypeIndex == e.detail.value) return
     this.setData({
       successProjectArr: [],
       errorProjectArr: [],
       recommentStr: '',
       phoneTypeIndex: e.detail.value,
-      phoneText:''
+      phoneText: ''
     })
     this.getRecommendGetProjectList()
   },
   //意向户型选择
-  bindHouseTypeChange(e){
+  bindHouseTypeChange(e) {
     this.setData({
       houseHoldTypeListIndex: e.detail.value,
       isClickHouse: true,
@@ -372,7 +267,7 @@ Page({
     let that = this
     if (!this.data.city_id) {
       let cityInfo = wx.getStorageSync('storLocalCity')
-      if (!cityInfo) return           
+      if (!cityInfo) return
       this.setData({
         'reportList.city': cityInfo.city,
         city_id: cityInfo.id
@@ -380,7 +275,7 @@ Page({
     }
     let promise = {
       cityId: this.data.city_id,
-      openid:app.globalData.bindUserInfo.wxid,
+      openid: app.globalData.bindUserInfo.wxid,
       refer_type: this.data.arrayNum[this.data.phoneTypeIndex]
     }
     let cityPromise = wx.getStorageSync("cityPromise")
@@ -393,10 +288,12 @@ Page({
           return n.wxProjectId == that.data.reportList.projectId
         })
         for (let i = 0; i < data.data.length; i++) {
-          if (i == findI){
-            data.data[i].isSel=true
-            this.setData({ recommentStr: data.data[i].wxProjectName})
-          }else{
+          if (i == findI) {
+            data.data[i].isSel = true
+            this.setData({
+              recommentStr: data.data[i].wxProjectName
+            })
+          } else {
             data.data[i].isSel = false
           }
         }
@@ -405,7 +302,7 @@ Page({
           arrayProjectIndex: findI
         })
       } else {
-        for(let i=0;i<data.data.length;i++){
+        for (let i = 0; i < data.data.length; i++) {
           data.data[i].isSel = false
         }
         this.setData({
@@ -418,8 +315,10 @@ Page({
   },
   //获取意向户型
   getHouseHoldType() {
-    let that=this
-    let promise = { openID: app.globalData.openid}
+    let that = this
+    let promise = {
+      openID: app.globalData.openid
+    }
     $http(apiSetting.recommendGetHouseHoldType, promise).then((data) => {
       that.setData({
         houseHoldTypeList: data.data
@@ -437,20 +336,9 @@ Page({
     this.data.reportList.projectId = this.data.arrayProject[e.detail.value].wxProjectId
   },
 
-  visibleOk() {
-    wx.navigateTo({
-      url: "../bindUser/bindUser"
-    })
-  },
-
-  visibleOkClose() {
-    wx.reLaunch({
-      url: "../index/index"
-    })
-  },
   //确认推荐
   bindSub() {
-    let that=this
+    let that = this
     if (this.data.reportList.customName == "") {
       $Message({
         content: '请输入客户姓名',
@@ -485,11 +373,11 @@ Page({
         let successProjectId = data.data.successProjectId
         let errorProjectId = data.data.errorProjectId
         let arrayProject = that.data.arrayProject
-        let successArr=[]
-        let errorArr = []   
-        for (let i = 0; i < arrayProject.length;i++){
-          for (let j = 0; j < errorProjectId.length;j++){
-            if (arrayProject[i].wxProjectId == errorProjectId[j]){
+        let successArr = []
+        let errorArr = []
+        for (let i = 0; i < arrayProject.length; i++) {
+          for (let j = 0; j < errorProjectId.length; j++) {
+            if (arrayProject[i].wxProjectId == errorProjectId[j]) {
               errorArr.push(arrayProject[i].wxProjectName)
             }
           }
@@ -498,15 +386,15 @@ Page({
               successArr.push(arrayProject[i].wxProjectName)
             }
           }
-        }   
-       
+        }
+
         this.setData({
           successProjectArr: successArr,
           errorProjectArr: errorArr,
           visible2: true,
           placeholderText: '',
         })
-      }else {
+      } else {
         $Message({
           content: data.message,
           type: 'warning'
@@ -542,59 +430,77 @@ Page({
     });
   },
   //弹出复选楼盘picker
-  setProject(){
-    this.setData({ showPicker: true})
+  setProject() {
+    this.setData({
+      showPicker: true
+    })
   },
   //选择项目
-  selTheItem(e){
-    let index=e.currentTarget.dataset.index
+  selTheItem(e) {
+    let index = e.currentTarget.dataset.index
     let selIndexArr = this.data.projectIndexArr
-    if(selIndexArr.indexOf(index)==-1){
+    if (selIndexArr.indexOf(index) == -1) {
       selIndexArr.push(index)
-    }else{
-      selIndexArr.splice(selIndexArr.indexOf(index),1)
+    } else {
+      selIndexArr.splice(selIndexArr.indexOf(index), 1)
     }
-    this.setData({ projectIndexArr: selIndexArr})
+    this.setData({
+      projectIndexArr: selIndexArr
+    })
     let _arrayProjectItem = "arrayProject[" + index + "].isSel"
-    this.setData({ [_arrayProjectItem]: !this.data.arrayProject[index].isSel})
+    this.setData({
+      [_arrayProjectItem]: !this.data.arrayProject[index].isSel
+    })
   },
   //隐藏picker
-  cancelPicker(e){
-    let type=e.target.dataset.type
-    if(type=='1'){
+  cancelPicker(e) {
+    let type = e.target.dataset.type
+    if (type == '1') {
       let arrayProject = this.data.arrayProject
       let str = ''
-      let strId=''
+      let strId = ''
       for (let i = 0; i < arrayProject.length; i++) {
-        if (arrayProject[i].isSel){
+        if (arrayProject[i].isSel) {
           str += arrayProject[i].wxProjectName
-          str+="，"
+          str += "，"
           strId += arrayProject[i].wxProjectId
           strId += ","
         }
       }
-      str=str.substring(0,str.length-1)
+      str = str.substring(0, str.length - 1)
       strId = strId.substring(0, strId.length - 1)
-      this.setData({ recommentStr:str})
-      this.setData({ 'reportList.projectId': strId})
-      this.setData({ showPicker: false, projectIndexArr:[] })
-    }else if(type=='0'){
+      this.setData({
+        recommentStr: str
+      })
+      this.setData({
+        'reportList.projectId': strId
+      })
+      this.setData({
+        showPicker: false,
+        projectIndexArr: []
+      })
+    } else if (type == '0') {
       let arrayProject = this.data.arrayProject
       let _selIndexArr = this.data.projectIndexArr
-      _selIndexArr.sort((a,b)=>{
-        return a-b
+      _selIndexArr.sort((a, b) => {
+        return a - b
       })
-      for (let i = 0; i < _selIndexArr.length;i++){
+      for (let i = 0; i < _selIndexArr.length; i++) {
         arrayProject[_selIndexArr[i]].isSel = !arrayProject[_selIndexArr[i]].isSel
       }
-      this.setData({ arrayProject: arrayProject})     
+      this.setData({
+        arrayProject: arrayProject
+      })
       // this.setData({ recommentStr:''})
       // this.setData({ arrayProject: arrayProject})
-      this.setData({ showPicker: false, projectIndexArr:[]})
+      this.setData({
+        showPicker: false,
+        projectIndexArr: []
+      })
     }
   },
   //遮罩穿透空事件
-  notouch(){
+  notouch() {
     return
   },
 })

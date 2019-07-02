@@ -8,7 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    versions: '0.0.1',      //版本
+    versions: '0.0.1', //版本
   },
 
   /**
@@ -21,7 +21,9 @@ Page({
 
   getProjectApiFindSettingDict: function() {
     let that = this
-    let promise = { dictname: '当前版本'}
+    let promise = {
+      dictname: '当前版本'
+    }
     let cityPromise = wx.getStorageSync("cityPromise")
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
@@ -34,10 +36,10 @@ Page({
   },
 
   //跳转文本显示
-  showSetText(e){
-    let num=e.target.dataset.index
+  showSetText(e) {
+    let num = e.target.dataset.index
     wx.navigateTo({
-      url: '../brokertext /brokertext ?num=' + num
+      url: '../brokertext/brokertext?num=' + num
     })
   }
 })

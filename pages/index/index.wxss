@@ -192,7 +192,8 @@ swiper image {
 .rim-info {
   border-top: 2rpx solid #eee;
 }
-.no-build-list{
+
+.no-build-list {
   margin-top: 34rpx;
   border: 0;
 }
@@ -241,17 +242,6 @@ swiper image {
   justify-content: space-between;
 }
 
-.hours-list .sale text, .rim-list .sale text {
-  /* display: block;
-  height: 26rpx;
-  background: rgba(32, 160, 255, 0.6);
-  font-family: PingFangTC;
-  font-size: 18rpx;
-  color: #fff;
-  padding: 0 6rpx 0 4rpx;
-  border-radius: 4rpx; *//* margin-left: 20rpx; */
-}
-
 .hours-list .tag, .rim-list .tag {
   align-items: center;
   width: calc(100% - 70rpx);
@@ -259,21 +249,6 @@ swiper image {
   overflow: hidden;
   box-sizing: border-box;
   margin-bottom: 10rpx;
-}
-
-.hours-list .tag text, .rim-list .tag text {
-  /* display: inline-block;
-  padding: 0 10rpx;
-  margin: 0 10rpx 0 0;
-  border-radius: 4rpx;
-  border: 1rpx solid #979797;
-  font-family: 'PingFangTC-Light';
-  font-size: 20rpx;
-  color: #333;
-  line-height: 28rpx;
-  letter-spacing: 0.2rpx;
-  text-align: center;
-  margin-bottom: 5rpx; */
 }
 
 .hours-list .bottom-info .hours-address, .rim-list .bottom-info .hours-address {
@@ -338,30 +313,36 @@ swiper image {
 .bgpack button::after {
   border: none;
 }
-.img-icon-type{
-  position: absolute;
-  right:0;
-  top:0;
-}
-/* 热销 */
-.issale-hot{
-background:url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
-background-size:150rpx 150rpx;
-height:150rpx;
-width:150rpx;
-}
-/* 清盘 */
-.issale-liquidation{
-background:url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
-background-size:150rpx 150rpx;
-height:150rpx;
-width:150rpx;
 
+.img-icon-type {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
+
+/* 热销 */
+
+.issale-hot {
+  background: url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
+  background-size: 150rpx 150rpx;
+  height: 150rpx;
+  width: 150rpx;
+}
+
+/* 清盘 */
+
+.issale-liquidation {
+  background: url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
+  background-size: 150rpx 150rpx;
+  height: 150rpx;
+  width: 150rpx;
+}
+
 /* 即将清盘 */
-.issale-the-liquidation{
-background:url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
-background-size:150rpx 150rpx;
-height:150rpx;
-width:150rpx;
+
+.issale-the-liquidation {
+  background: url("http://haiketest.coli688.com:8081/zhwx/userfiles/49686EA5B36A48D28C6D87E97F9A8679/3DB950EE5E8A42A0B6DD701E18E4B538.gif") no-repeat center;
+  background-size: 150rpx 150rpx;
+  height: 150rpx;
+  width: 150rpx;
 }

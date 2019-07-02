@@ -10,7 +10,7 @@ Page({
   data: {
     cityListData: [], // 城市列表
     selectCity: null, // 当前选中城市id
-    localCity: null,// 当前选中城市信息
+    localCity: null, // 当前选中城市信息
   },
 
   /**

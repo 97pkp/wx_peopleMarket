@@ -8,43 +8,41 @@ const app = getApp()
 
 Page({
   data: {
-    defaultImg: '../../images/defaultImg.png',    
-    //视频路径
-    videoPath:'',
-    isFullView:false,       //视频全屏播放
-    isVideo:false,          //显示视频
-    imgVdoIndex:0,          //视频图片切换下标
+    defaultImg: '../../images/defaultImg.png',
+    videoPath: '', //视频路径
+    isFullView: false, //视频全屏播放
+    isVideo: false, //显示视频
+    imgVdoIndex: 0, //视频图片切换下标
     // 打开导航的需要参数
     mapInfo: {
       name: '',
       salesLongitude: '',
       salesLatitude: '',
-      salesAddress:'',
+      salesAddress: '',
       showLongitude: '',
       showLlatitude: '',
-      showAddress:'',
+      showAddress: '',
     },
-    project_id:'',
-    optionsObj: null,       //首页传递的参数
-    imgpath: fileUrl,       //图片根路径
-    isAttention: false,     //是否关注
-    imgUrls: [],            //轮播图列表 
-    bannerlength: 0,        //轮播图个数
-    bannerindex: 0,         //轮播下标
-    visible2: false,        //主力均价提示框
-    ishaveall: false,       //是否大于5条亮点
-    islookall: false,       //是否查看全部亮点
+    project_id: '', //项目id
+    optionsObj: null, //首页传递的参数
+    imgpath: fileUrl, //图片根路径
+    isAttention: false, //是否关注
+    imgUrls: [], //轮播图列表 
+    bannerlength: 0, //轮播图个数
+    bannerindex: 0, //轮播下标
+    visible2: false, //主力均价提示框
+    ishaveall: false, //是否大于5条亮点
+    islookall: false, //是否查看全部亮点
     autoplay: false,
     interval: 5000,
     duration: 1000,
-    
+
     mainpriceOrCommission: 0, //0代表显示主力均价提示，1表示佣金规则
-    phone: '',                //联系我们-电话
+    phone: '', //联系我们-电话
 
     /*
       项目信息
      */
-    
     projectname_cswx: '',
     /*案名（项目名）*/
     issale: '',
@@ -57,9 +55,10 @@ Page({
     /*优惠信息*/
     mainprice: '',
     /*主力产品均价*/
-    mainpriceType:1,
-    pricetype:1,    
-    /*价格类型，单价or总价*/
+    mainpriceType: 1,
+    /*详细信息加个类型，单价or总价*/
+    pricetype: 1,
+    /*户型价格类型，单价or总价*/
     mainpricedescription: '',
     /*主力产品均价后方价格说明详情*/
     mainhouseholdList: [],
@@ -76,10 +75,9 @@ Page({
     /*城市id*/
 
     //楼盘主图,实景图,效果图,配套图,规划图字典
-    buildsRequestArr: ['项目主图', '实景图', '效果图', '配套图', '规划图'],     
+    buildsRequestArr: ['项目主图', '实景图', '效果图', '配套图', '规划图'],
     //楼盘主图,实景图,效果图,配套图,规划图数据
-    buildsimg: [
-      {
+    buildsimg: [{
         name: '实景图',
         imgs: []
       },
@@ -100,15 +98,14 @@ Page({
     /*
     项目详情
     */
+    projectInfo: [], //项目详情
+    isMoreInfo: false, //是否有更多详情
+    projectInfoNum: 0, //项目详情条数
+    lightspot: '', //亮点概述
+    spots: 0, //亮点条数
+    exemption: '', //免责条款
+    commissioninfo: '', //佣金规则
 
-    projectInfo: [],          //项目详情
-    isMoreInfo: false,        //是否有更多详情
-    projectInfoNum: 0,        //项目详情条数
-    lightspot: '',            //亮点概述
-    spots: 0,                 //亮点条数
-    exemption: '',            //免责条款
-    commissioninfo:'',        //佣金规则
-    
     /*
       房型列表
     */
@@ -141,57 +138,83 @@ Page({
    */
 
     attentionList: {
-      login_by: '',         //用户登录id
-      project_id: '',       //项目id
+      login_by: '', //用户登录id
+      project_id: '', //项目id
     },
 
-    isClickAttention: false,    //是否点击关注
-    //用户信息弹窗变量
-    showBgpack: false,       //是否显示用户信息授权窗口
-    showPhonepack: false,    //是否显示手机号授权窗口
+    isClickAttention: false, //是否点击关注
+
+    /*
+    用户信息弹窗变量
+    */
+    showBgpack: false, //是否显示用户信息授权窗口
+    showPhonepack: false, //是否显示手机号授权窗口
     showBindUserInfo: false, //是否显示绑定用户信息窗口
-    // navigateCode:null,       //跳转页面码
-    pageUrl: '',             // 跳转路径
+    pageUrl: '', // 跳转路径
   },
 
   //点击播放视频
-  startPlay(){
+  startPlay() {
     this.videoContext = wx.createVideoContext('myvideo', this);
-    this.videoContext.requestFullScreen({ direction: 0 });
-    this.setData({ isFullView:true})
-    
+    this.videoContext.requestFullScreen({
+      direction: 0
+    });
+    this.setData({
+      isFullView: true
+    })
+
   },
   //监听进入退出全屏
-  fullScreen(e){
-    if (!e.detail.fullScreen){
-      this.setData({ isFullView: false })
+  fullScreen(e) {
+    if (!e.detail.fullScreen) {
+      this.setData({
+        isFullView: false
+      })
     }
   },
   //切换图片和视频
-  selImgVdo(e){
-    if (e.target.dataset.type==undefined) return
+  selImgVdo(e) {
+    if (e.target.dataset.type == undefined) return
     if (e.target.dataset.type === 0) {
-      this.setData({ bannerindex: e.target.dataset.type, isVideo:true})
-    } else if (e.target.dataset.type === 1){
-      this.setData({ bannerindex: e.target.dataset.type, isVideo:false })
+      this.setData({
+        bannerindex: e.target.dataset.type,
+        isVideo: true
+      })
+    } else if (e.target.dataset.type === 1) {
+      this.setData({
+        bannerindex: e.target.dataset.type,
+        isVideo: false
+      })
     }
   },
   //获取展示视频
-  getShowVideo(project_id){
-    let that=this
-    // let promise = { project_id: "19C0E48235E2498FBCC3CF73E4E388DB" }
-    let promise = { project_id: project_id, picturetype:'视频'}
+  getShowVideo(project_id) {
+    let that = this
+    let promise = {
+      project_id: project_id,
+      picturetype: '视频'
+    }
     $http(apiSetting.projectApiFindProjectVideoListById, promise).then((data) => {
-      if (data.data.length){
+      if (data.data.length) {
         let videoList = data.data[0]
         if (videoList.upload_file_path) {
-          that.setData({ videoPath: that.data.imgpath + videoList.upload_file_path, isVideo: true, auto: that.data.imgpath + videoList.upload_file_path2})
+          that.setData({
+            videoPath: that.data.imgpath + videoList.upload_file_path,
+            isVideo: true,
+            auto: that.data.imgpath + videoList.upload_file_path2
+          })
         } else {
-          that.setData({ videoPath: '', isVideo: false })
+          that.setData({
+            videoPath: '',
+            isVideo: false
+          })
         }
-      } else{
-        that.setData({ videoPath: '', isVideo: false })
-      }    
+      } else {
+        that.setData({
+          videoPath: '',
+          isVideo: false
+        })
+      }
     }, (error) => {
       console.log(error)
     });
@@ -207,58 +230,27 @@ Page({
       title: '加载中',
       mask: true,
     })
-    if (!app.globalData.openid){
-      wx.login({
-        success: res => {
-          // 发送 res.code 到后台换取 openId, sessionKey, unionId
-          let promise = {
-            code: res.code
-          }
-          let cityPromise = wx.getStorageSync("cityPromise") || []
-          promise.currentCity = cityPromise.currentCity
-          promise.positionCity = cityPromise.positionCity
-          $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
-            app.globalData.token = data.data['vx-zhwx-token']
-            app.globalData.openid = data.data.openid
-            app.globalData.status = data.data.status
-            if (data.data.isCheck == 0) {
-              app.globalData.isCheck = true
-            } else {
-              app.globalData.isCheck = false
-            }
-            if (data.data.status == 401) {
-              that.setData({
-                isPermit: true
-              })
-            }
-            app.globalData.userId = data.data.USERID
-            this.onLoad(options)
-          }, (error) => {
-            console.log(error)
-          });
-        }
-      })
-    }else{
-      /*
-        首页传递项目id到详情页，并将项目id进行保存，并使用
-      */
-      this.data.optionsObj = options
-      let project_id = options.project_id          //index-->information 项目id
-      this.setData({ project_id: project_id })
+    /*
+       首页传递项目id到详情页，并将项目id进行保存，并使用
+     */
+    this.data.optionsObj = options
+    let project_id = options.project_id //index-->information 项目id
+    this.setData({
+      project_id: project_id
+    })
 
-      //对关注接口的请求参数进行赋值
-      this.setData({
-        'attentionList.login_by': app.globalData.userId,
-        'attentionList.project_id': project_id
-      })
-      this.getProjectInfo(project_id);            // 通过id获取项目信息
-      this.getProjectDetails(project_id)          //通过id获取项目详情
-      this.getProjectHouserholdList(project_id);  //通过id查询户型列表
-      this.getHourseImgList(project_id);          //通过类型查询楼盘图
-      this.getClauseAndRule();                    //获取免责条款
-      this.isAttentionProject();                  //判断是否关注项目
-      this.getShowVideo(project_id);              //获取展示视频
-    }
+    //对关注接口的请求参数进行赋值
+    this.setData({
+      'attentionList.login_by': app.globalData.userId,
+      'attentionList.project_id': project_id
+    })
+    this.getProjectInfo(project_id); // 通过id获取项目信息
+    this.getProjectDetails(project_id) //通过id获取项目详情
+    this.getProjectHouserholdList(project_id); //通过id查询户型列表
+    this.getHourseImgList(project_id); //通过类型查询楼盘图
+    this.getClauseAndRule(); //获取免责条款
+    this.isAttentionProject(); //判断是否关注项目
+    this.getShowVideo(project_id); //获取展示视频
   },
   //查询免责条款
   getClauseAndRule() {
@@ -278,21 +270,21 @@ Page({
     }
   },
 
-//通过类型查询楼盘图列表
-  getHourseImgList(id){
-    let promiseTypeIndex=0
+  //通过类型查询楼盘图列表
+  getHourseImgList(id) {
+    let promiseTypeIndex = 0
     let promise = {
       picturetype: this.data.buildsRequestArr[promiseTypeIndex],
-      project_id:id
+      project_id: id
     }
     let cityPromise = wx.getStorageSync("cityPromise")
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
     $http(apiSetting.projectApiFindProjectImagesListByType, promise).then((data) => {
-      let _arrBannerImg=data.data
-      let _arrBannerImg2=[]
-      if (_arrBannerImg.length>0){
+      let _arrBannerImg = data.data
+      let _arrBannerImg2 = []
+      if (_arrBannerImg.length > 0) {
         for (let i = 0; i < _arrBannerImg.length; i++) {
           if (_arrBannerImg[i].upload_file_path == undefined || _arrBannerImg[i].upload_file_path == null) {
             continue
@@ -300,11 +292,11 @@ Page({
             _arrBannerImg2.push(_arrBannerImg[i].upload_file_path)
           }
         }
-      }else{
+      } else {
         _arrBannerImg2 = [this.data.defaultImg]
       }
-      
-      for (let i = 0; i < _arrBannerImg2.length;i++){
+
+      for (let i = 0; i < _arrBannerImg2.length; i++) {
         _arrBannerImg2[i] = this.data.imgpath + _arrBannerImg2[i]
       }
       this.resetBanner(_arrBannerImg2)
@@ -312,9 +304,9 @@ Page({
       promise.picturetype = this.data.buildsRequestArr[promiseTypeIndex]
       return $http(apiSetting.projectApiFindProjectImagesListByType, promise)
     }).then((data) => {
-      let _arrSJImg=data.data
-      let _arrSJImg2=[]
-      for (let i = 0; i < _arrSJImg.length;i++){
+      let _arrSJImg = data.data
+      let _arrSJImg2 = []
+      for (let i = 0; i < _arrSJImg.length; i++) {
         if (_arrSJImg[i].upload_file_path == undefined || _arrSJImg[i].upload_file_path == null) {
           continue
         } else {
@@ -324,13 +316,15 @@ Page({
       for (let i = 0; i < _arrSJImg2.length; i++) {
         _arrSJImg2[i] = this.data.imgpath + _arrSJImg2[i]
       }
-      this.setData({ 'buildsimg[0].imgs': _arrSJImg2 })
+      this.setData({
+        'buildsimg[0].imgs': _arrSJImg2
+      })
       promiseTypeIndex++
       promise.picturetype = this.data.buildsRequestArr[promiseTypeIndex]
       return $http(apiSetting.projectApiFindProjectImagesListByType, promise)
-    }).then((data)=>{
-      let _arrXGImg=data.data
-      let _arrXGImg2=[]
+    }).then((data) => {
+      let _arrXGImg = data.data
+      let _arrXGImg2 = []
       for (let i = 0; i < _arrXGImg.length; i++) {
         if (_arrXGImg[i].upload_file_path == undefined || _arrXGImg[i].upload_file_path == null) {
           continue
@@ -341,13 +335,15 @@ Page({
       for (let i = 0; i < _arrXGImg2.length; i++) {
         _arrXGImg2[i] = this.data.imgpath + _arrXGImg2[i]
       }
-      this.setData({ 'buildsimg[1].imgs': _arrXGImg2 })
+      this.setData({
+        'buildsimg[1].imgs': _arrXGImg2
+      })
       promiseTypeIndex++
       promise.picturetype = this.data.buildsRequestArr[promiseTypeIndex]
       return $http(apiSetting.projectApiFindProjectImagesListByType, promise)
-    }).then((data)=>{
-      let _arrPTImg=data.data
-      let _arrPTImg2=[]
+    }).then((data) => {
+      let _arrPTImg = data.data
+      let _arrPTImg2 = []
       for (let i = 0; i < _arrPTImg.length; i++) {
         if (_arrPTImg[i].upload_file_path == undefined || _arrPTImg[i].upload_file_path == null) {
           continue
@@ -358,13 +354,15 @@ Page({
       for (let i = 0; i < _arrPTImg2.length; i++) {
         _arrPTImg2[i] = this.data.imgpath + _arrPTImg2[i]
       }
-      this.setData({ 'buildsimg[2].imgs': _arrPTImg2 })
+      this.setData({
+        'buildsimg[2].imgs': _arrPTImg2
+      })
       promiseTypeIndex++
       promise.picturetype = this.data.buildsRequestArr[promiseTypeIndex]
       return $http(apiSetting.projectApiFindProjectImagesListByType, promise)
-    }).then((data)=>{
-      let _arrGHImg=data.data
-      let _arrGHImg2=[]
+    }).then((data) => {
+      let _arrGHImg = data.data
+      let _arrGHImg2 = []
       for (let i = 0; i < _arrGHImg.length; i++) {
         if (_arrGHImg[i].upload_file_path == undefined || _arrGHImg[i].upload_file_path == null) {
           continue
@@ -375,17 +373,20 @@ Page({
       for (let i = 0; i < _arrGHImg2.length; i++) {
         _arrGHImg2[i] = this.data.imgpath + _arrGHImg2[i]
       }
-      this.setData({ 'buildsimg[3].imgs': _arrGHImg2 })
+      this.setData({
+        'buildsimg[3].imgs': _arrGHImg2
+      })
       let _buildArr = this.data.buildsimg
-      for (let i = 0; i < _buildArr.length;i++){
-        if (!_buildArr[i].imgs.length){
-          _buildArr.splice(i,1)
+      for (let i = 0; i < _buildArr.length; i++) {
+        if (!_buildArr[i].imgs.length) {
+          _buildArr.splice(i, 1)
           i--
         }
       }
-     
-      this.setData({ buildsimg: _buildArr})
-    }).then(()=>{
+      this.setData({
+        buildsimg: _buildArr
+      })
+    }).then(() => {
       this.isHaveBuildsImg(this.data.buildsimg)
       wx.hideLoading()
     }), (error) => {
@@ -407,7 +408,7 @@ Page({
       let imgArr = data.data[0]
       if (imgArr) {
         this.setData({
-          upload_file_path: this.data.imgpath+imgArr.upload_file_path
+          upload_file_path: this.data.imgpath + imgArr.upload_file_path
         })
       } else {
         this.setData({
@@ -431,7 +432,7 @@ Page({
       let hourserholdlist = data.data[0];
       if (!hourserholdlist) return
       this.setData({
-        hourselist: data.data,                         
+        hourselist: data.data,
         caption: hourserholdlist.caption,
         houserhold: hourserholdlist.houserhold,
         buyingpoint: hourserholdlist.buyingpoint,
@@ -441,10 +442,12 @@ Page({
         pricetype: hourserholdlist.pricetype,
         houserholdremark: hourserholdlist.houserholdremark,
       })
-      if (hourserholdlist.price){
-        this.setData({ price: parseInt(hourserholdlist.price)})
+      if (hourserholdlist.price) {
+        this.setData({
+          price: parseInt(hourserholdlist.price)
+        })
       }
-     
+
       //截取亮点标签
       this.setData({
         pointList: hourserholdlist.buyingpoint.split(',')
@@ -469,80 +472,79 @@ Page({
       let projectdetails = data.data
       if (!projectdetails) return
       this.setData({
-        lightspot: projectdetails.highlights,               //亮点概述信息
-        commissioninfo: projectdetails.commissioninfo       //佣金规则
+        lightspot: projectdetails.highlights, //亮点概述信息
+        commissioninfo: projectdetails.commissioninfo //佣金规则
       })
       //项目详情列表
       let _projectInfo = []
       _projectInfo.push({
-          name: '开发商',
-          value: projectdetails.developer
-        }, {
-          name: '物业公司',
-          value: projectdetails.propertycompany
-        }, {
-          name: '开盘时间',
-          value: projectdetails.opening_date
-        }, {
-          name: '交房时间',
-          value: projectdetails.delivery_date
-        }, {
-          name: '产权年限',
-          value: projectdetails.years
-        }, {
-          name: '建筑类别',
-          value: projectdetails.buildingtype
-        }, {
-          name: '装修状态',
-          value: projectdetails.isup
-        }, {
-          name: '物业费',
-          value: projectdetails.propertyexpenses 
-        },
-        {
-          name: '所属区县',
-          value: projectdetails.district
-        }, {
-          name: '建筑面积',
-          value: projectdetails.floorarea
-        }, {
-          name: '主面积',
-          value: projectdetails.mainarea
-        }, {
-          name: '绿化情况',
-          value: projectdetails.greencoverage
-        }, {
-          name: '建筑规划',
-          value: projectdetails.panning
-        }, {
-          name: '咨询电话',
-          value: projectdetails.phone
-        }, {
-          name: '容积率',
-          value: projectdetails.plotratio
-        }, {
-          name: '预售许可证',
-          value: projectdetails.presalepermit
-        }, {
-          name: '楼盘地址',
-          value: projectdetails.projectaddr
-        }, {
-          name: '物业类别',
-          value: projectdetails.propertytype
-        }, )
+        name: '开发商',
+        value: projectdetails.developer
+      }, {
+        name: '物业公司',
+        value: projectdetails.propertycompany
+      }, {
+        name: '开盘时间',
+        value: projectdetails.opening_date
+      }, {
+        name: '交房时间',
+        value: projectdetails.delivery_date
+      }, {
+        name: '产权年限',
+        value: projectdetails.years
+      }, {
+        name: '建筑类别',
+        value: projectdetails.buildingtype
+      }, {
+        name: '装修状态',
+        value: projectdetails.isup
+      }, {
+        name: '物业费',
+        value: projectdetails.propertyexpenses
+      }, {
+        name: '所属区县',
+        value: projectdetails.district
+      }, {
+        name: '建筑面积',
+        value: projectdetails.floorarea
+      }, {
+        name: '主面积',
+        value: projectdetails.mainarea
+      }, {
+        name: '绿化情况',
+        value: projectdetails.greencoverage
+      }, {
+        name: '建筑规划',
+        value: projectdetails.panning
+      }, {
+        name: '咨询电话',
+        value: projectdetails.phone
+      }, {
+        name: '容积率',
+        value: projectdetails.plotratio
+      }, {
+        name: '预售许可证',
+        value: projectdetails.presalepermit
+      }, {
+        name: '楼盘地址',
+        value: projectdetails.projectaddr
+      }, {
+        name: '物业类别',
+        value: projectdetails.propertytype
+      }, )
       //筛选有值的详情项
       let _arr = []
       for (let i = 0; i < _projectInfo.length; i++) {
         if (_projectInfo[i].value && _projectInfo[i].value !== 'null') {
           //截掉开盘时间字段中的时分秒
-          if(i===2||i===3){
+          if (i === 2 || i === 3) {
             if (_projectInfo[i].value.indexOf(' ') != -1) {
               _projectInfo[i].value = _projectInfo[i].value.split(' ')[0]
             }
           }
           _arr.push(_projectInfo[i])
         }
-      }     
+      }
       //判断符合的数量，大于8个即产生'查看更多'
       if (_arr.length > 8) {
         this.setData({
@@ -565,9 +567,9 @@ Page({
       this.data.mapInfo.showAddress = data.data.showhall
 
       this.setData({
-        projectInfo: _arr,                          //项目详情列表
-        phone: projectdetails.phone,                //联系电话
-        projectname_cswx: projectdetails.projectname_cswx    //项目名
+        projectInfo: _arr, //项目详情列表
+        phone: projectdetails.phone, //联系电话
+        projectname_cswx: projectdetails.projectname_cswx //项目名
       })
 
       this.stopRefresh()
@@ -585,14 +587,16 @@ Page({
     let cityPromise = wx.getStorageSync("cityPromise")
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
-    promise.loginby= app.globalData.userId
+    promise.loginby = app.globalData.userId
     $http(apiSetting.projectApiFindProjectInfoById, promise).then((data) => {
       let projectinfo = data.data
       if (!projectinfo) return
-      this.getSpotLength(projectinfo.brightspotsList)            //获取亮点条数
-      if (projectinfo.mainprice){
-        if (projectinfo.mainprice.indexOf('.')!==-1){
-          this.setData({ mainprice: projectinfo.mainprice.split('.')[0]})
+      this.getSpotLength(projectinfo.brightspotsList) //获取亮点条数
+      if (projectinfo.mainprice) {
+        if (projectinfo.mainprice.indexOf('.') !== -1) {
+          this.setData({
+            mainprice: projectinfo.mainprice.split('.')[0]
+          })
         }
       }
       this.setData({
@@ -608,20 +612,22 @@ Page({
         city_id: projectinfo.city
       })
       //判断亮点信息是否为空，并筛选有数据的项
-      let _arr=[]
-      for (let i = 0; i < projectinfo.brightspotsList.length;i++){
-        if (projectinfo.brightspotsList[i].remark !== null && projectinfo.brightspotsList[i].remark !== undefined && projectinfo.brightspotsList[i].remark !== ''){
+      let _arr = []
+      for (let i = 0; i < projectinfo.brightspotsList.length; i++) {
+        if (projectinfo.brightspotsList[i].remark !== null && projectinfo.brightspotsList[i].remark !== undefined && projectinfo.brightspotsList[i].remark !== '') {
           _arr.push(projectinfo.brightspotsList[i])
         }
       }
-      this.setData({ brightspotsList:_arr})
+      this.setData({
+        brightspotsList: _arr
+      })
     }, (error) => {
       console.log(error)
     });
   },
   // 查看更多户型，跳转到户型列表页
   goHousetype() {
-    wx.navigateTo({   
+    wx.navigateTo({
       url: '../housestype/housestype?project_id=' + this.data.project_id + '&&projectname_cswx=' + this.data.projectname_cswx,
     })
   },
@@ -646,10 +652,13 @@ Page({
   //楼盘图查看更多事件
   goBuildimg(e) {
     let obj = this.data.imgUrls
-    let bannerObj = { name: '项目主图', imgs: this.data.imgUrls}
-    let _imgArr = JSON.parse(JSON.stringify(this.data.buildsimg))      //切除引用关系
+    let bannerObj = {
+      name: '项目主图',
+      imgs: this.data.imgUrls
+    }
+    let _imgArr = JSON.parse(JSON.stringify(this.data.buildsimg)) //切除引用关系
     _imgArr.unshift(bannerObj)
-    let _t=0
+    let _t = 0
     let selIndex = e.currentTarget.dataset.selindex;
     wx.navigateTo({
       url: '../houseimg/houseimg?buildsimg=' + JSON.stringify(_imgArr) + "&&selIndex=" + selIndex
@@ -658,27 +667,31 @@ Page({
 
 
   //关注 按钮事件
-  toAttention(){
-    this.setData({ isClickAttention:true})
+  toAttention() {
+    this.setData({
+      isClickAttention: true
+    })
     this.Users()
   },
-  
+
   attentionProject() {
     this.setData({
       isAttention: !this.data.isAttention
     })
-    if (this.data.isAttention) {   //isAttention为true,则发起关注请求
+    if (this.data.isAttention) { //isAttention为true,则发起关注请求
       let promise = this.data.attentionList
       let cityPromise = wx.getStorageSync("cityPromise")
       promise.currentCity = cityPromise.currentCity
       promise.positionCity = cityPromise.positionCity
       $http(apiSetting.projectApiInsertMyConc, promise).then((data) => {
-        
+
       }, (error) => {
-        this.setData({ isAttention:false})
+        this.setData({
+          isAttention: false
+        })
         console.log(error)
       });
-    } else {   //isAttention为false,则发起取消关注请求
+    } else { //isAttention为false,则发起取消关注请求
       let promise = this.data.attentionList
       let cityPromise = wx.getStorageSync("cityPromise")
       promise.currentCity = cityPromise.currentCity
@@ -686,11 +699,15 @@ Page({
       $http(apiSetting.projectApiUpdateMyConc, promise).then((data) => {
         console.log(data)
       }, (error) => {
-        this.setData({ isAttention: true })
+        this.setData({
+          isAttention: true
+        })
         console.log(error)
       });
     }
-    this.setData({ isClickAttention:false})
+    this.setData({
+      isClickAttention: false
+    })
   },
   //判断是否已经关注
   isAttentionProject() {
@@ -699,7 +716,7 @@ Page({
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.projectApiUpdateMyConc, promise).then((data) => {
-      if (data.code === -1) {    //返回值为-1，表示项目暂时没有被关注
+      if (data.code === -1) { //返回值为-1，表示项目暂时没有被关注
         this.setData({
           isAttention: false
         })
@@ -755,17 +772,21 @@ Page({
     //初始化轮播展示图数量
     this.setData({
       bannerlength: this.data.imgUrls.length
-    }) 
+    })
   },
   //图片轮播
   bannerChange(e) {
     let current = e.detail.current
     let source = e.detail.source
     if (source != "touch") return
-    if (current === 0 && this.data.videoPath!=''){
-      this.setData({isVideo:true})
-    }else{
-      this.setData({ isVideo: false })
+    if (current === 0 && this.data.videoPath != '') {
+      this.setData({
+        isVideo: true
+      })
+    } else {
+      this.setData({
+        isVideo: false
+      })
     }
     this.setData({
       bannerindex: current
@@ -794,10 +815,12 @@ Page({
       })
     }
   },
-  
+
   //去推荐
   goRecommend() {
-    this.setData({ pageUrl: '../recommend/recommend?project_id=' + this.data.project_id})
+    this.setData({
+      pageUrl: '../recommend/recommend?project_id=' + this.data.project_id
+    })
     this.Users()
     // wx.navigateTo({
     //   url: '../recommend/recommend?project_id=' + this.data.project_id,
@@ -809,11 +832,11 @@ Page({
       phoneNumber: this.data.phone
     })
   },
- 
+
 
   //点击导航，判断授权
   pageToMap(e) {
-    let that=this
+    let that = this
     wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userLocation']) {
@@ -833,10 +856,10 @@ Page({
     })
   },
   //打开内置地图
-  openMapInWx(type){
-    let that=this
+  openMapInWx(type) {
+    let that = this
     if (type == 1) {
-      if (!this.data.mapInfo.salesLatitude || !this.data.mapInfo.salesAddress ){
+      if (!this.data.mapInfo.salesLatitude || !this.data.mapInfo.salesAddress) {
         return
       }
       wx.getLocation({
@@ -852,10 +875,10 @@ Page({
             scale: 5
           })
         },
-        fail:(err)=>{
+        fail: (err) => {
           wx.showToast({
             title: '请检查您的设备是否开启定位',
-            icon:'none'
+            icon: 'none'
           })
           console.log(err)
         }
@@ -888,12 +911,12 @@ Page({
       })
     }
   },
-//滑动bug
-  stopMove(){
+  //滑动bug
+  stopMove() {
     return
   },
   //户型图片错误
-  erroImage1(e){
+  erroImage1(e) {
     if (e.type == 'error') {
       this.data.upload_file_path = this.data.defaultImg
       this.setData({
@@ -902,7 +925,7 @@ Page({
     }
   },
   //项目主图错误
-  erroImage2(e){
+  erroImage2(e) {
     if (e.type == 'error') {
       this.data.imgUrls[e.target.dataset.index] = this.data.defaultImg
       this.setData({
@@ -911,51 +934,23 @@ Page({
     }
   },
   //楼盘图错误
-  erroImage3(e){
+  erroImage3(e) {
     let index = e.target.dataset.index
     let name = e.target.dataset.name
     if (e.type == 'error') {
       let _buildsimgArr = this.data.buildsimg
-      for (let i = 0; i < _buildsimgArr.length;i++){
-        if (_buildsimgArr[i].name==name){
-          let t = 'buildsimg[' + i + '].imgs['+index+']'
+      for (let i = 0; i < _buildsimgArr.length; i++) {
+        if (_buildsimgArr[i].name == name) {
+          let t = 'buildsimg[' + i + '].imgs[' + index + ']'
           this.setData({
             [t]: this.data.defaultImg
           })
         }
       }
-
-
-
-      // if(name=='实景图'){
-      //   this.data.buildsimg[0].imgs[index] = this.data.defaultImg
-      //   this.setData({
-      //     'buildsimg[0]': this.data.buildsimg[0]
-      //   })
-      // }
-      // else if(name=='效果图'){
-      //   this.data.buildsimg[1].imgs[index] = this.data.defaultImg
-      //   this.setData({
-      //     'buildsimg[1]': this.data.buildsimg[1]
-      //   })
-      // } 
-      // else if (name == '配套图') {
-      //   this.data.buildsimg[2].imgs[index] = this.data.defaultImg
-      //   this.setData({
-      //     'buildsimg[2]': this.data.buildsimg[2]
-      //   })
-      // }
-      //   else if (name == '规划图') {
-      //   console.log("规划图:",this.data.buildsimg)
-      //   this.data.buildsimg[3].imgs[index] = this.data.defaultImg
-      //   this.setData({
-      //     'buildsimg[3]': this.data.buildsimg[3]
-      //   })
-      // }
     }
   },
   //视频封面错误
-  erroVideoImage(e){
+  erroVideoImage(e) {
     if (e.type == 'error') {
       this.setData({
         auto: this.data.defaultImg
@@ -964,18 +959,16 @@ Page({
   },
 
   //转发
-  onShareAppMessage:function(res) {
-    let project_id = this.data.project_id         // 分享产品的project_id
-    if (res.from === 'button') {                  // 来自页面内转发按钮
+  onShareAppMessage: function(res) {
+    let project_id = this.data.project_id // 分享产品的project_id
+    if (res.from === 'button') { // 来自页面内转发按钮
       console.log(res.target)
     }
     return {
       title: '',
-      path: `pages/information/information?project_id=${project_id} `,    // 分享后打开的页面
+      path: `pages/information/information?project_id=${project_id} `, // 分享后打开的页面
     }
   },
-
-
 
   // 下拉刷新
   onPullDownRefresh() {
@@ -998,24 +991,26 @@ Page({
     wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {
-          wx.hideTabBar()
-          // if (that.data.visible) {
-          //   return
-          // }
-          that.setData({showBgpack: true})
+          // wx.hideTabBar()
+          that.setData({
+            showBgpack: true
+          })
         } else {
           //获取缓存信息验证手机号授权
           let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
           if (JSON.stringify(wxDetailUserInfo) !== "{}") {
             if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
-              that.setData({ showPhonepack: false })
+              that.setData({
+                showPhonepack: false
+              })
               //若验证手机号已经授权，去判断受否绑定用户信息
               if (app.globalData.isCheck) {
-                that.setData({ showBindUserInfo: false })
-                console.log('111')
-                if (that.data.isClickAttention){
+                that.setData({
+                  showBindUserInfo: false
+                })
+                if (that.data.isClickAttention) {
                   that.attentionProject()
-                }else{
+                } else {
                   wx.navigateTo({
                     url: that.data.pageUrl,
                   })
@@ -1026,10 +1021,14 @@ Page({
                 })
               }
             } else {
-              that.setData({ showPhonepack: true })
+              that.setData({
+                showPhonepack: true
+              })
             }
-          }else{
-            that.setData({ showPhonepack: true })
+          } else {
+            that.setData({
+              showPhonepack: true
+            })
           }
         }
       }
@@ -1037,7 +1036,7 @@ Page({
   },
   // 获取微信用户信息
   onGotUserInfo(e) {
-    wx.showTabBar()
+    // wx.showTabBar()
     if (!e.detail.userInfo) {
       return
     }
@@ -1051,7 +1050,9 @@ Page({
   //获取手机号
   getPhoneNumber(e) {
     let that = this
-    that.setData({ showPhonepack: false })
+    that.setData({
+      showPhonepack: false
+    })
     if (e.detail.errMsg == 'getPhoneNumber:ok') {
       let promise = {
         encryptedData: e.detail.encryptedData,
@@ -1060,23 +1061,20 @@ Page({
         openID: app.globalData.openid,
         appid: appid
       }
-      console.log()
       $http(apiSetting.userGetWxPhone, promise).then((data) => {
         let phoneData = JSON.parse(data.data)
         let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
         wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
         wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
-        // that.userUpdata(wxDetailUserInfo)
-        // that.setData({ showBindUserInfo: true })
         //若验证手机号已经授权，去判断受否绑定用户信息
-        console.log(app.globalData.isCheck)
         if (app.globalData.isCheck) {
-          that.setData({ showBindUserInfo: false })
-          console.log("cac")
+          that.setData({
+            showBindUserInfo: false
+          })
+          // 如果没有点击关注，就是点击的推荐，进行跳转，否则调用接口函数，关注项目
           if (that.data.isClickAttention) {
-            console.log("nnn")
             that.attentionProject()
-          }else{
+          } else {
             wx.navigateTo({
               url: that.data.pageUrl,
             })
@@ -1090,7 +1088,9 @@ Page({
         console.log(error)
       });
     } else {
-      that.setData({ showPhonepack: true })
+      that.setData({
+        showPhonepack: true
+      })
       let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
       wxDetailUserInfo.wxPhoneNumber = ''
       wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
@@ -1107,7 +1107,10 @@ Page({
 
   //取消授权窗
   cancelTip() {
-    this.setData({ showBgpack: false, showPhonepack: false })
+    this.setData({
+      showBgpack: false,
+      showPhonepack: false
+    })
   },
   //绑定用户信息弹窗按钮
   visibleOk() {
@@ -1116,7 +1119,9 @@ Page({
     })
   },
   visibleOkClose() {
-    this.setData({ showBindUserInfo: false })
+    this.setData({
+      showBindUserInfo: false
+    })
   },
   //滑动事件
   notouch() {

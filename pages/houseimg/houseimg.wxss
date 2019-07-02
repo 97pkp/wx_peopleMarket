@@ -1,30 +1,35 @@
 /* 户型图页面样式 */
 
-page{
+page {
   height: 100%;
 }
-.house-img-page{
+
+.house-img-page {
   width: 100%;
   height: 100%;
-  background: #000000;
+  background: #000;
   position: relative;
 }
-.house-img-page .house-img{
+
+.house-img-page .house-img {
   width: 100%;
   height: 100%;
 }
-swiper{
+
+swiper {
   width: 100%;
   height: calc(100% - 74rpx);
   padding-bottom: 70rpx;
   display: flex;
   align-items: center;
 }
-.swiper-item{
+
+.swiper-item {
   width: 100%;
   height: 600rpx;
 }
-.swiper-item view{
+
+.swiper-item view {
   width: 100%;
   height: 100%;
   display: flex;
@@ -32,14 +37,15 @@ swiper{
   overflow: scroll;
 }
 
-.house-img-page .house-img image{
+.house-img-page .house-img image {
   width: 100%;
 }
-.house-img-page .tabbar{
+
+.house-img-page .tabbar {
   font-size: 28rpx;
   font-family: 'PingFang-SC-Medium';
-  color: #ffffff;
-  background: #000000;
+  color: #fff;
+  background: #000;
   height: 74rpx;
   width: 100%;
   position: fixed;
@@ -48,10 +54,12 @@ swiper{
   padding-bottom: 32rpx;
   justify-content: space-around;
 }
-.house-img-page .tabbar .active{
-  color: #20A0FF;
+
+.house-img-page .tabbar .active {
+  color: #20a0ff;
 }
-.house-img-page .tabbar>view{
+
+.house-img-page .tabbar>view {
   width: 50%;
   height: 100%;
   display: flex;
@@ -60,12 +68,14 @@ swiper{
   align-items: center;
   margin-top: 6rpx;
 }
-.house-img-page .tabbar>view .icon{
+
+.house-img-page .tabbar>view .icon {
   width: 19.2rpx;
   height: 12rpx;
   display: flex;
 }
-.house-img-page .tabbar>view image{
+
+.house-img-page .tabbar>view image {
   width: 100%;
   height: 100%;
 }

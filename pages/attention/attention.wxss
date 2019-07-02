@@ -92,7 +92,7 @@
   flex-wrap: wrap;
   width: calc(100% - 90rpx);
   height: 50rpx;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .my-attention .hours-list .bottom-info .tag text {
@@ -129,7 +129,7 @@
   height: 100%;
 }
 
-.my-attention .hours-list .bottom-info .hours-address text{
+.my-attention .hours-list .bottom-info .hours-address text {
   margin-left: 5rpx;
 }
 

@@ -1,41 +1,28 @@
 <!-- 户型列表页 -->
 <view class='house-type'>
-  <view class='top-sel' >
+  <view class='top-sel'>
     <view bindtap='changeHouse' data-index="{{-1}}" data-type='{{-1}}' class="{{selIndex===-1?'active':''}}">
       <text>全部({{allhourseList.length}})</text>
       <view></view>
     </view>
-    <!-- <view bindtap='changeHouse' wx:for='{{hourseTypeList}}' wx:key='{{index}}' data-index="{{index}}" data-type='{{index}}' class="{{selIndex===index?'active':''}}">
-      <text wx:if='{{index===0 && onehourse.length}}'>{{item}}({{onehourse.length}})</text>
-      <text wx:if='{{index===1 && twohourse.length}}'>{{item}}({{twohourse.length}})</text>
-      <text wx:if='{{index===2 && threehourse.length}}'>{{item}}({{threehourse.length}})</text>
-      <text wx:if='{{index===3 && fourhourse.length}}'>{{item}}({{fourhourse.length}})</text>
-      <text wx:if='{{index===4 && otherhourse.length}}'>{{item}}({{otherhourse.length}})</text>
-      
-      <view wx:if='{{index===0 && onehourse.length}}'></view>
-      <view wx:if='{{index===1 && twohourse.length}}'></view>
-      <view wx:if='{{index===2 && threehourse.length}}'></view>
-      <view wx:if='{{index===3 && fourhourse.length}}'></view>
-      <view wx:if='{{index===4 && otherhourse.length}}'></view>
-    </view> -->
     <view wx:if='{{onehourse.length}}' bindtap='changeHouse' data-index="{{0}}" data-type='{{0}}' class="{{selIndex===0?'active':''}}">
-      <text >{{hourseTypeList[0]}}({{onehourse.length}})</text>
+      <text>{{hourseTypeList[0]}}({{onehourse.length}})</text>
       <view></view>
     </view>
     <view wx:if='{{twohourse.length}}' bindtap='changeHouse' data-index="{{1}}" data-type='{{1}}' class="{{selIndex===1?'active':''}}">
-      <text >{{hourseTypeList[1]}}({{twohourse.length}})</text>
-      <view ></view>
+      <text>{{hourseTypeList[1]}}({{twohourse.length}})</text>
+      <view></view>
     </view>
     <view wx:if='{{threehourse.length}}' bindtap='changeHouse' data-index="{{2}}" data-type='{{2}}' class="{{selIndex===2?'active':''}}">
-      <text >{{hourseTypeList[2]}}({{threehourse.length}})</text>
-      <view ></view>
+      <text>{{hourseTypeList[2]}}({{threehourse.length}})</text>
+      <view></view>
     </view>
     <view wx:if='{{fourhourse.length}}' bindtap='changeHouse' data-index="{{3}}" data-type='{{3}}' class="{{selIndex===3?'active':''}}">
-      <text >{{hourseTypeList[3]}}({{fourhourse.length}})</text>
+      <text>{{hourseTypeList[3]}}({{fourhourse.length}})</text>
       <view></view>
     </view>
     <view wx:if='{{otherhourse.length}}' bindtap='changeHouse' data-index="{{4}}" data-type='{{4}}' class="{{selIndex===4?'active':''}}">
-      <text >{{hourseTypeList[4]}}({{otherhourse.length}})</text>
+      <text>{{hourseTypeList[4]}}({{otherhourse.length}})</text>
       <view></view>
     </view>
   </view>
@@ -46,14 +33,7 @@
         <text>{{item.caption}}</text>
       </view>
       <view class='img'>
-        <image 
-          mode="aspectFill" 
-          src="{{item.imgArr[0].upload_file_path==''?defaultImg:item.imgArr[0].upload_file_path}}" 
-          binderror="erroImage1"
-          data-index='{{index}}'
-          bindtap='goHouseimg' 
-          data-imgArr='{{item.imgArr}}'
-          ></image>
+        <image mode="aspectFill" src="{{item.imgArr[0].upload_file_path==''?defaultImg:item.imgArr[0].upload_file_path}}" binderror="erroImage1" data-index='{{index}}' bindtap='goHouseimg' data-imgArr='{{item.imgArr}}'></image>
         <view class='explain'>
           <view class='totle' wx:if='{{item.price}}'>{{item.price}}
             <text wx:if="{{item.pricetype==1}}">元/m²</text>
@@ -85,8 +65,12 @@
             <text wx:else>暂无信息</text>
           </view>
         </view>
-        <view class='miaoshu' wx:if='{{item.houserholdremark}}'>户型描述：<text>{{item.houserholdremark}}</text></view>
-        <view class='miaoshu' wx:else>户型描述：<text>暂无描述</text></view>
+        <view class='miaoshu' wx:if='{{item.houserholdremark}}'>户型描述：
+          <text>{{item.houserholdremark}}</text>
+        </view>
+        <view class='miaoshu' wx:else>户型描述：
+          <text>暂无描述</text>
+        </view>
       </view>
     </view>
   </view>

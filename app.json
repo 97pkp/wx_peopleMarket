@@ -14,8 +14,7 @@
     "pages/houseimg/houseimg",
     "pages/cityList/cityList",
     "pages/citySelect/citySelect",
-    "pages/brokertext/brokertext ",
-    "pages/map/map"
+    "pages/brokertext/brokertext"
   ],
   "window": {
     "backgroundTextStyle": "light",

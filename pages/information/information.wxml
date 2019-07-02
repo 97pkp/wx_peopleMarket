@@ -1,13 +1,6 @@
 <!--pages/information/information.wxml-->
-<view class="information">
+<view class="information {{visible2?'preventTouchMove':''}}">
   <!-- banner图 -->
-
-  <!-- <view class='num' wx:if='{{bannerlength>0}}'>
-    <text>{{bannerindex+1}}</text>/{{bannerlength}}
-  </view>
-  <view class='num' wx:else>
-    <text>{{bannerindex}}</text>/{{bannerlength}}
-  </view> -->
   <view class='num' wx:if="{{bannerlength>0 && videoPath==''}}">
     <text>{{bannerindex+1}}</text>/{{bannerlength}}
   </view>
@@ -25,8 +18,9 @@
     <view class="video-tag {{isVideo?'fffBg':''}}" data-type='{{0}}' wx:if="{{videoPath!==''}}">视频</view>
     <view class="img-tag {{!isVideo?'fffBg':''}}" data-type='{{1}}' wx:if="{{videoPath!==''}}">图片</view>
   </view>
- <!-- 视频播放元素 -->
-  <video wx:if="{{isFullView}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{true}}'  src="{{videoPath}}"  bindfullscreenchange="fullScreen"  bindended="closeVideo"  controls="{{true}}" show-center-play-btn='{{false}}' custom-cache='{{false}}' vslide-gesture-in-fullscreen='{{false}}' ></video>
+  <!-- 视频播放元素 -->
+  <video wx:if="{{isFullView}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{true}}' src="{{videoPath}}" bindfullscreenchange="fullScreen" bindended="closeVideo" controls="{{true}}" show-center-play-btn='{{false}}' custom-cache='{{false}}'
+    vslide-gesture-in-fullscreen='{{false}}'></video>
   <swiper wx:if="{{true}}" autoplay="{{false}}" interval="{{interval}}" duration="{{duration}}" bindchange='bannerChange' current='{{bannerindex}}'>
     <!-- 视频展示块 -->
     <block wx:if="{{videoPath!==''}}">
@@ -36,19 +30,17 @@
           <view bindtap='startPlay' wx:if="{{!isFullView}}">
             <image src='../../images/video.png'></image>
           </view>
-          <!-- <video wx:if="{{true}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{false}}'  src="{{videoPath}}"  bindfullscreenchange="fullScreen" bindplay="startPlay"  bindended="closeVideo"  controls="{{true}}" show-center-play-btn='{{true}}' custom-cache='{{false}}' vslide-gesture-in-fullscreen='{{false}}' poster='{{auto}}'></video> -->
-          <!-- <video src='{{videoPath}}'></video> -->
         </view>
       </swiper-item>
     </block>
     <!-- 图片展示块 -->
-    <block wx:for="{{imgUrls}}" wx:key="{{index}}" >
+    <block wx:for="{{imgUrls}}" wx:key="{{index}}">
       <swiper-item>
         <image class='main-img' mode="aspectFill" src='{{item==""?defaultImg:item}}' binderror="erroImage2" data-index='{{index}}' bindtap='goBuildimg'></image>
       </swiper-item>
     </block>
   </swiper>
-  
+
   <!-- 详情 -->
   <view class='info'>
     <view class='name-money'>
@@ -231,8 +223,8 @@
 </view>
 
 <!-- 主力均价提示 -->
-<view class='model-view' wx:if='{{visible2}}'  >
-  <view class='shadow' catchtouchmove='stopMove'></view>
+<view class='model-view' wx:if='{{visible2}}' catchtouchmove='notouch'>
+  <view class='shadow'></view>
   <view class='model-content'>
     <view wx:if='{{mainpriceOrCommission===0 && mainpricedescription}}'>{{mainpricedescription}}</view>
     <view wx:if='{{mainpriceOrCommission===0 && !mainpricedescription}}'>暂无价格提示</view>

@@ -9,7 +9,6 @@ Page({
    * 页面的初始数据
    */
   data: {
-    visible:false,                //是否显示绑定用户模态窗
     showRight: false,             //是否点击了筛选弹出右侧抽屉
     itemPakerIndex: null,         //所选项目下标
     dataIntervalStart:null,       //时间区间-开始时间
@@ -26,7 +25,10 @@ Page({
 
     recommendPersonList:[],     //推荐人信息列表
     _val:'',                    //搜索框临时数据
-    //筛选条件
+
+    /*
+    筛选条件
+    */
     selectList:{
       startRow: 1,        
       perRow: 5,
@@ -127,7 +129,7 @@ Page({
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.recommendFindCustomList, promise).then((data) => {
-      if(data.code!==0) {//----------------------------------------------------
+      if(data.code!==0) {
         if (data.code === -1) {
           this.setData({ recommendPersonList: [] })
           return
@@ -277,13 +279,6 @@ Page({
    */
   onLoad: function(options) {
     let that = this
-    if (!app.globalData.isCheck) {
-      that.setData({
-        visible: true,
-        placeholderText: ''
-      })
-      return
-    }
     wx.showLoading({
       title: '加载中',
       mask: true,
@@ -311,27 +306,6 @@ Page({
         return
       }
       let list = customList
-      
-      // for (let i = 0; i < list.length;i++){
-      //   if(!list[i].lfDate){
-      //     list[i].rgDate=''
-      //     list[i].cjDate=''
-      //   } else if (list[i].lfDate && !list[i].rgDate){
-      //     list[i].cjDate = ''
-      //   }
-      //   if (list[i].tjDate.indexOf(' ') !== -1) {
-      //     list[i].tjDate = list[i].tjDate.split(' ')[0]
-      //   }
-      //   if (list[i].lfDate.indexOf(' ') !== -1) {
-      //     list[i].lfDate = list[i].lfDate.split(' ')[0]
-      //   }
-      //   if (list[i].rgDate.indexOf(' ') !== -1) {
-      //     list[i].rgDate = list[i].rgDate.split(' ')[0]
-      //   }
-      //   if (list[i].cjDate.indexOf(' ') !== -1) {
-      //     list[i].cjDate = list[i].cjDate.split(' ')[0]
-      //   }
-      // }
       this.setData({ recommendPersonList: this.cutDate(list)})
       wx.hideLoading()
     }, (error) => {
@@ -391,20 +365,4 @@ Page({
       this.findCustomList()
     }
   },
-  //阻止遮罩穿透
-  stopMove(){
-    return
-  },
-
-//判断用户是否绑定信息
-  visibleOk() {
-    wx.navigateTo({
-      url: "../bindUser/bindUser"
-    })
-  },
-  visibleOkClose() {
-    wx.reLaunch({
-      url: "../index/index"
-    })
-  }
 })

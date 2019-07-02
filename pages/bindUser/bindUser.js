@@ -11,7 +11,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    isEdit: false,          //是否修改
+    isEdit: false, //是否修改
     // 用户信息参数
     userInfo: {
       agencyAccount: '',
@@ -24,25 +24,25 @@ Page({
       sex: '男',
       wxid: ''
     },
-    trench:'',                //留电渠道
-    showAgencyAccount: '',    //中介账户
+    trench: '', //留电渠道
+    showAgencyAccount: '', //中介账户
     //渠道验证码失败
     showTipCode: {
-      code:0,
-      message:''
-    },              
-    noteCodeVisible: false,   // 验证码窗
+      code: 0,
+      message: ''
+    },
+    noteCodeVisible: false, // 验证码窗
     noteCodeVal: null,
     noteCodeValLeng: 4,
     modalPhone: null,
-    noteResult: false,        // 验证是否成功
+    noteResult: false, // 验证是否成功
     array: [],
     arrayIndex: null,
 
-    setInter: '',             // 存放计时器
-    downTime: 180,            // 验证倒计时
+    setInter: '', // 存放计时器
+    downTime: 180, // 验证倒计时
     isnote: true,
-    onHideTime: null,         // 记录切换后台时间
+    onHideTime: null, // 记录切换后台时间
     gender: null,
   },
 
@@ -70,10 +70,10 @@ Page({
       // let findIndex = this.data.array.findIndex((n) => {
       //   return n.name == app.globalData.bindUserInfo.brokertype
       // })
-      if (app.globalData.bindUserInfo.brokertype == '中介'){
+      if (app.globalData.bindUserInfo.brokertype == '中介') {
         this.getUserGetHaikeAgencyInfo(app.globalData.bindUserInfo.agencyMobile)
       }
-  
+
       this.setData({
         userInfo: this.data.userInfo,
         gender: this.data.userInfo.sex,
@@ -152,7 +152,7 @@ Page({
       mobile: that.data.userInfo.phone,
       openid: app.globalData.openid
     }
-    if (promise1.openid==null){
+    if (promise1.openid == null) {
       wx.login({
         success: res => {
           let promise = {
@@ -167,7 +167,7 @@ Page({
           });
         }
       })
-    }else{
+    } else {
       let cityPromise = wx.getStorageSync("cityPromise")
       promise1.currentCity = cityPromise.currentCity
       promise1.positionCity = cityPromise.positionCity
@@ -175,7 +175,7 @@ Page({
         wx.hideLoading()
         if (data.code == 0) {
           // 开启计时器
-          that.data.setInter = setInterval(function () {
+          that.data.setInter = setInterval(function() {
             that.data.downTime = that.data.downTime - 1
             if (that.data.downTime <= 0) {
               that.endSetInter()
@@ -322,8 +322,8 @@ Page({
       trench: '',
       'showTipCode.code': 0,
       'showTipCode.message': '',
-    })  
-    
+    })
+
     $http(apiSetting.userGetHaikeAgencyInfo, promise).then((data) => {
       if (data.code == 0) {
         that.data.userInfo.agencyAccount = data.data.agencyAccount
@@ -341,14 +341,14 @@ Page({
         that.setData({
           'showTipCode.code': data.code,
           'showTipCode.message': data.message
-        })  
+        })
       }
     })
   },
 
   // 用户信息提交
   bindSub() {
-    let _that=this
+    let _that = this
     // 是否填写姓名
     if (this.data.userInfo.myName == '') {
       $Message({
@@ -395,13 +395,13 @@ Page({
         return
       }
     }
-    if (this.data.arrayIndex == 2 && this.data.showTipCode.code!==0) {
+    if (this.data.arrayIndex == 2 && this.data.showTipCode.code !== 0) {
       wx.showModal({
         title: '修改失败',
-        content: '后台'+this.data.showTipCode.message,
-        showCancel: false, 
+        content: '后台' + this.data.showTipCode.message,
+        showCancel: false,
         confirmText: "关闭",
-        success:function(){
+        success: function() {
           // _that.setData({
           //   // 'showTipCode.code': 0,
           //   'showTipCode.message': '',

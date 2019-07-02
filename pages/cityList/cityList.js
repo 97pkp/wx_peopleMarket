@@ -9,9 +9,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-    cityListData: [],         // 城市列表  
-    selectCity: null,         // 当前选中城市id  
-    localCity: null,          // 当前选中城市信息
+    cityListData: [], // 城市列表  
+    selectCity: null, // 当前选中城市id  
+    localCity: null, // 当前选中城市信息
   },
 
   /**
@@ -128,7 +128,7 @@ Page({
   // 页面跳转
   pageTobind() {
     wx.reLaunch({
-      url: '../index/index?ifChange='+1
+      url: '../index/index?ifChange=' + 1
     })
   }
 })

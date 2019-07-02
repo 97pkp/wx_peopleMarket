@@ -27,8 +27,8 @@
 </view>
 
 <i-modal visible="{{ isPermit }}" show-ok='{{!isPermit}}' show-cancel='{{!isPermit}}' bind:ok="handleClose2" bind:cancel="handleClose2">
-    <view>无使用权限</view>
-    <navigator class='wxexit' open-type="exit" target="miniProgram">确定</navigator>
+  <view>无使用权限</view>
+  <navigator class='wxexit' open-type="exit" target="miniProgram">确定</navigator>
 </i-modal>
 
 <!------用户授权弹窗------>

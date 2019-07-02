@@ -1,5 +1,5 @@
 <!-- 客户列表页 -->
-<view class='clients'>
+<view class='clients {{showRight?"preventTouchMove":""}}'>
   <!-- 人数显示 -->
   <view class='top'>
     <view>
@@ -80,19 +80,6 @@
           <image src='../../images/duihao.png'></image>
         </view>
       </view>
-      <!-- <view class='step-tip'>
-        <text>推荐</text>
-        <text>来访</text>
-        <text>认购</text>
-        <text>成交</text>
-      </view>
-      <view class='step-time'>
-        <text>{{item.tjDate}}</text>
-        <text>{{item.lfDate}}</text>
-        <text>{{item.rgDate}}</text>
-        <text wx:if="{{item.cjDate && item.commissioninfo !== null && item.commissioninfo !== '' && item.commissioninfo !== undefined && item.commissioninfo !== 'null'}}">{{item.cjDate}}</text>
-        <text wx:else></text>
-      </view> -->
 
       <view class='step-info'>
         <view class='step-tj'>
@@ -136,8 +123,8 @@
   </view>
 </view>
  <!-- 抽屉 -->
-<view class='drawer' wx:if='{{showRight}}' catchtouchmove='stopMove'>
-  <view class='shade' bindtap='hideDrawer'></view>
+<view class='drawer' wx:if='{{showRight}}' >
+  <view class='shade' bindtap='hideDrawer' ></view>
   <view class='content' >
     <view class='city'>
       <view class='title'>城市</view>
@@ -232,7 +219,3 @@
     </view>
   </view>
 </view>
-
-<i-modal visible="{{ visible }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
-  <view>暂无绑定用户信息</view>
-</i-modal>

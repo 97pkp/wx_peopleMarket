@@ -130,9 +130,6 @@
   <navigator class='wxexit' open-type="exit" target="miniProgram">确定</navigator>
 </i-modal>
 
-
-
-
 <!------用户授权弹窗------>
 <view wx:if="{{showBgpack}}" class='bgpack' catchtouchmove='notouch'>
   <view class='wicket'>

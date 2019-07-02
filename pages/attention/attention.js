@@ -10,9 +10,9 @@ Page({
    */
   data: {
     defaultImg: '../../images/defaultImg.png',
-    imgpath: fileUrl,          //图片根路径                      
-    attentionList: [],         //我的关注列表
-    isHide: false,      
+    imgpath: fileUrl, //图片根路径                      
+    attentionList: [], //我的关注列表
+    isHide: false,
     // 数据请求参数
     pageData: {
       page: 1,
@@ -25,7 +25,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    let that=this
+    let that = this
     wx.showLoading({
       title: '加载中',
       mask: true,
@@ -44,8 +44,11 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
-    if (this.data.isHide){
-      this.setData({ 'pageData.page': 1,'pageData.isPage':true})
+    if (this.data.isHide) {
+      this.setData({
+        'pageData.page': 1,
+        'pageData.isPage': true
+      })
       this.getProjectApiFindProjectListByMyConc([])
     }
   },
@@ -62,7 +65,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function() {
-   
+
   },
 
   /**
@@ -92,7 +95,7 @@ Page({
           } else {
             attentions[i].pictureurl = this.data.imgpath + attentions[i].pictureurl
           }
-          if (attentions[i].mainprice){
+          if (attentions[i].mainprice) {
             attentions[i].mainprice = parseInt(attentions[i].mainprice)
           }
         }
@@ -101,17 +104,19 @@ Page({
           if (!attentions[i].labels) {
             attentions[i].labels = []
           } else {
-             attentions[i].labels = attentions[i].labels.split(',')
+            attentions[i].labels = attentions[i].labels.split(',')
           }
         }
-        let newArr=[]
+        let newArr = []
         newArr = [...list, ...attentions]
         this.setData({
           attentionList: newArr
         })
         wx.hideLoading()
-      }else {
-        this.setData({'pageData.isPage':false})
+      } else {
+        this.setData({
+          'pageData.isPage': false
+        })
         wx.hideLoading()
         return
       }
@@ -136,7 +141,7 @@ Page({
   },
 
   //关注列表图片错误
-  erroImage(e){
+  erroImage(e) {
     if (e.type == 'error') {
       this.data.attentionList[e.target.dataset.index].pictureurl = this.data.defaultImg
       this.setData({

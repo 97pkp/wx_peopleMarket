@@ -34,7 +34,6 @@ page {
 }
 
 .coupon-item .info .num {
-
   width: 200rpx;
   height: 150rpx;
   display: flex;
@@ -53,7 +52,6 @@ page {
   font-size: 24rpx;
   font-family: 'PingFang-SC-Medium';
 }
-
 
 .coupon-item .info .explain {
   width: 414rpx;
@@ -76,7 +74,7 @@ page {
   justify-content: space-around;
   font-family: PingFang-SC-Medium;
   font-size: 15px;
-  color: #333333;
+  color: #333;
 }
 
 .coupon-item .info .explain .top>text {
@@ -94,46 +92,10 @@ page {
   justify-content: space-between;
   margin-bottom: 20rpx;
 }
-.coupon-item .info .explain .bottom>view{
+
+.coupon-item .info .explain .bottom>view {
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-
-/* 获取用户信息 */
-.bgpack {
-  display: flex;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  font-size: 30rpx;
-  z-index: 10;
-}
-
-.bgpack .wicket {
-  width: 560rpx;
-  height: 334rpx;
-  box-sizing: border-box;
-  margin: auto;
-  padding: 40rpx 0rpx 0rpx 0rpx;
-  border-radius: 6rpx;
-  background: #F8F8F8;
-}
-
-.bgpack button {
-  display: inline-block;
-  width: 50%;
-  height: 100rpx;
-  background: none;
-  border-radius:0;
-  font-size: 36rpx;
-}
-
-.bgpack button::after {
-  border: none;
 }

@@ -13,16 +13,14 @@ Page({
    * 页面的初始数据
    */
   data: {
-    isPermit:false,       //是否显示使用权限弹窗
-    // visible: false,
+    isPermit: false, //是否显示使用权限弹窗
     brokertype: '',
 
     //用户信息弹窗变量
-    showBgpack: false,       //是否显示用户信息授权窗口
-    showPhonepack: false,    //是否显示手机号授权窗口
+    showBgpack: false, //是否显示用户信息授权窗口
+    showPhonepack: false, //是否显示手机号授权窗口
     showBindUserInfo: false, //是否显示绑定用户信息窗口
-    // navigateCode:null,       //跳转页面码
-    pageUrl: '',             // 跳转路径
+    pageUrl: '', // 跳转路径
   },
 
   /**
@@ -36,7 +34,7 @@ Page({
         isPermit: true
       })
     }
-   
+
     if (app.globalData.isCheck) {
       that.setData({
         brokertype: app.globalData.bindUserInfo.brokertype
@@ -56,8 +54,8 @@ Page({
    */
   onShow: function() {
     this.setData({
-      showBgpack: false,       //是否显示用户信息授权窗口
-      showPhonepack: false,    //是否显示手机号授权窗口
+      showBgpack: false, //是否显示用户信息授权窗口
+      showPhonepack: false, //是否显示手机号授权窗口
       showBindUserInfo: false, //是否显示绑定用户信息窗口
     })
   },
@@ -89,19 +87,21 @@ Page({
   onReachBottom: function() {
 
   },
-  visibleOk() {
-    wx.navigateTo({
-      url: "../bindUser/bindUser"
-    })
-  },
-  visibleOkClose() {
-    wx.reLaunch({
-      url: "../index/index"
-    })
-  },
+  // visibleOk() {
+  //   wx.navigateTo({
+  //     url: "../bindUser/bindUser"
+  //   })
+  // },
+  // visibleOkClose() {
+  //   wx.reLaunch({
+  //     url: "../index/index"
+  //   })
+  // },
 
   pageTobind(e) {
-    this.setData({ pageUrl: e.target.dataset.url })
+    this.setData({
+      pageUrl: e.target.dataset.url
+    })
     this.Users()
 
     // let pageUrl = e.target.dataset.url
@@ -111,13 +111,13 @@ Page({
   },
 
   //跳转绑定信息页
-  pageTobindUser(e){
+  pageTobindUser(e) {
     wx.navigateTo({
       url: '../bindUser/bindUser',
     })
   },
- //跳转设置页
-  pageTobindSet(e){
+  //跳转设置页
+  pageTobindSet(e) {
     wx.navigateTo({
       url: '../setting/setting',
     })
@@ -130,33 +130,40 @@ Page({
     wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {
-          that.setData({ showBgpack: true })
+          that.setData({
+            showBgpack: true
+          })
           // wx.hideTabBar()
         } else {
           //获取缓存信息验证手机号授权
           let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
           if (JSON.stringify(wxDetailUserInfo) !== "{}") {
             if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
-              that.setData({ showPhonepack: false })
+              that.setData({
+                showPhonepack: false
+              })
               //若验证手机号已经授权，去判断受否绑定用户信息
               if (app.globalData.isCheck) {
-                that.setData({ showBindUserInfo: false })
+                that.setData({
+                  showBindUserInfo: false
+                })
                 wx.navigateTo({
                   url: that.data.pageUrl,
                 })
               } else {
-                // wx.hideTabBar()
                 that.setData({
                   showBindUserInfo: true,
                 })
               }
             } else {
-              // wx.hideTabBar()
-              that.setData({ showPhonepack: true })
+              that.setData({
+                showPhonepack: true
+              })
             }
-          }else{
-            // wx.hideTabBar()
-            that.setData({ showPhonepack: true })
+          } else {
+            that.setData({
+              showPhonepack: true
+            })
           }
         }
       }
@@ -177,7 +184,9 @@ Page({
   //获取手机号
   getPhoneNumber(e) {
     let that = this
-    that.setData({ showPhonepack: false })
+    that.setData({
+      showPhonepack: false
+    })
     if (e.detail.errMsg == 'getPhoneNumber:ok') {
       let promise = {
         encryptedData: e.detail.encryptedData,
@@ -191,12 +200,11 @@ Page({
         let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
         wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
         wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
-        // that.userUpdata(wxDetailUserInfo)
-        // that.setData({ showBindUserInfo: true })
         //若验证手机号已经授权，去判断受否绑定用户信息
         if (app.globalData.isCheck) {
-          // wx.showTabBar()
-          that.setData({ showBindUserInfo: false })
+          that.setData({
+            showBindUserInfo: false
+          })
           wx.navigateTo({
             url: that.data.pageUrl,
           })
@@ -206,11 +214,12 @@ Page({
           })
         }
       }, (error) => {
-        // wx.showTabBar()
         console.log(error)
       });
     } else {
-      that.setData({ showPhonepack: true })
+      that.setData({
+        showPhonepack: true
+      })
       let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
       wxDetailUserInfo.wxPhoneNumber = ''
       wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
@@ -227,8 +236,10 @@ Page({
 
   //取消授权窗
   cancelTip() {
-    // wx.showTabBar()
-    this.setData({ showBgpack: false, showPhonepack: false })
+    this.setData({
+      showBgpack: false,
+      showPhonepack: false
+    })
   },
   //绑定用户信息弹窗按钮
   visibleOk() {
@@ -237,8 +248,9 @@ Page({
     })
   },
   visibleOkClose() {
-    // wx.showTabBar()
-    this.setData({ showBindUserInfo: false })
+    this.setData({
+      showBindUserInfo: false
+    })
   },
   //滑动事件
   notouch() {

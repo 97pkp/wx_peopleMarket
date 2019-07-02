@@ -18,7 +18,8 @@
   width: 200rpx;
   position: relative;
 }
-.phone-type-box,.phont-header-box{
+
+.phone-type-box, .phont-header-box {
   width: 95rpx;
   height: 100rpx;
   display: flex;
@@ -27,17 +28,18 @@
   float: left;
   margin-right: 10rpx;
 }
-.phone-type-box picker,.phont-header-box picker{
+
+.phone-type-box picker, .phont-header-box picker {
   display: flex;
   flex: 1;
 }
 
-.phone-type-box image,.phont-header-box image{
+.phone-type-box image, .phont-header-box image {
   width: 16rpx;
   height: 10rpx;
 }
 
-.phone-header,.phoneType-header {
+.phone-header, .phoneType-header {
   width: 80rpx;
   color: #b4b9cb;
   font-size: 28rpx;
@@ -107,55 +109,20 @@
   border: none;
 }
 
-.house-type-box{
+.house-type-box {
   display: flex;
   flex: 1;
   height: 100%;
 }
-.house-type-box picker{
+
+.house-type-box picker {
   width: 100%;
   height: 100%;
 }
-.housetype-header-default{
+
+.housetype-header-default {
   font-size: 28rpx;
   color: #b4b9cb;
-}
-
-/* 获取用户信息弹窗 */
-
-/* .bgpack {
-  display: flex;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  font-size: 30rpx;
-  z-index: 10;
-}
-
-.bgpack .wicket {
-  width: 560rpx;
-  height: 334rpx;
-  box-sizing: border-box;
-  margin: auto;
-  padding: 40rpx 0rpx 0rpx 0rpx;
-  border-radius: 6rpx;
-  background: #f8f8f8;
-}
-
-.bgpack button {
-  display: inline-block;
-  width: 50%;
-  height: 100rpx;
-  background: none;
-  border-radius: 0;
-  font-size: 36rpx;
-}
-
-.bgpack button::after {
-  border: none;
 }
 
 .place-sel {
@@ -166,7 +133,7 @@
   padding-left: 20rpx;
   font-size: 28rpx;
   color: #b4b9cb;
-} */
+}
 
 /* picker样式 */
 
@@ -207,7 +174,7 @@
 
 .picker-view .content .top text:first-child {
   text-align: left;
-  color: #333333;
+  color: #888;
 }
 
 .picker-view .content .top text:last-child {

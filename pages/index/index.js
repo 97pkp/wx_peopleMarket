@@ -11,24 +11,23 @@ const QQMapWX = require('../../utils/qqmap-wx-jssdk.min.js')
 const wxMap = new QQMapWX({
   key: mapKey
 });
-let ifChange;
+let ifChange; //全局变量，判断进入小程序加载的方式：登录加载/切换城市加载/返回跳转加载
 const {
   $Message
 } = require('../../dist/base/index');
 Page({
   data: {
-    defaultImg:'../../images/defaultImg.png',     //默认图才能相对路径
-    isLoading:false,       //是否加载数据中
-    isHaveCoupon: true,    //是否显示优惠券
-    isPermit: false,       //是否有使用权限
-    imgpath: fileUrl,   
-    cityNametext: '',
-    imgUrls: [],           //轮播图数组
+    defaultImg: '../../images/defaultImg.png', //默认图才能相对路径
+    isHaveCoupon: true, //是否显示优惠券
+    isPermit: false, //是否有使用权限
+    imgpath: fileUrl, //图片拼接根路径
+    cityNametext: '', //定位城市名
+    imgUrls: [], //轮播图数组
     autoplay: true,
     interval: 5000,
     duration: 1000,
-    swiperCurrent: 0,      //轮播图下标
-    
+    swiperCurrent: 0, //轮播图下标
+
     // 查询城市参数
     cityInfo: {
       latitude: '',
@@ -39,8 +38,6 @@ Page({
     buildinfolist: [],
     //楼盘信息标签列表
     buildinfotaglist: [],
-    // 楼盘信息图片
-    buildinfoimg: '',
     //周边楼盘信息列表
     rimbuildinfolist: [],
     //周边楼盘信息标签列表
@@ -51,16 +48,13 @@ Page({
       perpage: 10,
       isPage: true
     },
-    rimbuildinfoimg: '',    // 周边楼盘信息图片
-
 
     //用户信息弹窗变量
-    showBgpack: false,       //是否显示用户信息授权窗口
-    showPhonepack: false,    //是否显示手机号授权窗口
+    showBgpack: false, //是否显示用户信息授权窗口
+    showPhonepack: false, //是否显示手机号授权窗口
     showBindUserInfo: false, //是否显示绑定用户信息窗口
-    // navigateCode:null,    //跳转页面码
-    pageUrl: '',             // 跳转路径
-    isBuildClick: false       //是楼盘列表点击
+    pageUrl: '', // 跳转路径
+    isBuildClick: false //是楼盘列表点击
   },
   // 切换城市
   changeCity() {
@@ -82,31 +76,36 @@ Page({
   //跳转详情页
   goInformation(e) {
     let project_id = e.currentTarget.dataset.project_id
+    this.setData({
+      pageUrl: '../information/information?project_id=' + project_id,
+      isBuildClick: true
+    })
+    this.Users()
+
     // let imgurl = e.currentTarget.dataset.imgurl
     // wx.navigateTo({
     //   url: '../information/information?project_id=' + project_id   //+ '&&imgurl=' + imgurl
     // })
-
-    this.setData({ pageUrl: '../information/information?project_id=' + project_id, isBuildClick:true })
-    this.Users()
   },
 
   onLoad: function(option) {
-    if (option !=undefined && JSON.stringify(option)!="{}"){
+    if (option != undefined && JSON.stringify(option) != "{}") {
       ifChange = option.ifChange;
-    }else{
-      if(ifChange==2){
-        ifChange=1
+    } else {
+      if (ifChange == 2) {
+        ifChange = 1
       }
     }
 
-    let that=this
+    let that = this
     wx.showLoading({
       title: '加载中',
       mask: true,
     })
-    that.setData({ rimbuildinfolist:[]})
-    that.data.rimBuildPage.isPage=true
+    that.setData({
+      rimbuildinfolist: []
+    })
+    that.data.rimBuildPage.isPage = true
     that.setData({
       'rimBuildPage.page': 1,
       'rimBuildPage.perpage': 10,
@@ -119,8 +118,8 @@ Page({
         let promise = {
           code: res.code
         }
-        
-        let cityPromise = wx.getStorageSync("cityPromise")||{}
+
+        let cityPromise = wx.getStorageSync("cityPromise") || {}
         promise.currentCity = cityPromise.currentCity
         promise.positionCity = cityPromise.positionCity
         $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
@@ -149,10 +148,10 @@ Page({
       }
     })
   },
-  onShow:function(){
+  onShow: function() {
     this.setData({
-      showBgpack: false,       //是否显示用户信息授权窗口
-      showPhonepack: false,    //是否显示手机号授权窗口
+      showBgpack: false, //是否显示用户信息授权窗口
+      showPhonepack: false, //是否显示手机号授权窗口
       showBindUserInfo: false, //是否显示绑定用户信息窗口
     })
   },
@@ -166,10 +165,10 @@ Page({
       that.getNowAddress()
       // that.data.cityInfo.cityName = app.globalData.storLocalCity.city
       // that.getCityFindBuildInfoByCity()
-    }else if (app.globalData.storLocalCity && ifChange == '1'){
+    } else if (app.globalData.storLocalCity && ifChange == '1') {
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
       that.getCityFindBuildInfoByCity()
-    }else {
+    } else {
       wx.getSetting({
         success(res) {
           if (!res.authSetting['scope.userLocation']) {
@@ -186,7 +185,7 @@ Page({
             that.getMapLocation();
           }
         },
-        fail(res){
+        fail(res) {
           console.log(res)
         }
       })
@@ -207,7 +206,7 @@ Page({
             latitude: that.data.cityInfo.latitude,
             longitude: that.data.cityInfo.longitude
           },
-          success: function (res) {
+          success: function(res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
@@ -217,7 +216,7 @@ Page({
             that.getCityList(city.city)
             // that.getCityFindBuildInfoByCity()
           },
-          fail: function (res) {
+          fail: function(res) {
             // that.getCityFindBuildInfoByCity()
             that.getCityList()
           }
@@ -227,22 +226,22 @@ Page({
         that.getCityList()
       },
       complete: function(res) {
-        
+
       }
     })
   },
   //获取城市列表信息
-  getCityList(city){
-    let that=this
+  getCityList(city) {
+    let that = this
     let promise = {}
-    let cityPromise = wx.getStorageSync("cityPromise")||{}
-    
+    let cityPromise = wx.getStorageSync("cityPromise") || {}
+
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
     $http(apiSetting.cityFindCityItems, promise).then((data) => {
-      let cityList=data.data
-      if(city){
+      let cityList = data.data
+      if (city) {
         for (let i = 0; i < cityList.length; i++) {
           if (city.indexOf(cityList[i].city) !== -1) {
             wx.setStorageSync('storLocalCity', cityList[i])
@@ -251,12 +250,14 @@ Page({
           }
         }
       }
-      if (that.data.cityInfo){
-        that.setData({ 'cityInfo.cityName': cityList[0].city })
+      if (that.data.cityInfo) {
+        that.setData({
+          'cityInfo.cityName': cityList[0].city
+        })
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
-        
+
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
@@ -268,14 +269,14 @@ Page({
   },
 
   //获取缓存判断是否有该字段
-  getSessionCityList(city){
+  getSessionCityList(city) {
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
-    if ('positionCity' in cityPromise && cityPromise.positionCity.indexOf(cityPromise.currentCity)!=-1){
+    if ('positionCity' in cityPromise && cityPromise.positionCity.indexOf(cityPromise.currentCity) != -1) {
       that.getCityFindBuildInfoByCity()
       return
-    } 
+    }
 
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
@@ -287,17 +288,19 @@ Page({
           if (city.indexOf(cityList[i].city) !== -1) {
             wx.showModal({
               title: '定位城市提示',
-              content: '定位显示您当前的城市是"' + city +'",是否需要切换城市?',
-              showCancel:true,
+              content: '定位显示您当前的城市是"' + city + '",是否需要切换城市?',
+              showCancel: true,
               cancelColor: '#999999',
               confirmColor: '#77C4FF',
               success(res) {
                 if (res.confirm) {
                   wx.setStorageSync('storLocalCity', cityList[i])
-                  that.setData({ 'cityInfo.cityName': cityList[i].city })
+                  that.setData({
+                    'cityInfo.cityName': cityList[i].city
+                  })
                   app.globalData.storLocalCity = cityList[i]
                   let _storage = wx.getStorageSync('cityPromise') || {}
-                  
+
                   _storage.currentCity = cityList[i].city
                   wx.setStorageSync('cityPromise', _storage)
                   that.getCityFindBuildInfoByCity()
@@ -312,11 +315,13 @@ Page({
         }
       }
       if (that.data.cityInfo.cityName) {
-        that.setData({ 'cityInfo.cityName': cityList[0].city })
+        that.setData({
+          'cityInfo.cityName': cityList[0].city
+        })
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
-        
+
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
@@ -328,11 +333,11 @@ Page({
 
   },
   //获取当前地址进行与缓存匹配
-  getNowAddress(){
+  getNowAddress() {
     let that = this
     wx.getLocation({
       type: 'wgs84',
-      success: function (res) {
+      success: function(res) {
         that.data.cityInfo.latitude = res.latitude.toString()
         that.data.cityInfo.longitude = res.longitude.toString()
         //经纬度逆解析获取城市名
@@ -341,40 +346,40 @@ Page({
             latitude: that.data.cityInfo.latitude,
             longitude: that.data.cityInfo.longitude
           },
-          success: function (res) {
+          success: function(res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
             wx.setStorageSync('cityPromise', _storage)
-            if (city.city != _storage.positionCity || city.city != _storage.currentCity){
+            if (city.city != _storage.positionCity || city.city != _storage.currentCity) {
               that.getSessionCityList(city.city)
-            }else{
-             that.getCityFindBuildInfoByCity()
+            } else {
+              that.getCityFindBuildInfoByCity()
             }
             // wx.setStorageSync('cityPromise', _storage)
             //传入城市，判断是否有城市字典
             // that.getCityList(city.city)
             // that.getCityFindBuildInfoByCity()
           },
-          fail: function (res) {
+          fail: function(res) {
             // that.getCityFindBuildInfoByCity()
             that.getCityList()
           }
         })
       },
-      fail: function (res) {
+      fail: function(res) {
         that.getCityList()
       },
-      complete: function (res) {
+      complete: function(res) {
 
       }
     })
   },
 
-  getCitySessionFindBuildInfoByCity(){
+  getCitySessionFindBuildInfoByCity() {
     let that = this
     that.setData({
-      'cityInfo.cityName':'',
+      'cityInfo.cityName': '',
       'cityInfo.latitude': '',
       'cityInfo.longitude': '',
     })
@@ -388,10 +393,14 @@ Page({
     $http(apiSetting.cityFindBuildInfoByCity, promise).then((data) => {
       if (data.data.cityInfo) {
         app.globalData.storLocalCity = data.data.cityInfo
-        that.setData({ cityNametext: data.data.cityInfo.city })
+        that.setData({
+          cityNametext: data.data.cityInfo.city
+        })
       } else {
         // app.globalData.storLocalCity = that.data.cityInfo.cityName
-        that.setData({ cityNametext: that.data.cityInfo.cityName })
+        that.setData({
+          cityNametext: that.data.cityInfo.cityName
+        })
       }
       //修改楼盘图路径
       let _list1 = data.data.buildInfo
@@ -427,7 +436,6 @@ Page({
 
       // 获取周边楼盘
       this.getRimBuildInfo();
-
     }, (error) => {
       console.log(error)
     });
@@ -438,20 +446,24 @@ Page({
     let promise = that.data.cityInfo
     let cityPromise = wx.getStorageSync("cityPromise")
     promise.positionCity = cityPromise.positionCity
-    promise.loginby = app.globalData.userId 
+    promise.loginby = app.globalData.userId
     $http(apiSetting.cityFindBuildInfoByCity, promise).then((data) => {
       if (data.data.cityInfo) {
         app.globalData.storLocalCity = data.data.cityInfo
-        that.setData({ cityNametext: data.data.cityInfo.city})
-      }else{
+        that.setData({
+          cityNametext: data.data.cityInfo.city
+        })
+      } else {
         // app.globalData.storLocalCity = that.data.cityInfo.cityName
-        that.setData({ cityNametext: that.data.cityInfo.cityName})
+        that.setData({
+          cityNametext: that.data.cityInfo.cityName
+        })
       }
       //修改楼盘图路径
       let _list1 = data.data.buildInfo
-      for(let i=0;i<_list1.length;i++){
-         _list1[i].pictureurl = this.data.imgpath + _list1[i].pictureurl
-        if (_list1[i].mainprice){
+      for (let i = 0; i < _list1.length; i++) {
+        _list1[i].pictureurl = this.data.imgpath + _list1[i].pictureurl
+        if (_list1[i].mainprice) {
           _list1[i].mainprice = parseInt(_list1[i].mainprice)
         }
       }
@@ -459,13 +471,12 @@ Page({
       for (let i = 0; i < _list2.length; i++) {
         _list2[i].url = this.data.imgpath + _list2[i].url
       }
-      
       that.setData({
         imgUrls: _list2,
         buildinfolist: _list1,
         isHaveCoupon: data.data.isHaveCoupon
       })
-     
+
       let buildInfo = data.data.buildInfo
       let _tagArr = []
       for (let j = 0; j < buildInfo.length; j++) {
@@ -509,10 +520,10 @@ Page({
         wx.hideLoading()
         return
       }
-      
+
       //周边列表图片路径修改
       let _list3 = rimbuildinfo
-      for(let i=0;i<_list3.length;i++){
+      for (let i = 0; i < _list3.length; i++) {
         _list3[i].pictureurl = this.data.imgpath + _list3[i].pictureurl
         _list3[i].mainprice = parseInt(_list3[i].mainprice)
       }
@@ -520,7 +531,6 @@ Page({
         rimbuildinfolist: _list3
       })
       let _arr = []
-      // if (rimbuildinfo.length<=1) return
       for (let i = 0; i < rimbuildinfo.length; i++) {
         if (rimbuildinfo[i].labels) {
           _arr.push(rimbuildinfo[i].labels.split(','))
@@ -539,9 +549,10 @@ Page({
   // 获取绑定用户信息
   getUserGetUserInfo(val) {
     let that = this
-    let promise = { openid: val}
+    let promise = {
+      openid: val
+    }
     let cityPromise = wx.getStorageSync("cityPromise") || {}
-    
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.userGetUserInfo, promise).then((data) => {
@@ -552,16 +563,18 @@ Page({
 
   // 页面跳转
   pageTobind(e) {
-    this.setData({ pageUrl: e.target.dataset.url})
+    this.setData({
+      pageUrl: e.target.dataset.url
+    })
     this.Users()
-    
+
     // let pageUrl = e.target.dataset.url
     // wx.navigateTo({
     //   url: pageUrl
     // })
   },
-//轮播图错误图片
-  erroImage1(e){
+  //轮播图错误图片
+  erroImage1(e) {
     if (e.type == 'error') {
       this.data.imgUrls[e.target.dataset.index].url = this.data.defaultImg
       this.setData({
@@ -569,9 +582,9 @@ Page({
       })
     }
   },
-// 楼盘信息错误图片
-  erroImage3(e){
-    if(e.type == 'error'){
+  // 楼盘信息错误图片
+  erroImage3(e) {
+    if (e.type == 'error') {
       this.data.buildinfolist[e.target.dataset.index].pictureurl = this.data.defaultImg
       this.setData({
         buildinfolist: this.data.buildinfolist
@@ -579,7 +592,7 @@ Page({
     }
   },
   //周边列表错误图片
-  erroImage2(e){
+  erroImage2(e) {
     if (e.type == 'error') {
       this.data.rimbuildinfolist[e.target.dataset.index].pictureurl = this.data.defaultImg
       this.setData({
@@ -592,7 +605,7 @@ Page({
   onPullDownRefresh() {
     // 显示导航栏加载框
     wx.showNavigationBarLoading()
-    ifChange=2
+    ifChange = 2
     this.onLoad()
   },
   // 停止刷新
@@ -607,13 +620,13 @@ Page({
     // 判断是否翻页
     if (this.data.rimBuildPage.isPage) {
       this.data.rimBuildPage.page++
-      this.getRimBuildInfo()
+        this.getRimBuildInfo()
     }
   },
 
   //用户信息获取
-  Users(){
-    let that=this
+  Users() {
+    let that = this
     //检查用户信息授权
     wx.getSetting({
       success(res) {
@@ -621,41 +634,47 @@ Page({
           that.setData({
             showBgpack: true,
           })
-          // wx.hideTabBar()
-        }else{
+        } else {
           //获取缓存信息验证手机号授权
           let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
           if (JSON.stringify(wxDetailUserInfo) !== "{}") {
             if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
-              that.setData({ showPhonepack: false })
+              that.setData({
+                showPhonepack: false
+              })
               that.userUpdata()
               //楼盘列表点击，不用授权绑定信息；其他点击，需要授权绑定信息
-              if (that.data.isBuildClick){
-                that.setData({ isBuildClick:false})
+              if (that.data.isBuildClick) {
+                that.setData({
+                  isBuildClick: false
+                })
                 wx.navigateTo({
                   url: that.data.pageUrl,
                 })
-              }else{
+              } else {
                 //若验证手机号已经授权，去判断受否绑定用户信息
                 if (app.globalData.isCheck) {
-                  that.setData({ showBindUserInfo: false })
+                  that.setData({
+                    showBindUserInfo: false
+                  })
                   wx.navigateTo({
                     url: that.data.pageUrl,
                   })
                 } else {
-                  // wx.hideTabBar()
                   that.setData({
                     showBindUserInfo: true,
                   })
                 }
               }
             } else {
-              // wx.hideTabBar()
-              that.setData({ showPhonepack: true })
+              that.setData({
+                showPhonepack: true
+              })
             }
-          }else{
-            // wx.hideTabBar()
-            that.setData({ showPhonepack: true })
+          } else {
+            that.setData({
+              showPhonepack: true
+            })
           }
         }
       }
@@ -666,6 +685,7 @@ Page({
     if (!e.detail.userInfo) {
       return
     }
+    console.log(e)
     wx.setStorageSync('wxUserInfo', e.detail.userInfo)
     this.userUpdata()
     this.setData({
@@ -677,7 +697,9 @@ Page({
   //获取手机号
   getPhoneNumber(e) {
     let that = this
-    that.setData({ showPhonepack: false })
+    that.setData({
+      showPhonepack: false
+    })
     if (e.detail.errMsg == 'getPhoneNumber:ok') {
       let promise = {
         encryptedData: e.detail.encryptedData,
@@ -692,20 +714,25 @@ Page({
         wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
         wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
         that.userUpdata()
-        if (that.data.isBuildClick){
-          that.setData({ isBuildClick:false})
+        if (that.data.isBuildClick) {
+          that.setData({
+            isBuildClick: false
+          })
           wx.navigateTo({
             url: that.data.pageUrl,
           })
-        }else{
+        } else {
           if (app.globalData.isCheck) {
-            // wx.showTabBar()
-            that.setData({ showBindUserInfo: false })
+            that.setData({
+              showBindUserInfo: false
+            })
             wx.navigateTo({
               url: that.data.pageUrl,
             })
           } else {
-            that.setData({ showBindUserInfo: true })
+            that.setData({
+              showBindUserInfo: true
+            })
           }
         }
       }, (error) => {
@@ -713,7 +740,9 @@ Page({
         console.log(error)
       });
     } else {
-      that.setData({ showPhonepack: true })
+      that.setData({
+        showPhonepack: true
+      })
       let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
       wxDetailUserInfo.wxPhoneNumber = ''
       wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
@@ -730,8 +759,10 @@ Page({
 
   //取消授权窗
   cancelTip() {
-    this.setData({ showBgpack: false, showPhonepack:false})
-    // wx.showTabBar()
+    this.setData({
+      showBgpack: false,
+      showPhonepack: false
+    })
   },
   //绑定用户信息弹窗按钮
   visibleOk() {
@@ -740,8 +771,9 @@ Page({
     })
   },
   visibleOkClose() {
-    // wx.showTabBar()
-    this.setData({ showBindUserInfo: false })
+    this.setData({
+      showBindUserInfo: false
+    })
   },
 
   //用户数据更新
@@ -755,7 +787,7 @@ Page({
       headurl: wxUserInfo.avatarUrl,
       wxmobile: ''
     }
-    if (wxDetailUserInfo.wxPhoneNumber!=''){
+    if (wxDetailUserInfo.wxPhoneNumber != '') {
       promise.wxmobile = wxDetailUserInfo.wxPhoneNumber
     }
     $http(apiSetting.userUpdateUserInfo, promise).then((data) => {
@@ -765,7 +797,7 @@ Page({
     });
   },
   //滑动事件
-  notouch(){
+  notouch() {
     return
   }
 })
