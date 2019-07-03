@@ -685,7 +685,6 @@ Page({
     if (!e.detail.userInfo) {
       return
     }
-    console.log(e)
     wx.setStorageSync('wxUserInfo', e.detail.userInfo)
     this.userUpdata()
     this.setData({

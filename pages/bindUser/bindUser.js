@@ -348,7 +348,6 @@ Page({
 
   // 用户信息提交
   bindSub() {
-    let _that = this
     // 是否填写姓名
     if (this.data.userInfo.myName == '') {
       $Message({
@@ -402,10 +401,7 @@ Page({
         showCancel: false,
         confirmText: "关闭",
         success: function() {
-          // _that.setData({
-          //   // 'showTipCode.code': 0,
-          //   'showTipCode.message': '',
-          // })
+
         }
       })
       return
@@ -425,7 +421,6 @@ Page({
         wx.hideLoading()
       }
     })
-
   },
 
 

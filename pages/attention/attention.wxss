@@ -59,10 +59,6 @@
   display: flex;
 }
 
-.my-attention .hours-list .sale text {
-  /* background: #20a0ff 60%; */
-}
-
 .my-attention .hours-list .sale .t3 {
   display: block;
   padding: 0 2rpx 0 11rpx;
@@ -90,24 +86,10 @@
 
 .my-attention .hours-list .bottom-info .tag {
   flex-wrap: wrap;
-  width: calc(100% - 90rpx);
+  /* width: calc(100% - 100rpx); */
   height: 50rpx;
   overflow: hidden;
-}
-
-.my-attention .hours-list .bottom-info .tag text {
-  /* display: inline-block;
-  padding: 0 5rpx;
-  margin: 0 10rpx 0 0;
-  border-radius: 4rpx;
-  border: 1rpx solid #979797;
-  font-family: 'PingFangTC-Light';
-  font-size: 20rpx;
-  color: #333;
-  line-height: 28rpx;
-  letter-spacing: 0.2rpx;
-  text-align: center;
-  margin-bottom: 5rpx; */
+  flex: 1;
 }
 
 .my-attention .hours-list .bottom-info .hours-address {

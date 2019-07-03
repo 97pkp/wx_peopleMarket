@@ -1,5 +1,5 @@
 <!--pages/recommend/recommend.wxml-->
-<view>
+<view class='{{showPicker?"preventTouchMove":""}}'>
   <ul class='list'>
     <li>
       <span class='title required'>客户姓名</span>
@@ -121,7 +121,7 @@
   <view class='content'>
     <view class='top'>
       <text  bindtap='cancelPicker' data-type='0'>取消</text>
-      <text  bindtap='cancelPicker' data-type='1'>确认</text>
+      <text  bindtap='cancelPicker' data-type='1'>确定</text>
     </view>
     <view class='bottom'>
       <view class='list' wx:for="{{arrayProject}}" wx:key="{{index}}" data-index="{{index}}" bindtap='selTheItem'>

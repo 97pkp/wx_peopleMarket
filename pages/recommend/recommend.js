@@ -267,12 +267,15 @@ Page({
     let that = this
     if (!this.data.city_id) {
       let cityInfo = wx.getStorageSync('storLocalCity')
-      if (!cityInfo) return
+      if(!cityInfo){
+        return
+      }
       this.setData({
-        'reportList.city': cityInfo.city,
-        city_id: cityInfo.id
+        'reportList.city': app.globalData.storLocalCity.city,
+        city_id: app.globalData.storLocalCity.id
       })
     }
+
     let promise = {
       cityId: this.data.city_id,
       openid: app.globalData.bindUserInfo.wxid,

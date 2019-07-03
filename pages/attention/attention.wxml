@@ -28,7 +28,7 @@
             <view class='icon'>
               <image src='../../images/dingwei2.png'></image>
             </view>
-            <text class=' province'>{{item.city_text}}</text>
+            <text class='province'>{{item.city_text}}</text>
           </view>
         </view>
       </view>

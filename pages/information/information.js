@@ -143,7 +143,6 @@ Page({
     },
 
     isClickAttention: false, //是否点击关注
-
     /*
     用户信息弹窗变量
     */
@@ -668,9 +667,10 @@ Page({
 
   //关注 按钮事件
   toAttention() {
-    this.setData({
-      isClickAttention: true
-    })
+    if (this.data.isClickAttention){
+      return
+    }
+    this.setData({ isClickAttention: true})
     this.Users()
   },
 

@@ -5,6 +5,10 @@
   font-size: 30rpx;
 }
 
+.vPack:last-child {
+  margin-bottom: 100rpx;
+}
+
 .vTitle {
   background-color: #fff;
   padding: 20rpx 0rpx 20rpx 30rpx;
@@ -12,7 +16,8 @@
 
 .cityName {
   display: inline-block;
-  width: 154rpx;
+  min-width: 150rpx;
+  padding: 0 5rpx;
   height: 56rpx;
   line-height: 56rpx;
   text-align: center;
