@@ -54,7 +54,7 @@ Page({
     showPhonepack: false, //是否显示手机号授权窗口
     showBindUserInfo: false, //是否显示绑定用户信息窗口
     pageUrl: '', // 跳转路径
-    isBuildClick: false //是楼盘列表点击
+    isBuildClick: false, //是否楼盘列表点击
   },
   // 切换城市
   changeCity() {
@@ -152,7 +152,6 @@ Page({
     this.setData({
       showBgpack: false, //是否显示用户信息授权窗口
       showPhonepack: false, //是否显示手机号授权窗口
-      showBindUserInfo: false, //是否显示绑定用户信息窗口
     })
   },
 
@@ -564,7 +563,7 @@ Page({
   // 页面跳转
   pageTobind(e) {
     this.setData({
-      pageUrl: e.target.dataset.url
+      pageUrl: e.target.dataset.url,
     })
     this.Users()
 
@@ -645,11 +644,11 @@ Page({
               that.userUpdata()
               //楼盘列表点击，不用授权绑定信息；其他点击，需要授权绑定信息
               if (that.data.isBuildClick) {
-                that.setData({
-                  isBuildClick: false
-                })
                 wx.navigateTo({
                   url: that.data.pageUrl,
+                })
+                that.setData({
+                  isBuildClick: false
                 })
               } else {
                 //若验证手机号已经授权，去判断受否绑定用户信息
@@ -689,7 +688,7 @@ Page({
     this.userUpdata()
     this.setData({
       showBgpack: false,
-      showPhonepack: true
+      showPhonepack: true,
     })
     this.getLocation()
   },
@@ -760,7 +759,7 @@ Page({
   cancelTip() {
     this.setData({
       showBgpack: false,
-      showPhonepack: false
+      showPhonepack: false,
     })
   },
   //绑定用户信息弹窗按钮
@@ -771,7 +770,7 @@ Page({
   },
   visibleOkClose() {
     this.setData({
-      showBindUserInfo: false
+      showBindUserInfo: false,
     })
   },
 

@@ -5,8 +5,8 @@
   font-size: 30rpx;
 }
 
-.vPack:last-child {
-  margin-bottom: 100rpx;
+.vBody {
+  padding-bottom: 150rpx;
 }
 
 .vTitle {

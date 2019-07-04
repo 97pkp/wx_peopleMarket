@@ -184,11 +184,12 @@
 
 .picker-view .content .top text:first-child {
   text-align: left;
-  color: #000000;
+  color: #333333;
 }
 
 .picker-view .content .top text:last-child {
   text-align: right;
+  color: #1aad19;
 }
 
 .picker-view .content .bottom {

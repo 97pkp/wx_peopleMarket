@@ -7,7 +7,6 @@
           <view>
             <image mode='widthFix' wx:if='{{item}}' src='{{item}}' bindtap='getBigImg' data-imglist='{{buildImgList[selItem].imgs}}' data-imgIndex='{{index}}' style='transition:0.3s;'></image>
           </view>
-
         </swiper-item>
       </block>
     </swiper>
