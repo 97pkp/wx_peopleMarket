@@ -144,7 +144,140 @@ swiper image {
   width: 64rpx;
   height: 50rpx;
 }
+/* 新闻活动 */
+.news-activity{
+  width: 670rpx;
+  margin-top: 60rpx;
+  /* background: #ffffff; */
+}
+.news-header{
+  height: 80rpx;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.news-title{
+  font-family: 'PingFang-SC-Medium';
+  color: #333333;
+  font-size: 34rpx;
+}
+.news-more{
+  display: flex;
+  align-items: center;
+}
+.news-more text{
+  font-family: 'PingFang-SC-Medium';
+  font-size: 24rpx;
+  color: #8D91A2;
+}
+.news-more image{
+  width: 12rpx;
+  height: 22rpx;
+  margin-left: 10rpx;
+}
+.news-body{
+  width: 100%;
+  height: 144rpx;
+  position: relative;
+}
+.shade-view{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  z-index: 100;
+}
+.news-body swiper{
+  width: 100%;
+  height: 100%;
+}
+.news-body .swiper-box{
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+.news-body image{
+  width: 256rpx;
+  height: 144rpx;
+  margin-right: 24rpx;
+}
+.news-info{
+  font-family: 'PingFang-SC-Medium';
+  font-size: 28rpx;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+.news-info .news-txt{
+  width: 376rpx;
+  height: 80rpx;
+  display: -webkit-box;    
+  -webkit-box-orient: vertical;    
+  -webkit-line-clamp: 2;    
+  overflow: hidden;
+}
+.news-info .date{
+  font-size: 24rpx;
+  color: #7F8389;
+  margin-bottom: 5rpx;
+}
 
+/* 弹屏样式 */
+.popup-view-box{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 900;
+}
+.popup-view{
+  position: absolute;
+  width: 484rpx;
+  height: 748rpx;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.popup-view .top{
+  width: 100%;
+  height: 628rpx;
+  background: pink;
+  border-radius: 48rpx;
+}
+.popup-view .line{
+  width: 0;
+  height: 40rpx;
+  border: solid #ffffff;
+  border-width: 0 2rpx;
+}
+.popup-view .close-view{
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.popup-view .close-view image{
+  width: 36rpx;
+  height: 36rpx;
+}
+
+/* 楼盘样式 */
 .hours {
   width: 100%;
   height: 44rpx;
@@ -157,7 +290,7 @@ swiper image {
 }
 
 .build-info {
-  margin-top: 34rpx;
+  /* margin-top: 34rpx; */
 }
 
 .hours-list, .rim-list {

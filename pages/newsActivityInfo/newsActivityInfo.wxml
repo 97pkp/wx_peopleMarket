@@ -1,0 +1,4 @@
+<!--pages/newsActivityInfo/newsActivityInfo.wxml-->
+<view class='news-ctivity-box'>
+  <text>新闻活动页</text>
+</view>

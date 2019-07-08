@@ -1,13 +1,13 @@
 /* pages/recommend/recommend.wxss */
 
-.preventTouchMove{
-  top: 0px ; 
-  left: 0px ; 
-  width: 100% ; 
-  height: 100% ; 
-  overflow: hidden ; 
-  position: fixed ; 
-  z-index: 0 ;
+.preventTouchMove {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: fixed;
+  z-index: 0;
 }
 
 .list li {
@@ -184,12 +184,12 @@
 
 .picker-view .content .top text:first-child {
   text-align: left;
-  color: #333333;
+  color: #333;
 }
 
 .picker-view .content .top text:last-child {
   text-align: right;
-  color: #1aad19;
+  color: #1ec66f;
 }
 
 .picker-view .content .bottom {

@@ -1,0 +1,5 @@
+/* pages/newsActivityInfo/newsActivityInfo.wxss */
+
+page{
+  background: #ffffff;
+}

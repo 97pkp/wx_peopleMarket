@@ -3,6 +3,10 @@ const serviceModule = {
     url: '/user/decodeUserInfo',
     method: 'post'
   },
+  newsactivityFindNewsActivitys:{
+    url: '/newsactivity/findNewsActivitys',
+    method: 'post'
+  },
   cityFindBuildInfoByCity: {
     url: '/city/findBuildInfoByCity',
     method: 'post'

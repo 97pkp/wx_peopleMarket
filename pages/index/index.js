@@ -28,6 +28,8 @@ Page({
     duration: 1000,
     swiperCurrent: 0, //轮播图下标
 
+    newsList:[], //新闻活动列表
+
     // 查询城市参数
     cityInfo: {
       latitude: '',
@@ -55,6 +57,8 @@ Page({
     showBindUserInfo: false, //是否显示绑定用户信息窗口
     pageUrl: '', // 跳转路径
     isBuildClick: false, //是否楼盘列表点击
+    isNewsClick: false,  //是否是新闻点击
+    isHavePopupView: false, //是否有弹屏信息
   },
   // 切换城市
   changeCity() {
@@ -87,7 +91,14 @@ Page({
     //   url: '../information/information?project_id=' + project_id   //+ '&&imgurl=' + imgurl
     // })
   },
-
+  //跳转新闻活动页
+  goNewsActivityInfo(e){
+    this.setData({ pageUrl: e.currentTarget.dataset.url, isNewsClick:true})
+    this.Users()
+    // wx.navigateTo({
+    //   url: this.data.pageUrl,
+    // })
+  },
   onLoad: function(option) {
     if (option != undefined && JSON.stringify(option) != "{}") {
       ifChange = option.ifChange;
@@ -142,6 +153,7 @@ Page({
           app.globalData.userId = data.data.USERID
           that.getUserGetUserInfo(data.data.openid)
           that.accreditOperate()
+          that.getNewsActivity()
         }, (error) => {
           console.log(error)
         });
@@ -167,6 +179,7 @@ Page({
     } else if (app.globalData.storLocalCity && ifChange == '1') {
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
       that.getCityFindBuildInfoByCity()
+      that.getNewsActivity()
     } else {
       wx.getSetting({
         success(res) {
@@ -545,6 +558,15 @@ Page({
     });
   },
 
+  //获取新闻活动信息
+  getNewsActivity(){
+    let promise = {}
+    $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
+      console.log(data.data)
+      this.setData({ newsList:data.data})
+    })
+  },
+
   // 获取绑定用户信息
   getUserGetUserInfo(val) {
     let that = this
@@ -643,12 +665,13 @@ Page({
               })
               that.userUpdata()
               //楼盘列表点击，不用授权绑定信息；其他点击，需要授权绑定信息
-              if (that.data.isBuildClick) {
+              if (that.data.isBuildClick || that.data.isNewsClick) {
                 wx.navigateTo({
                   url: that.data.pageUrl,
                 })
                 that.setData({
-                  isBuildClick: false
+                  isBuildClick: false,
+                  isNewsClick: false
                 })
               } else {
                 //若验证手机号已经授权，去判断受否绑定用户信息
@@ -712,9 +735,10 @@ Page({
         wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
         wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
         that.userUpdata()
-        if (that.data.isBuildClick) {
+        if (that.data.isBuildClick || that.data.isNewsClick) {
           that.setData({
-            isBuildClick: false
+            isBuildClick: false,
+            isNewsClick: false
           })
           wx.navigateTo({
             url: that.data.pageUrl,

@@ -194,7 +194,7 @@ Page({
       picturetype: '视频'
     }
     $http(apiSetting.projectApiFindProjectVideoListById, promise).then((data) => {
-      if (data.data.length) {
+      if (data.data && data.data.length) {
         let videoList = data.data[0]
         if (videoList.upload_file_path) {
           that.setData({
