@@ -1,0 +1,13 @@
+<!--pages/myApply/myApply.wxml-->
+<view class='content' wx:if="{{activityList.length}}">
+  <view class='news-item' wx:for="{{activityList}}" wx:key="{{index}}" wx:value="{{item}}" bindtap='goNewsAtvInfo' data-atvID='{{item.id}}'> 
+    <image src='{{item.imgArr.upload_file_path}}' binderror='errorImg' data-index='{{index}}'></image>
+      <view class='news-info'>
+        <view class='news-txt'>
+          <text>【活动】{{item.title}}</text>
+        </view>
+        <view class='date'>{{item.start_date}}-{{item.end_date}}</view>
+      </view>
+  </view>
+</view>
+<view wx:else class='no-date'>暂无报名活动！</view>

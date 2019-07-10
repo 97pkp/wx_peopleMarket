@@ -18,10 +18,10 @@
         <image class='iconImg' data-url='../clients/client' src="../../images/myrecommend.png"></image>我的推荐</li>
       <li data-url='../mycoupon/mycoupon' bindtap='pageTobind'>
         <image class='iconImg' data-url='../mycoupon/mycoupon' src="../../images/myreduced.png"></image>我的优惠券</li>
-      <li style='border-bottom: 1rpx solid #e6e6e6;' data-url='../attention/attention' bindtap='pageTobind'>
+      <li data-url='../attention/attention' bindtap='pageTobind'>
         <image class='iconImg' data-url='../attention/attention' src="../../images/guanzhu.png"></image>我的关注</li>
-        <!-- <li style='border-bottom: 1rpx solid #e6e6e6;' data-url='../attention/attention' bindtap='pageTobind'>
-        <image class='iconImg' data-url='../attention/attention' src="../../images/guanzhu.png"></image>我的报名</li> -->
+      <li style='border-bottom: 1rpx solid #e6e6e6;' data-url='../myApply/myApply' bindtap='pageTobind'>
+        <image class='iconImg' data-url='../attention/attention' src="../../images/guanzhu.png"></image>我的报名</li>
       <li style='margin-top:20rpx;border-bottom: 1rpx solid #e6e6e6;' data-url='../setting/setting' bindtap='pageTobindSet'>
         <image class='iconImg' data-url='../setting/setting' src="../../images/setting.png"></image>设置</li>
     </ul>

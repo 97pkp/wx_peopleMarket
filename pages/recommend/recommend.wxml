@@ -2,6 +2,17 @@
 <view class='{{showPicker?"preventTouchMove":""}}'>
   <ul class='list'>
     <li>
+      <span class='title required'>城市</span>
+      <span class="inp" bindtap='citySelcet'>
+        <input placeholder-class="phcolor" placeholder-style='color:#B4B9CB;' type='text' value="{{reportList.city}}" disabled  style='font-size:28rpx;'/>
+      </span>
+    </li>
+    <li>
+      <span class='title required'>推荐楼盘</span>
+      <span wx:if="{{recommentStr!==''}}" class="inp" style="text-align:left;display:block;" bindtap="setProject">{{recommentStr}}</span>
+      <span wx:if="{{recommentStr===''}}" class="place-sel" style="text-align:left;display:block;" bindtap="setProject">请选择</span>  
+    </li>
+    <li>
       <span class='title required'>客户姓名</span>
       <span class="inp">
         <input placeholder-class="phcolor" type='text' bindinput='customNameBind' placeholder="请输入姓名" placeholder-style='color:#B4B9CB;'/>
@@ -26,9 +37,9 @@
       <span class='title required'>客户电话</span>
       <view class="section">
         <view class='phone-type-box' wx:if="{{reportList.reportType=='中介'}}">
-          <picker bindchange="bindPickerChangePhoneType" value="{{phoneTypeIndex}}" range="{{arrayNum}}">
+          <picker bindchange="bindPickerChangePhoneType" value="{{phoneTypeIndex}}" range="{{arrayNum}}" range-key="name">
             <view class="picker phoneType-header">
-              {{arrayNum[phoneTypeIndex]}}
+              {{arrayNum[phoneTypeIndex].name}}
             </view>
           </picker>
           <image src='../../images/godown.png'></image>
@@ -47,17 +58,7 @@
         <input placeholder-class="phcolor" bindinput='customPhoneBind' value='{{phoneText}}' placeholder="请输入客户电话" placeholder-style='color:#B4B9CB;' maxlength='{{numberMaxLength}}'/>
       </span>
     </li>
-    <li>
-      <span class='title required'>城市</span>
-      <span class="inp" bindtap='citySelcet'>
-        <input placeholder-class="phcolor" placeholder-style='color:#B4B9CB;' type='text' value="{{reportList.city}}" disabled  style='font-size:28rpx;'/>
-      </span>
-    </li>
-    <li>
-      <span class='title required'>推荐楼盘</span>
-      <span wx:if="{{recommentStr!==''}}" class="inp" style="text-align:left;display:block;" bindtap="setProject">{{recommentStr}}</span>
-      <span wx:if="{{recommentStr===''}}" class="place-sel" style="text-align:left;display:block;" bindtap="setProject">请选择</span>  
-    </li>
+    
     <li>
       <span class='title'>意向户型</span>
       <view class='house-type-box'>

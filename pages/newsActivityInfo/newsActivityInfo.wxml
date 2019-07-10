@@ -1,4 +1,12 @@
 <!--pages/newsActivityInfo/newsActivityInfo.wxml-->
-<view class='news-ctivity-box'>
-  <text>新闻活动页</text>
+<import src="../../wxParse/wxParse.wxml" />
+
+<view class='title'>{{newsAtvInfo.title}}</view>
+<view class='news-body'>
+  <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
 </view>
+
+<button wx:if="{{type=='1' && btnType==0}}" class='can-apply' disabled='{{false}}' bindtap='bindSub'>活动报名</button>
+<button wx:if="{{type=='1' && btnType==1}}" class='canot-apply' disabled='{{true}}' >已报名</button>
+<button wx:if="{{type=='1' && btnType==2}}" class='canot-apply' disabled='{{true}}' >报名未开始</button>
+<button wx:if="{{type=='1' && btnType==3}}" class='canot-apply' disabled='{{true}}' >报名已结束</button>

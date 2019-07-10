@@ -15,7 +15,9 @@
     "pages/cityList/cityList",
     "pages/citySelect/citySelect",
     "pages/brokertext/brokertext",
-    "pages/newsActivityInfo/newsActivityInfo"
+    "pages/newsActivityList/newsActivityList",
+    "pages/newsActivityInfo/newsActivityInfo",
+    "pages/myApply/myApply"
   ],
   "window": {
     "backgroundTextStyle": "light",

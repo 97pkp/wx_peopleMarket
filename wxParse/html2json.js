@@ -11,6 +11,7 @@
  * for: 微信小程序富文本解析
  * detail : http://weappdev.com/t/wxparse-alpha0-1-html-markdown/184
  */
+import fileUrl from '../http/fileServeUrl.js'    //本系统图片路径前缀,改造来自：kyz
 
 var __placeImgeUrlHttps = "https";
 var __emojisReg = '';
@@ -147,7 +148,11 @@ function html2json(html, bindName) {
             //对img添加额外数据
             if (node.tag === 'img') {
                 node.imgIndex = results.images.length;
-                var imgUrl = node.attr.src;
+                if (node.attr.src.indexOf("http")!=-1){
+                  var imgUrl = node.attr.src;
+                }else{
+                  var imgUrl = fileUrl.split('/zhwx')[0]+node.attr.src;
+                }
                 if (imgUrl[0] == '') {
                     imgUrl.splice(0, 1);
                 }

@@ -17,6 +17,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    app.globalData.transienceCity = {}
     this.setData({
       selectCity: options.city_id
     })
@@ -68,7 +69,7 @@ Page({
   //城市选择
   cityChange(e) {
     this.setData({
-      selectCity: e.target.dataset.item.id,
+      selectCity: e.target.dataset.item.id, 
       localCity: e.target.dataset.item
     })
     this.pageTobind()
@@ -78,19 +79,18 @@ Page({
   getCityList() {
     let that = this
     that.showLoading()
-    let promise = {}
-
-    $http(apiSetting.cityFindCityItems, promise).then((data) => {
+    let promise = { openID: app.globalData.openid}
+    $http(apiSetting.recommendGetCityList, promise).then((data) => {
       let newData = data.data
       let listData = []
       for (let i in newData) {
         let findIndex = listData.findIndex((n) => {
-          return n.key == newData[i].firstCn
+          return n.key == newData[i].FIRST_CN
         })
 
         if (findIndex == -1) {
           listData.push({
-            'key': newData[i].firstCn,
+            'key': newData[i].FIRST_CN,
             'item': [newData[i]]
           })
         } else {

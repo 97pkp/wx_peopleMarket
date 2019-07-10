@@ -147,7 +147,7 @@ swiper image {
 /* 新闻活动 */
 .news-activity{
   width: 670rpx;
-  margin-top: 60rpx;
+  margin-top: 40rpx;
   /* background: #ffffff; */
 }
 .news-header{
@@ -221,7 +221,14 @@ swiper image {
   -webkit-box-orient: vertical;    
   -webkit-line-clamp: 2;    
   overflow: hidden;
+  word-wrap: break-word;
+  word-break: break-all;
 }
+.news-info .news-txt text{
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .news-info .date{
   font-size: 24rpx;
   color: #7F8389;

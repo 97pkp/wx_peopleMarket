@@ -1,0 +1,48 @@
+/* pages/newsActivityInfo/newsActivityInfo.wxss */
+
+page{
+  background: #ffffff;
+}
+.content{
+  width: 100%;
+  overflow-x: hidden;
+}
+.news-item{
+  padding: 20rpx 30rpx;
+  width: calc(100% - 60rpx);
+  height: 144rpx;
+  display: flex;
+  border-bottom: 2rpx solid #cccccc;
+}
+
+.news-item image{
+  width: 256rpx;
+  height: 144rpx;
+  margin-right: 24rpx;
+}
+.news-info{
+  font-family: 'PingFang-SC-Medium';
+  font-size: 28rpx;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+.news-info .news-txt{
+  width: 376rpx;
+  height: 80rpx;
+  display: -webkit-box;    
+  -webkit-box-orient: vertical;    
+  -webkit-line-clamp: 2;    
+  overflow: hidden;
+}
+.news-info .news-txt text{
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.news-info .date{
+  font-size: 24rpx;
+  color: #7F8389;
+  margin-bottom: 5rpx;
+}

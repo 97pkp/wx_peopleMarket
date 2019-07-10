@@ -1,5 +1,38 @@
 /* pages/newsActivityInfo/newsActivityInfo.wxss */
+@import "../../wxParse/wxParse.wxss";
 
 page{
   background: #ffffff;
+}
+.title{
+  text-align: center;
+  margin-top: 50rpx;
+  font-size: 40rpx;
+}
+.news-body{
+  margin-top: 20rpx;
+  padding: 0 30rpx;
+}
+.can-apply{
+  width: 80%;
+  height: 80rpx;
+  background: #20a0ff;
+  color: #ffffff;
+  text-align: center;
+  line-height: 80rpx;
+  border-radius: 20rpx;
+  margin: 100rpx auto;
+}
+.canot-apply{
+  width: 80%;
+  height: 80rpx;
+  text-align: center;
+  line-height: 80rpx;
+  /* border-radius: 20rpx; */
+  margin: 100rpx auto;
+  /* background: #cccccc;
+  color: #333333; */
+}
+image{
+  width: 100% !important;
 }

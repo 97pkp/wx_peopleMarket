@@ -59,6 +59,9 @@ Page({
     isBuildClick: false, //是否楼盘列表点击
     isNewsClick: false,  //是否是新闻点击
     isHavePopupView: false, //是否有弹屏信息
+
+    t:0, //新闻模块循环变量初始为0
+    _imgList: [], //新闻图片存放
   },
   // 切换城市
   changeCity() {
@@ -153,7 +156,6 @@ Page({
           app.globalData.userId = data.data.USERID
           that.getUserGetUserInfo(data.data.openid)
           that.accreditOperate()
-          that.getNewsActivity()
         }, (error) => {
           console.log(error)
         });
@@ -178,8 +180,8 @@ Page({
       // that.getCityFindBuildInfoByCity()
     } else if (app.globalData.storLocalCity && ifChange == '1') {
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
-      that.getCityFindBuildInfoByCity()
       that.getNewsActivity()
+      that.getCityFindBuildInfoByCity()
     } else {
       wx.getSetting({
         success(res) {
@@ -257,6 +259,7 @@ Page({
         for (let i = 0; i < cityList.length; i++) {
           if (city.indexOf(cityList[i].city) !== -1) {
             wx.setStorageSync('storLocalCity', cityList[i])
+            that.getNewsActivity()
             that.getCityFindBuildInfoByCity()
             return
           }
@@ -273,6 +276,7 @@ Page({
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
+      that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
@@ -286,6 +290,7 @@ Page({
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
     if ('positionCity' in cityPromise && cityPromise.positionCity.indexOf(cityPromise.currentCity) != -1) {
+      that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
       return
     }
@@ -315,6 +320,7 @@ Page({
 
                   _storage.currentCity = cityList[i].city
                   wx.setStorageSync('cityPromise', _storage)
+                  that.getNewsActivity()
                   that.getCityFindBuildInfoByCity()
                   return
                 } else if (res.cancel) {
@@ -337,6 +343,7 @@ Page({
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
+      that.getNewsActivity()
       that.getCitySessionFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
@@ -366,6 +373,7 @@ Page({
             if (city.city != _storage.positionCity || city.city != _storage.currentCity) {
               that.getSessionCityList(city.city)
             } else {
+              that.getNewsActivity()
               that.getCityFindBuildInfoByCity()
             }
             // wx.setStorageSync('cityPromise', _storage)
@@ -560,12 +568,102 @@ Page({
 
   //获取新闻活动信息
   getNewsActivity(){
+    let _newsArr=[]
+    let _activityArr=[]
+    let _allArr=[]
     let promise = {}
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
-      console.log(data.data)
-      this.setData({ newsList:data.data})
+      if (data.code === -1 || !data.list.length) return
+      let newsList = data.list
+      for(let i=0;i<newsList.length;i++){
+        if (newsList[i].type==0){
+          if (newsList[i].published_date && newsList[i].published_date.indexOf(' ')!=-1){
+            newsList[i].published_date = newsList[i].published_date.split(' ')[0].split('-').join('.')
+          }
+          _newsArr.push(newsList[i])
+        } else if (newsList[i].type ==1){
+          if (newsList[i].start_date && newsList[i].start_date.indexOf(' ') != -1){
+            newsList[i].start_date = newsList[i].start_date.split(' ')[0].split('-').join('.')
+          }
+          if (newsList[i].end_date && newsList[i].end_date.indexOf(' ') != -1){
+            newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
+          }
+          _activityArr.push(newsList[i])
+        }
+      }
+     
+      //如果新闻活动个数不足6个，则显示全部；超过6个，不足三个的显示全部，另一项自动补全为6个
+      if (_newsArr.length + _activityArr.length<=6){
+        _allArr=_allArr.concat(_newsArr, _activityArr)
+      }else{
+        if (_newsArr.length>=3){
+          if (_activityArr.length>=3){
+            _newsArr.length = 3
+            _activityArr.length = 3
+          }else{
+            _newsArr.length = 6 - _activityArr.length
+          }
+        }else{
+          _activityArr.length = 6 - _newsArr.length
+        }
+        _allArr = _allArr.concat(_newsArr, _activityArr)
+      }
+      this.setData({ newsList: _allArr })
+      this.findAttachRelationById(_allArr.length)
     })
   },
+  //获取新闻图片
+  findAttachRelationById(newsAtvListLength) {
+    let _t = this.data.t //_t=0
+    if (_t > newsAtvListLength - 1) {
+      let _arr1 = this.data._imgList
+      for (let i = 0; i < _arr1.length; i++) {
+        if (_arr1[i] !== null && _arr1[i] !== undefined) {
+          _arr1[i].upload_file_path = this.data.imgpath + _arr1[i].upload_file_path
+        } else {
+          _arr1[i] = {
+            upload_file_path: this.data.imgpath
+          }
+        }
+      }
+      //将图片挂在到户型列表上
+      let newsList = this.data.newsList
+      for (let i = 0; i < newsList.length; i++) {
+        newsList[i].imgArr = _arr1[i]
+      }
+      this.setData({
+        newsList: newsList,
+      })
+      wx.hideLoading()
+      return
+    }
+    let _newsList = this.data.newsList
+    if (_t > newsAtvListLength - 1) return
+    let promise = { id: _newsList[ _t].id }
+    let _arr = this.data._imgList
+    $http(apiSetting.newsactivityFindAttachRelationById, promise).then((data) => {
+      _arr.push(data.data[0])
+      this.setData({
+        _imgList: _arr,
+        t: _t + 1
+      })
+      this.findAttachRelationById(newsAtvListLength)
+    }), (error) => {
+      console.log(error)
+    }
+  },
+  //新闻活动图片加载失败
+  errorImgNews(e){
+    if (e.type == 'error') {
+      this.data.newsList[e.target.dataset.index].imgArr.upload_file_path = this.data.defaultImg
+      this.setData({
+        newsList: this.data.newsList
+      })
+    }
+  },
+
+
+
 
   // 获取绑定用户信息
   getUserGetUserInfo(val) {

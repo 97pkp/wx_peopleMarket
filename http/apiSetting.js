@@ -3,10 +3,34 @@ const serviceModule = {
     url: '/user/decodeUserInfo',
     method: 'post'
   },
+  //新闻活动列表
   newsactivityFindNewsActivitys:{
     url: '/newsactivity/findNewsActivitys',
     method: 'post'
   },
+  //查询某一项新闻活动
+  newsactivityFindNewsActivityById:{
+    url: '/newsactivity/findNewsActivityById',
+    method: 'post'
+  },
+  //获取新闻活动缩略图
+  newsactivityFindAttachRelationById:{
+    url: '/newsactivity/findAttachRelationById',
+    method: 'post'
+  },
+  //查询活动是否已经报名
+  newsactivityFindMyEnrollActivityById:{
+    url: '/newsactivity/findMyEnrollActivityById',
+      method: 'post'
+  },
+
+
+  //活动报名
+  newsactivityInsertActivityEnrollee:{
+    url: '/newsactivity/insertActivityEnrollee',
+    method: 'post'
+  },
+
   cityFindBuildInfoByCity: {
     url: '/city/findBuildInfoByCity',
     method: 'post'
@@ -94,6 +118,18 @@ const serviceModule = {
     url: '/recommend/getMyRecommendData',
     method: 'post'
   },
+  // 获取全号隐号数据
+  recommendGetRecommendItem:{
+    url: '/recommend/getRecommendItem',
+    method: 'post'
+  },
+  //获取城市列表
+  recommendGetCityList:{
+    url: '/recommend/getCityList',
+    method: 'post'
+  },
+
+
   //获取佣金信息
   // recommendCommissionInfoList: {
   //   url: '/recommend/commissionInfoList',

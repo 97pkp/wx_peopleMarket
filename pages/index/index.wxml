@@ -45,12 +45,12 @@
   <view class='news-activity' wx:if="{{newsList.length}}">
     <view class='news-header'>
       <view class='news-title'>新闻活动</view>
-      <view class='news-more' bindtap='goNewsActivityInfo' data-url='../newsActivityInfo/newsActivityInfo'>
+      <view class='news-more' bindtap='goNewsActivityInfo' data-url='../newsActivityList/newsActivityList'>
         <text>更多</text>
         <image src='../../images/right.png'></image>
       </view>
     </view>
-    <view class='news-body' bindtap='goNewsActivityInfo' data-url='../newsActivityInfo/newsActivityInfo'>
+    <view class='news-body' bindtap='goNewsActivityInfo' data-url='../newsActivityList/newsActivityList'>
       <!-- 添加透明遮罩，防止swiper组件触摸滑动 -->
       <view class='shade-view'></view>
       <swiper 
@@ -59,13 +59,18 @@
         vertical="{{true}}"
         circular="{{true}}"
         >
-        <block wx:for="{{1}}" wx:key="{{index}}">
+        <block wx:for="{{newsList}}" wx:key="{{index}}">
           <swiper-item>
             <view class='swiper-box'>
-              <image src='http://haiketest.coli688.com:8081/zhwx/userfiles/6A155AE2530443CFAE05B3A3F314C9B0/B645B809E3944872BBF7EFE8C0D08CDA.gif'></image>
+              <image src='{{item.imgArr.upload_file_path}}' binderror='errorImgNews' data-index='{{index}}'></image>
               <view class='news-info'>
-                <view class='news-txt'>【新闻】中国海外发展有限公司公布2018年展有限业绩有限业绩</view>
-                <view class='date'>2019.6.18</view>
+                <view class='news-txt'>
+                  <text wx:if="{{item.type==0}}">【新闻】</text>
+                  <text wx:if="{{item.type==1}}">【活动】</text>
+                  {{item.title}}
+                </view>
+                <view class='date' wx:if="{{item.type==0}}">{{item.published_date}}</view>
+                <view class='date' wx:if="{{item.type==1}}">{{item.start_date}}-{{item.end_date}}</view>
               </view>
             </view>
           </swiper-item>
