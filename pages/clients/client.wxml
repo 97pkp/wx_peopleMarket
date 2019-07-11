@@ -124,7 +124,7 @@
 </view>
  <!-- 抽屉 -->
 <view class='drawer' wx:if='{{showRight}}' >
-  <view class='shade' bindtap='hideDrawer' ></view>
+  <view class='shade' bindtap='hideDrawer'></view>
   <view class='content' >
     <view class='city'>
       <view class='title'>城市</view>

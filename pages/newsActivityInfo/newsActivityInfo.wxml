@@ -10,3 +10,4 @@
 <button wx:if="{{type=='1' && btnType==1}}" class='canot-apply' disabled='{{true}}' >已报名</button>
 <button wx:if="{{type=='1' && btnType==2}}" class='canot-apply' disabled='{{true}}' >报名未开始</button>
 <button wx:if="{{type=='1' && btnType==3}}" class='canot-apply' disabled='{{true}}' >报名已结束</button>
+<button wx:if="{{type=='1' && btnType==4}}" class='canot-apply' disabled='{{true}}' >活动已结束</button>

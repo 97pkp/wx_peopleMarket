@@ -49,25 +49,48 @@ Page({
       if(!data.data) return
       let newsAtvItem = data.data
       if (newsAtvItem.type == 0) {
-        if (newsAtvItem.create_date && newsAtvItem.create_date.indexOf(' ') != -1) {
-          newsAtvItem.create_date = newsAtvItem.create_date.split(' ')[0].split('-').join('.')
+        if (newsAtvItem.published_date && newsAtvItem.published_date.indexOf(' ') != -1) {
+          newsAtvItem.published_date = newsAtvItem.published_date.split(' ')[0].split('-').join('.')
         }
       } else if (newsAtvItem.type == 1) {
-        if (newsAtvItem.create_date && newsAtvItem.create_date.indexOf(' ') != -1) {
-          newsAtvItem.create_date = newsAtvItem.create_date.split(' ')[0].split('-').join('.')
+        if (newsAtvItem.start_date && newsAtvItem.start_date.indexOf(' ') != -1) {
+          newsAtvItem.start_date = newsAtvItem.start_date.split(' ')[0].split('-').join('.')
         }
         if (newsAtvItem.end_date && newsAtvItem.end_date.indexOf(' ') != -1) {
           newsAtvItem.end_date = newsAtvItem.end_date.split(' ')[0].split('-').join('.')
         }
-        let nowDate= new Date().getTime()
-        let startTime = new Date(newsAtvItem.settings_enroll_startTime).getTime()
-        let endTime = new Date(newsAtvItem.settings_enroll_endTime).getTime() 
-        if (startTime>nowDate){
-          this.setData({btnType:2})
+        let nowDate= new Date().getTime()   //当前网络时间
+        let activityEndTime = new Date(newsAtvItem.end_date).getTime()   //活动结束时间
+        let startTime = new Date(newsAtvItem.settings_enroll_startTime).getTime()   //报名开始时间
+        let endTime = new Date(newsAtvItem.settings_enroll_endTime).getTime()     //报名结束时间
+        //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束
+        //如果活动结束时间在报名开始时间之后，则去判断活动报名时间是否开始
+        //如果活动结束时间在报名开始时间之前，则显示活动结束，禁用点击按钮
+        if (activityEndTime > startTime){
+          if (startTime > nowDate) {
+            this.setData({ btnType: 2 })
+          }
+        }else{
+          if (activityEndTime <= nowDate){
+            this.setData({ btnType: 4 })
+          }else{
+            this.setData({ btnType: 2 })
+          }
         }
-        if (endTime<nowDate){
-          this.setData({ btnType:3})
+        //如果活动结束时间在报名结束时间之后，则去判断活动报名时间是否结束
+        //如果活动结束时间在报名结束时间之前，则去判断活动结束时间，如果在现在时间之前，则活动结束
+        if (activityEndTime > endTime){
+          if (endTime <= nowDate) {
+            this.setData({ btnType: 3 })
+          }
+        } else {
+          if (activityEndTime <= nowDate) {
+            this.setData({ btnType: 4 })
+          }
         }
+        // if (endTime<nowDate){
+        //   this.setData({ btnType:3})
+        // }
       }
       this.setData({ newsAtvInfo:newsAtvItem})
       let article = newsAtvItem.content

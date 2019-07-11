@@ -36,7 +36,7 @@
     <li>
       <span class='title required'>客户电话</span>
       <view class="section">
-        <view class='phone-type-box' wx:if="{{reportList.reportType=='中介'}}">
+        <view class='phone-type-box' wx:if="{{reportList.reportType=='中介' && arrayNum.length==2}}">
           <picker bindchange="bindPickerChangePhoneType" value="{{phoneTypeIndex}}" range="{{arrayNum}}" range-key="name">
             <view class="picker phoneType-header">
               {{arrayNum[phoneTypeIndex].name}}

@@ -31,7 +31,7 @@ Page({
     */
     selectList:{
       startRow: 1,        
-      perRow: 5,
+      perRow: 10,
       searchType: "",                  //进度
       startDate: "",                   //开始时间
       endDate: "",                     //结束时间

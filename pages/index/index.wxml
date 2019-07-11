@@ -42,7 +42,8 @@
   </view>
 
 <!-- 新闻活动 -->
-  <view class='news-activity' wx:if="{{newsList.length}}">
+<!-- wx:if="{{newsList.length}}" -->
+  <view class='news-activity' wx:if="{{0}}">
     <view class='news-header'>
       <view class='news-title'>新闻活动</view>
       <view class='news-more' bindtap='goNewsActivityInfo' data-url='../newsActivityList/newsActivityList'>
@@ -80,7 +81,8 @@
   </view>
 
   <!-- 新闻活动弹屏 -->
-  <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}">
+  <!-- wx:if="{{isHavePopupView}}" -->
+  <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{0}}">
     <view class='popup-view'>
       <view class='top'></view>
       <view class='line'></view>

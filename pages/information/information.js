@@ -12,6 +12,7 @@ Page({
     videoPath: '', //视频路径
     isFullView: false, //视频全屏播放
     isVideo: false, //显示视频
+    _isNoVideo:false,  //用于下拉刷新时isVideo是否要变化的判断
     imgVdoIndex: 0, //视频图片切换下标
     // 打开导航的需要参数
     mapInfo: {
@@ -199,9 +200,13 @@ Page({
         if (videoList.upload_file_path) {
           that.setData({
             videoPath: that.data.imgpath + videoList.upload_file_path,
-            isVideo: true,
             auto: that.data.imgpath + videoList.upload_file_path2
           })
+          if (that.data._isNoVideo){
+            that.setData({ isVideo:false,_isNoVideo:false})
+          }else{
+            that.setData({ isVideo: true})
+          }
         } else {
           that.setData({
             videoPath: '',
@@ -229,6 +234,9 @@ Page({
       title: '加载中',
       mask: true,
     })
+    if (app.globalData.sessionKey == ''){
+      that.loginFun()
+    }
     /*
        首页传递项目id到详情页，并将项目id进行保存，并使用
      */
@@ -819,7 +827,8 @@ Page({
   //去推荐
   goRecommend() {
     this.setData({
-      pageUrl: '../recommend/recommend?project_id=' + this.data.project_id
+      pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
+      isClickAttention:false
     })
     this.Users()
     // wx.navigateTo({
@@ -974,6 +983,9 @@ Page({
   onPullDownRefresh() {
     // 显示导航栏加载框
     wx.showNavigationBarLoading()
+    if (!this.data.isVideo){
+      this.setData({_isNoVideo : true})
+    }
     this.onLoad(this.data.optionsObj)
   },
   // 停止刷新
@@ -1054,39 +1066,15 @@ Page({
       showPhonepack: false
     })
     if (e.detail.errMsg == 'getPhoneNumber:ok') {
-      let promise = {
+      //允许手机号授权后，若sessionKey为空，可能为分享卡片进入的详情页，此时重新发起登录请求，获取sessionKey
+      let reqPromise = {
         encryptedData: e.detail.encryptedData,
         iv: e.detail.iv,
         sessionKey: app.globalData.sessionKey,
         openID: app.globalData.openid,
         appid: appid
       }
-      $http(apiSetting.userGetWxPhone, promise).then((data) => {
-        let phoneData = JSON.parse(data.data)
-        let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
-        wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
-        wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
-        //若验证手机号已经授权，去判断受否绑定用户信息
-        if (app.globalData.isCheck) {
-          that.setData({
-            showBindUserInfo: false
-          })
-          // 如果没有点击关注，就是点击的推荐，进行跳转，否则调用接口函数，关注项目
-          if (that.data.isClickAttention) {
-            that.attentionProject()
-          } else {
-            wx.navigateTo({
-              url: that.data.pageUrl,
-            })
-          }
-        } else {
-          that.setData({
-            showBindUserInfo: true,
-          })
-        }
-      }, (error) => {
-        console.log(error)
-      });
+      that.reqPhoneNum(reqPromise)
     } else {
       that.setData({
         showPhonepack: true
@@ -1096,6 +1084,39 @@ Page({
       wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
     }
   },
+
+  //手机号请求函数
+  reqPhoneNum(reqPromise){
+    let that=this
+    let promise = reqPromise
+    $http(apiSetting.userGetWxPhone, promise).then((data) => {
+      let phoneData = JSON.parse(data.data)
+      let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+      wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
+      wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
+      //若验证手机号已经授权，去判断受否绑定用户信息
+      if (app.globalData.isCheck) {
+        that.setData({
+          showBindUserInfo: false
+        })
+        // 如果没有点击关注，就是点击的推荐，进行跳转，否则调用接口函数，关注项目
+        if (that.data.isClickAttention) {
+          that.attentionProject()
+        } else {
+          wx.navigateTo({
+            url: that.data.pageUrl,
+          })
+        }
+      } else {
+        that.setData({
+          showBindUserInfo: true,
+        })
+      }
+    }, (error) => {
+      console.log(error)
+    });
+  },
+
   //获取定位信息列表
   getLocation() {
     let that = this
@@ -1111,6 +1132,7 @@ Page({
       showBgpack: false,
       showPhonepack: false
     })
+    this.setData({ isClickAttention: false })   //点击取消弹窗后，把关注按钮变为false,变成可点击状态
   },
   //绑定用户信息弹窗按钮
   visibleOk() {
@@ -1122,9 +1144,61 @@ Page({
     this.setData({
       showBindUserInfo: false
     })
+    this.setData({ isClickAttention: false })   //点击取消弹窗后，把关注按钮变为false,变成可点击状态
   },
   //滑动事件
   notouch() {
     return
-  }
+  },
+  //重新登录请求
+  loginFun(){
+    let that=this
+    wx.login({
+      success: res => {
+        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        let promise = {
+          code: res.code
+        }
+        let cityPromise = wx.getStorageSync("cityPromise") || {}
+        promise.currentCity = cityPromise.currentCity
+        promise.positionCity = cityPromise.positionCity
+        $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
+          console.log('openid:' + data.data.openid)
+          console.log('status:' + data.data.status)
+          app.globalData.token = data.data['vx-zhwx-token']
+          app.globalData.openid = data.data.openid
+          app.globalData.status = data.data.status
+          app.globalData.sessionKey = data.data.sessionKey
+          if (data.data.isCheck == 0) {
+            app.globalData.isCheck = true
+          } else {
+            app.globalData.isCheck = false
+          }
+          if (data.data.status == 401) {
+            that.setData({
+              isPermit: true
+            })
+          }
+          app.globalData.userId = data.data.USERID
+          that.getUserGetUserInfo(data.data.openid)
+        }, (error) => {
+          console.log(error)
+        });
+      }
+    })
+  },
+  // 获取绑定用户信息
+  getUserGetUserInfo(val) {
+    let that = this
+    let promise = {
+      openid: val
+    }
+    let cityPromise = wx.getStorageSync("cityPromise") || {}
+    promise.currentCity = cityPromise.currentCity
+    promise.positionCity = cityPromise.positionCity
+    $http(apiSetting.userGetUserInfo, promise).then((data) => {
+      app.globalData.bindUserInfo = data.data
+    })
+  },
+
 })

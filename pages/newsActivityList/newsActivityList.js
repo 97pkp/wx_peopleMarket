@@ -71,6 +71,7 @@ Page({
   getNewsActivity() {
     wx.showLoading({
       title: '加载中',
+      mask: true
     })
     let reqPath = JSON.parse(JSON.stringify(apiSetting.newsactivityFindNewsActivitys) ) 
     reqPath.url += "?page=" + this.data.requestPage.page + "&perpage=" + this.data.requestPage.perpage
@@ -83,7 +84,7 @@ Page({
     }
     $http(reqPath, promise).then((data) => {
       let dataArr = data.list
-      if (!dataArr.length){
+      if (!data.list || !dataArr.length){
         this.setData({isPage:false})
         wx.hideLoading()
         return

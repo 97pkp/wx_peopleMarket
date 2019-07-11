@@ -34,7 +34,7 @@ Page({
     })
     let reqPath = JSON.parse(JSON.stringify(apiSetting.newsactivityFindMyEnrollActivityById))
     reqPath.url += "?page=" + this.data.requestPage.page + "&perpage=" + this.data.requestPage.perpage
-    let promise = { userId: app.globalData.userId }
+    let promise = { "userId": app.globalData.userId }
     $http(reqPath, promise).then((data) => {
       if (!data.list || !data.list.length) {
         this.setData({ isPage: false })

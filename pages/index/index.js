@@ -180,7 +180,7 @@ Page({
       // that.getCityFindBuildInfoByCity()
     } else if (app.globalData.storLocalCity && ifChange == '1') {
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
-      that.getNewsActivity()
+      // that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     } else {
       wx.getSetting({
@@ -259,7 +259,7 @@ Page({
         for (let i = 0; i < cityList.length; i++) {
           if (city.indexOf(cityList[i].city) !== -1) {
             wx.setStorageSync('storLocalCity', cityList[i])
-            that.getNewsActivity()
+            // that.getNewsActivity()
             that.getCityFindBuildInfoByCity()
             return
           }
@@ -276,7 +276,7 @@ Page({
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
-      that.getNewsActivity()
+      // that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
@@ -290,7 +290,7 @@ Page({
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
     if ('positionCity' in cityPromise && cityPromise.positionCity.indexOf(cityPromise.currentCity) != -1) {
-      that.getNewsActivity()
+      // that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
       return
     }
@@ -320,7 +320,7 @@ Page({
 
                   _storage.currentCity = cityList[i].city
                   wx.setStorageSync('cityPromise', _storage)
-                  that.getNewsActivity()
+                  // that.getNewsActivity()
                   that.getCityFindBuildInfoByCity()
                   return
                 } else if (res.cancel) {
@@ -343,7 +343,7 @@ Page({
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
-      that.getNewsActivity()
+      // that.getNewsActivity()
       that.getCitySessionFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
@@ -373,7 +373,7 @@ Page({
             if (city.city != _storage.positionCity || city.city != _storage.currentCity) {
               that.getSessionCityList(city.city)
             } else {
-              that.getNewsActivity()
+              // that.getNewsActivity()
               that.getCityFindBuildInfoByCity()
             }
             // wx.setStorageSync('cityPromise', _storage)
@@ -573,7 +573,7 @@ Page({
     let _allArr=[]
     let promise = {}
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
-      if (data.code === -1 || !data.list.length) return
+      if (data.code === -1 || !data.list || !data.list.length) return
       let newsList = data.list
       for(let i=0;i<newsList.length;i++){
         if (newsList[i].type==0){
@@ -661,9 +661,6 @@ Page({
       })
     }
   },
-
-
-
 
   // 获取绑定用户信息
   getUserGetUserInfo(val) {

@@ -189,7 +189,7 @@ swiper image {
   top: 0;
   left: 0;
   background: transparent;
-  z-index: 100;
+  z-index: 5;
 }
 .news-body swiper{
   width: 100%;
