@@ -28,7 +28,7 @@ Page({
     duration: 1000,
     swiperCurrent: 0, //轮播图下标
 
-    newsList:[], //新闻活动列表
+    newsList: [], //新闻活动列表
 
     // 查询城市参数
     cityInfo: {
@@ -57,11 +57,13 @@ Page({
     showBindUserInfo: false, //是否显示绑定用户信息窗口
     pageUrl: '', // 跳转路径
     isBuildClick: false, //是否楼盘列表点击
-    isNewsClick: false,  //是否是新闻点击
+    isNewsClick: false, //是否是新闻点击
     isHavePopupView: false, //是否有弹屏信息
 
-    t:0, //新闻模块循环变量初始为0
+    t: 0, //新闻模块循环变量初始为0
     _imgList: [], //新闻图片存放
+
+    bombScreen: {}, //城市弹屏信息
   },
   // 切换城市
   changeCity() {
@@ -95,8 +97,11 @@ Page({
     // })
   },
   //跳转新闻活动页
-  goNewsActivityInfo(e){
-    this.setData({ pageUrl: e.currentTarget.dataset.url, isNewsClick:true})
+  goNewsActivityInfo(e) {
+    this.setData({
+      pageUrl: e.currentTarget.dataset.url,
+      isNewsClick: true
+    })
     this.Users()
     // wx.navigateTo({
     //   url: this.data.pageUrl,
@@ -180,7 +185,8 @@ Page({
       // that.getCityFindBuildInfoByCity()
     } else if (app.globalData.storLocalCity && ifChange == '1') {
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
-      // that.getNewsActivity()
+      that.findBombScreenByCityId()
+      that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     } else {
       wx.getSetting({
@@ -249,7 +255,6 @@ Page({
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
-
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
@@ -259,7 +264,9 @@ Page({
         for (let i = 0; i < cityList.length; i++) {
           if (city.indexOf(cityList[i].city) !== -1) {
             wx.setStorageSync('storLocalCity', cityList[i])
-            // that.getNewsActivity()
+            app.globalData.storLocalCity = cityList[i]
+            that.findBombScreenByCityId()
+            that.getNewsActivity()
             that.getCityFindBuildInfoByCity()
             return
           }
@@ -276,7 +283,8 @@ Page({
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
-      // that.getNewsActivity()
+      that.findBombScreenByCityId()
+      that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
@@ -290,7 +298,8 @@ Page({
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
     if ('positionCity' in cityPromise && cityPromise.positionCity.indexOf(cityPromise.currentCity) != -1) {
-      // that.getNewsActivity()
+      that.findBombScreenByCityId()
+      that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
       return
     }
@@ -311,16 +320,25 @@ Page({
               confirmColor: '#77C4FF',
               success(res) {
                 if (res.confirm) {
+                  let boomScreen_ids = app.globalData.boomScreen_ids
+                  let storLocalCity = app.globalData.storLocalCity
+                  for (let i = 0; i < boomScreen_ids.length; i++) {
+                    if (storLocalCity.id == boomScreen_ids[i].boomScreen_history_id) {
+                      boomScreen_ids.splice(i, 1)
+                    }
+                  }
+                  app.globalData.boomScreen_ids = boomScreen_ids
                   wx.setStorageSync('storLocalCity', cityList[i])
                   that.setData({
                     'cityInfo.cityName': cityList[i].city
                   })
                   app.globalData.storLocalCity = cityList[i]
                   let _storage = wx.getStorageSync('cityPromise') || {}
-
                   _storage.currentCity = cityList[i].city
                   wx.setStorageSync('cityPromise', _storage)
-                  // that.getNewsActivity()
+
+                  that.findBombScreenByCityId()
+                  that.getNewsActivity()
                   that.getCityFindBuildInfoByCity()
                   return
                 } else if (res.cancel) {
@@ -343,7 +361,8 @@ Page({
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
-      // that.getNewsActivity()
+      that.findBombScreenByCityId()
+      that.getNewsActivity()
       that.getCitySessionFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
@@ -373,7 +392,8 @@ Page({
             if (city.city != _storage.positionCity || city.city != _storage.currentCity) {
               that.getSessionCityList(city.city)
             } else {
-              // that.getNewsActivity()
+              that.findBombScreenByCityId()
+              that.getNewsActivity()
               that.getCityFindBuildInfoByCity()
             }
             // wx.setStorageSync('cityPromise', _storage)
@@ -567,48 +587,50 @@ Page({
   },
 
   //获取新闻活动信息
-  getNewsActivity(){
-    let _newsArr=[]
-    let _activityArr=[]
-    let _allArr=[]
+  getNewsActivity() {
+    let _newsArr = []
+    let _activityArr = []
+    let _allArr = []
     let promise = {}
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
       if (data.code === -1 || !data.list || !data.list.length) return
       let newsList = data.list
-      for(let i=0;i<newsList.length;i++){
-        if (newsList[i].type==0){
-          if (newsList[i].published_date && newsList[i].published_date.indexOf(' ')!=-1){
+      for (let i = 0; i < newsList.length; i++) {
+        if (newsList[i].type == 0) {
+          if (newsList[i].published_date && newsList[i].published_date.indexOf(' ') != -1) {
             newsList[i].published_date = newsList[i].published_date.split(' ')[0].split('-').join('.')
           }
           _newsArr.push(newsList[i])
-        } else if (newsList[i].type ==1){
-          if (newsList[i].start_date && newsList[i].start_date.indexOf(' ') != -1){
+        } else if (newsList[i].type == 1) {
+          if (newsList[i].start_date && newsList[i].start_date.indexOf(' ') != -1) {
             newsList[i].start_date = newsList[i].start_date.split(' ')[0].split('-').join('.')
           }
-          if (newsList[i].end_date && newsList[i].end_date.indexOf(' ') != -1){
+          if (newsList[i].end_date && newsList[i].end_date.indexOf(' ') != -1) {
             newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
           }
           _activityArr.push(newsList[i])
         }
       }
-     
+
       //如果新闻活动个数不足6个，则显示全部；超过6个，不足三个的显示全部，另一项自动补全为6个
-      if (_newsArr.length + _activityArr.length<=6){
-        _allArr=_allArr.concat(_newsArr, _activityArr)
-      }else{
-        if (_newsArr.length>=3){
-          if (_activityArr.length>=3){
+      if (_newsArr.length + _activityArr.length <= 6) {
+        _allArr = _allArr.concat(_newsArr, _activityArr)
+      } else {
+        if (_newsArr.length >= 3) {
+          if (_activityArr.length >= 3) {
             _newsArr.length = 3
             _activityArr.length = 3
-          }else{
+          } else {
             _newsArr.length = 6 - _activityArr.length
           }
-        }else{
+        } else {
           _activityArr.length = 6 - _newsArr.length
         }
         _allArr = _allArr.concat(_newsArr, _activityArr)
       }
-      this.setData({ newsList: _allArr })
+      this.setData({
+        newsList: _allArr
+      })
       this.findAttachRelationById(_allArr.length)
     })
   },
@@ -639,7 +661,9 @@ Page({
     }
     let _newsList = this.data.newsList
     if (_t > newsAtvListLength - 1) return
-    let promise = { id: _newsList[ _t].id }
+    let promise = {
+      id: _newsList[_t].id
+    }
     let _arr = this.data._imgList
     $http(apiSetting.newsactivityFindAttachRelationById, promise).then((data) => {
       _arr.push(data.data[0])
@@ -653,13 +677,76 @@ Page({
     }
   },
   //新闻活动图片加载失败
-  errorImgNews(e){
+  errorImgNews(e) {
     if (e.type == 'error') {
       this.data.newsList[e.target.dataset.index].imgArr.upload_file_path = this.data.defaultImg
       this.setData({
         newsList: this.data.newsList
       })
     }
+  },
+
+  //获取弹屏信息
+  findBombScreenByCityId() {
+    if (app.globalData.boomScreen_ids && app.globalData.boomScreen_ids != null) {
+      let boomScreen_ids = app.globalData.boomScreen_ids
+      for (let i = 0; i < boomScreen_ids.length; i++) {
+        if (app.globalData.storLocalCity.id == boomScreen_ids[i].boomScreen_history_id) {
+          this.setData({
+            isHavePopupView: false
+          })
+          return
+        }
+      }
+    } else {
+      app.globalData.boomScreen_ids = []
+    }
+    let promise = {
+      city_area_id: app.globalData.storLocalCity.id,
+      enabled: "1",
+      type: ""
+    }
+    $http(apiSetting.bombscreenFindBombScreenByCityId, promise).then((data) => {
+      if (!data.data) {
+        this.setData({
+          isHavePopupView: false
+        })
+        return
+      }
+      let bombScreen = data.data
+      app.globalData.boomScreen_ids.push({
+        boomScreen_history_id: bombScreen.city_area_id
+      })
+      bombScreen.attachment_path = this.data.imgpath + bombScreen.attachment_path
+      this.setData({
+        bombScreen: bombScreen,
+        isHavePopupView: true
+      })
+    }), (error) => {
+      console.log(error)
+    }
+  },
+
+  //点击弹窗进入详情页
+  goScreenInfo() {
+    //type:0  新闻；1：活动；2:项目
+    let bombScreen = this.data.bombScreen
+    if (bombScreen.type == '2') {
+      this.setData({
+        pageUrl: '../information/information?project_id=' + bombScreen.association_soures_id,
+      })
+    } else {
+      this.setData({
+        pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + bombScreen.association_soures_id + "&type=" + bombScreen.type,
+      })
+    }
+    this.Users()
+  },
+  //关闭弹屏窗口
+  closeView() {
+    this.setData({
+      isHavePopupView: false
+    })
   },
 
   // 获取绑定用户信息
@@ -777,6 +864,11 @@ Page({
                   wx.navigateTo({
                     url: that.data.pageUrl,
                   })
+                  if (that.data.isHavePopupView) {
+                    that.setData({
+                      isHavePopupView: false
+                    })
+                  }
                 } else {
                   that.setData({
                     showBindUserInfo: true,
@@ -846,6 +938,11 @@ Page({
             wx.navigateTo({
               url: that.data.pageUrl,
             })
+            if (that.data.isHavePopupView) {
+              that.setData({
+                isHavePopupView: false
+              })
+            }
           } else {
             that.setData({
               showBindUserInfo: true

@@ -14,7 +14,10 @@
     "pages/houseimg/houseimg",
     "pages/cityList/cityList",
     "pages/citySelect/citySelect",
-    "pages/brokertext/brokertext"
+    "pages/brokertext/brokertext",
+    "pages/newsActivityList/newsActivityList",
+    "pages/newsActivityInfo/newsActivityInfo",
+    "pages/myApply/myApply"
   ],
   "window": {
     "backgroundTextStyle": "light",

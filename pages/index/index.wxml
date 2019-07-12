@@ -43,7 +43,7 @@
 
 <!-- 新闻活动 -->
 <!-- wx:if="{{newsList.length}}" -->
-  <view class='news-activity' wx:if="{{0}}">
+  <view class='news-activity' wx:if="{{newsList.length}}">
     <view class='news-header'>
       <view class='news-title'>新闻活动</view>
       <view class='news-more' bindtap='goNewsActivityInfo' data-url='../newsActivityList/newsActivityList'>
@@ -82,11 +82,13 @@
 
   <!-- 新闻活动弹屏 -->
   <!-- wx:if="{{isHavePopupView}}" -->
-  <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{0}}">
+  <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}">
     <view class='popup-view'>
-      <view class='top'></view>
+      <view class='top' style='background: url("{{bombScreen.attachment_path}}") no-repeat center center;background-size:auto 100%;' bindtap='goScreenInfo'>
+        <!-- <image src='{{bombScreen.attachment_path}}'></image> -->
+      </view>
       <view class='line'></view>
-      <view class='close-view'>
+      <view class='close-view' bindtap='closeView'>
         <image src='../../images/close.png'></image>
       </view>
     </view>
@@ -215,6 +217,6 @@
 </view>
 
 <!-- 绑定用户信息弹窗 -->
-<i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
+<i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose" catchtouchmove='notouch'>
   <view>暂无绑定用户信息</view>
 </i-modal>

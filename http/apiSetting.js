@@ -24,10 +24,14 @@ const serviceModule = {
       method: 'post'
   },
 
-
   //活动报名
   newsactivityInsertActivityEnrollee:{
     url: '/newsactivity/insertActivityEnrollee',
+    method: 'post'
+  },
+  //查询单个弹屏信息
+  bombscreenFindBombScreenByCityId:{
+    url: '/bombscreen/findBombScreenByCityId',
     method: 'post'
   },
 
