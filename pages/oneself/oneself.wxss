@@ -63,6 +63,11 @@
   margin-right: 13px;
   float: left;
 }
+.activityIcon{
+  width: 34rpx;
+  margin-right: 15px;
+  margin-left: 8rpx;
+}
 
 /* 获取用户信息弹窗 */
 

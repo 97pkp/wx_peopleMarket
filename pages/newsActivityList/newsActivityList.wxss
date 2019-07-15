@@ -46,3 +46,14 @@ page{
   color: #7F8389;
   margin-bottom: 5rpx;
 }
+
+i-tabs{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.content{
+  margin-top: 84rpx;
+}

@@ -12,7 +12,7 @@ Page({
   data: {
     defaultImg: '../../images/defaultImg.png',
     imgpath: fileUrl,
-    current: 'news',  //tab下标值
+    current: 'activity',  //tab下标值
     resList:[],   //返回数据
     //分页请求参数
     requestPage:{
@@ -92,6 +92,11 @@ Page({
       let newsList=[]
       let activityList=[]
       for (let i = 0; i < dataArr.length; i++) {
+        if (dataArr[i].enabled == 0) {
+          dataArr.splice(i, 1)
+          i--
+          continue
+        }
         if (dataArr[i].type == 0) {
           if (dataArr[i].published_date && dataArr[i].published_date.indexOf(' ') != -1) {
             dataArr[i].published_date = dataArr[i].published_date.split(' ')[0].split('-').join('.')

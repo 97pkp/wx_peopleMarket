@@ -11,3 +11,9 @@
 <button wx:if="{{type=='1' && btnType==2}}" class='canot-apply' disabled='{{true}}' >报名未开始</button>
 <button wx:if="{{type=='1' && btnType==3}}" class='canot-apply' disabled='{{true}}' >报名已结束</button>
 <button wx:if="{{type=='1' && btnType==4}}" class='canot-apply' disabled='{{true}}' >活动已结束</button>
+<button wx:if="{{type=='1' && btnType==5}}" class='canot-apply' disabled='{{true}}' >报名人数已满</button>
+
+<!-- 绑定用户信息弹窗 -->
+<i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose" catchtouchmove='notouch'>
+  <view>暂无绑定用户信息</view>
+</i-modal>

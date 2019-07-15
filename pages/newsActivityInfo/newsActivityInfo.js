@@ -15,6 +15,7 @@ Page({
     newsActivityId:'',  //活动id
     isClickBtn:false,  //是否点击报名按钮
     btnType:0, //按钮样式 0：活动报名，1：已报名，2：活动未开始，3：活动已结束
+    showBindUserInfo: false,  //是否显示绑定信息弹窗
   },
 
   /**
@@ -63,34 +64,35 @@ Page({
         let activityEndTime = new Date(newsAtvItem.end_date).getTime()   //活动结束时间
         let startTime = new Date(newsAtvItem.settings_enroll_startTime).getTime()   //报名开始时间
         let endTime = new Date(newsAtvItem.settings_enroll_endTime).getTime()     //报名结束时间
-        //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束
+        //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
         //如果活动结束时间在报名开始时间之后，则去判断活动报名时间是否开始
         //如果活动结束时间在报名开始时间之前，则显示活动结束，禁用点击按钮
-        if (activityEndTime > startTime){
-          if (startTime > nowDate) {
-            this.setData({ btnType: 2 })
+        if (newsAtvItem.enroll_num<newsAtvItem.settings_enroll_number){
+          if (activityEndTime > startTime) {
+            if (startTime > nowDate) {
+              this.setData({ btnType: 2 })
+            }
+          } else {
+            if (activityEndTime <= nowDate) {
+              this.setData({ btnType: 4 })
+            } else {
+              this.setData({ btnType: 2 })
+            }
+          }
+          //如果活动结束时间在报名结束时间之后，则去判断活动报名时间是否结束
+          //如果活动结束时间在报名结束时间之前，则去判断活动结束时间，如果在现在时间之前，则活动结束
+          if (activityEndTime > endTime) {
+            if (endTime <= nowDate) {
+              this.setData({ btnType: 3 })
+            }
+          } else {
+            if (activityEndTime <= nowDate) {
+              this.setData({ btnType: 4 })
+            }
           }
         }else{
-          if (activityEndTime <= nowDate){
-            this.setData({ btnType: 4 })
-          }else{
-            this.setData({ btnType: 2 })
-          }
+          this.setData({ btnType: 5 })
         }
-        //如果活动结束时间在报名结束时间之后，则去判断活动报名时间是否结束
-        //如果活动结束时间在报名结束时间之前，则去判断活动结束时间，如果在现在时间之前，则活动结束
-        if (activityEndTime > endTime){
-          if (endTime <= nowDate) {
-            this.setData({ btnType: 3 })
-          }
-        } else {
-          if (activityEndTime <= nowDate) {
-            this.setData({ btnType: 4 })
-          }
-        }
-        // if (endTime<nowDate){
-        //   this.setData({ btnType:3})
-        // }
       }
       this.setData({ newsAtvInfo:newsAtvItem})
       let article = newsAtvItem.content
@@ -116,6 +118,10 @@ Page({
   //活动报名
   bindSub() {
     if (this.data.btnType!=0) return
+    if (!app.globalData.isCheck) {
+      this.setData({ showBindUserInfo:true})
+      return
+    }
     let promise={
       id: this.data.newsActivityId, 
       user_id: app.globalData.userId 
@@ -146,6 +152,35 @@ Page({
       // this.setData({ isClickBtn: false })
       this.setData({ btnType: 0})
     });
+  },
+
+  //取消授权窗
+  cancelTip() {
+    this.setData({
+      showBgpack: false,
+      showPhonepack: false,
+    })
+  },
+  //绑定用户信息弹窗按钮
+  visibleOk() {
+    wx.navigateTo({
+      url: "../bindUser/bindUser"
+    })
+    let boomScreen_ids = app.globalData.boomScreen_ids
+    let storLocalCity = app.globalData.storLocalCity
+    for (let i = 0; i < boomScreen_ids.length; i++) {
+      if (storLocalCity.id == boomScreen_ids[i].boomScreen_history_id) {
+        boomScreen_ids.splice(i, 1)
+      }
+    }
+    app.globalData.boomScreen_ids = boomScreen_ids
+    this.setData({ isBannerClick: false })
+  },
+  visibleOkClose() {
+    this.setData({
+      showBindUserInfo: false,
+      isBannerClick: false
+    })
   },
 
   /**

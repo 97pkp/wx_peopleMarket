@@ -28,7 +28,8 @@ Page({
     duration: 1000,
     swiperCurrent: 0, //轮播图下标
 
-    newsList: [], //新闻活动列表
+    newsList: [], //暂存的新闻活动数据列表
+    showNewsList:[],  //用于显示的新闻活动数据
 
     // 查询城市参数
     cityInfo: {
@@ -59,11 +60,13 @@ Page({
     isBuildClick: false, //是否楼盘列表点击
     isNewsClick: false, //是否是新闻点击
     isHavePopupView: false, //是否有弹屏信息
-
+    newsCurrent:0, //默认新闻活动下标
     t: 0, //新闻模块循环变量初始为0
     _imgList: [], //新闻图片存放
 
     bombScreen: {}, //城市弹屏信息
+    isBannerClick: false,  //是否点击轮播图
+    showNews:false,
   },
   // 切换城市
   changeCity() {
@@ -96,17 +99,27 @@ Page({
     //   url: '../information/information?project_id=' + project_id   //+ '&&imgurl=' + imgurl
     // })
   },
-  //跳转新闻活动页
-  goNewsActivityInfo(e) {
+  //跳转新闻活动列表页
+  goNewsActivityList(e) {
     this.setData({
       pageUrl: e.currentTarget.dataset.url,
       isNewsClick: true
     })
     this.Users()
-    // wx.navigateTo({
-    //   url: this.data.pageUrl,
-    // })
   },
+  //新闻活动直接跳转详情页
+  goNewsActivityInfo() {
+    let newsList = this.data.newsList
+    let newsCurrent = this.data.newsCurrent
+    this.setData({
+      pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + newsList[newsCurrent].id + '&type=' + newsList[newsCurrent].type,
+      isNewsClick: true
+    })
+    this.Users()
+  },
+
+
+
   onLoad: function(option) {
     if (option != undefined && JSON.stringify(option) != "{}") {
       ifChange = option.ifChange;
@@ -593,9 +606,18 @@ Page({
     let _allArr = []
     let promise = {}
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
-      if (data.code === -1 || !data.list || !data.list.length) return
+      if (data.code === -1 || !data.list || !data.list.length){
+        this.setData({ showNews:false})
+        return
+      } 
+      this.setData({ showNews: true})
       let newsList = data.list
       for (let i = 0; i < newsList.length; i++) {
+        if (newsList[i].enabled == 0) {
+          newsList.splice(i, 1)
+          i--
+          continue
+        }
         if (newsList[i].type == 0) {
           if (newsList[i].published_date && newsList[i].published_date.indexOf(' ') != -1) {
             newsList[i].published_date = newsList[i].published_date.split(' ')[0].split('-').join('.')
@@ -655,7 +677,9 @@ Page({
       }
       this.setData({
         newsList: newsList,
+        showNewsList: newsList
       })
+
       wx.hideLoading()
       return
     }
@@ -676,12 +700,20 @@ Page({
       console.log(error)
     }
   },
+  //新闻活动模块切换
+  newsChange(e){
+    let newsCurrent=e.detail.current
+    this.setData({ newsCurrent: newsCurrent})
+  },
+  
   //新闻活动图片加载失败
   errorImgNews(e) {
+    
     if (e.type == 'error') {
       this.data.newsList[e.target.dataset.index].imgArr.upload_file_path = this.data.defaultImg
       this.setData({
-        newsList: this.data.newsList
+        newsList: this.data.newsList,
+        showNewsList: this.data.newsList
       })
     }
   },
@@ -748,6 +780,17 @@ Page({
       isHavePopupView: false
     })
   },
+  //查看轮播图详情
+  lookBannerInfo(e){
+    if (this.data.isBannerClick) return
+    let bannerItem = e.target.dataset.item
+    if (bannerItem.type === undefined || bannerItem.type == 2) return
+    this.setData({ 
+      isBannerClick: true,
+      pageUrl: "../newsActivityInfo/newsActivityInfo?atvid=" + bannerItem.association_soures_id + "&type=" + bannerItem.type
+    })
+    this.Users()
+  },
 
   // 获取绑定用户信息
   getUserGetUserInfo(val) {
@@ -770,11 +813,6 @@ Page({
       pageUrl: e.target.dataset.url,
     })
     this.Users()
-
-    // let pageUrl = e.target.dataset.url
-    // wx.navigateTo({
-    //   url: pageUrl
-    // })
   },
   //轮播图错误图片
   erroImage1(e) {
@@ -809,6 +847,7 @@ Page({
     // 显示导航栏加载框
     wx.showNavigationBarLoading()
     ifChange = 2
+    this.setData({ isBannerClick: false, t: 0, _imgList: [], newsList:[]})
     this.onLoad()
   },
   // 停止刷新
@@ -846,14 +885,15 @@ Page({
                 showPhonepack: false
               })
               that.userUpdata()
-              //楼盘列表点击，不用授权绑定信息；其他点击，需要授权绑定信息
-              if (that.data.isBuildClick || that.data.isNewsClick) {
+              //楼盘列表点击,新闻活动点击,轮播图点击，不用授权绑定信息；其他点击，需要授权绑定信息
+              if (that.data.isBuildClick || that.data.isNewsClick || that.data.isBannerClick) {
                 wx.navigateTo({
                   url: that.data.pageUrl,
                 })
                 that.setData({
                   isBuildClick: false,
-                  isNewsClick: false
+                  isNewsClick: false,
+                  isBannerClick:false
                 })
               } else {
                 //若验证手机号已经授权，去判断受否绑定用户信息
@@ -922,10 +962,11 @@ Page({
         wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
         wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
         that.userUpdata()
-        if (that.data.isBuildClick || that.data.isNewsClick) {
+        if (that.data.isBuildClick || that.data.isNewsClick || that.data.isBannerClick) {
           that.setData({
             isBuildClick: false,
-            isNewsClick: false
+            isNewsClick: false,
+            isBannerClick:false
           })
           wx.navigateTo({
             url: that.data.pageUrl,
@@ -983,10 +1024,20 @@ Page({
     wx.navigateTo({
       url: "../bindUser/bindUser"
     })
+    let boomScreen_ids = app.globalData.boomScreen_ids
+    let storLocalCity = app.globalData.storLocalCity
+    for (let i = 0; i < boomScreen_ids.length; i++) {
+      if (storLocalCity.id == boomScreen_ids[i].boomScreen_history_id) {
+        boomScreen_ids.splice(i, 1)
+      }
+    }
+    app.globalData.boomScreen_ids = boomScreen_ids
+    this.setData({ isBannerClick: false})
   },
   visibleOkClose() {
     this.setData({
       showBindUserInfo: false,
+      isBannerClick:false
     })
   },
 

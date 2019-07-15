@@ -18,7 +18,7 @@
   <swiper autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" current="{{swiperCurrent}}" bindanimationfinish="swiperChange" circular='true'>
     <block wx:for="{{imgUrls}}" wx:key='{{index}}'>
       <swiper-item>
-        <image mode="aspectFill" src="{{item.url==''?defaultImg:item.url}}" width="355" height="150" binderror="erroImage1" data-index='{{index}}'></image>
+        <image mode="aspectFill" src="{{item.url==''?defaultImg:item.url}}" width="355" height="150" binderror="erroImage1" data-index='{{index}}' bindtap='lookBannerInfo' data-item='{{item}}'></image>
       </swiper-item>
     </block>
   </swiper>
@@ -43,24 +43,25 @@
 
 <!-- 新闻活动 -->
 <!-- wx:if="{{newsList.length}}" -->
-  <view class='news-activity' wx:if="{{newsList.length}}">
+  <view class='news-activity' wx:if="{{showNews}}">
     <view class='news-header'>
       <view class='news-title'>新闻活动</view>
-      <view class='news-more' bindtap='goNewsActivityInfo' data-url='../newsActivityList/newsActivityList'>
+      <view class='news-more' bindtap='goNewsActivityList' data-url='../newsActivityList/newsActivityList'>
         <text>更多</text>
         <image src='../../images/right.png'></image>
       </view>
     </view>
-    <view class='news-body' bindtap='goNewsActivityInfo' data-url='../newsActivityList/newsActivityList'>
+    <view class='news-body'>
       <!-- 添加透明遮罩，防止swiper组件触摸滑动 -->
-      <view class='shade-view'></view>
+      <view class='shade-view' bindtap='goNewsActivityInfo'></view>
       <swiper 
         autoplay="{{true}}" 
         interval="{{3000}}" 
         vertical="{{true}}"
         circular="{{true}}"
+        bindchange='newsChange'
         >
-        <block wx:for="{{newsList}}" wx:key="{{index}}">
+        <block wx:for="{{showNewsList}}" wx:key="{{index}}">
           <swiper-item>
             <view class='swiper-box'>
               <image src='{{item.imgArr.upload_file_path}}' binderror='errorImgNews' data-index='{{index}}'></image>
@@ -84,9 +85,12 @@
   <!-- wx:if="{{isHavePopupView}}" -->
   <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}">
     <view class='popup-view'>
-      <view class='top' style='background: url("{{bombScreen.attachment_path}}") no-repeat center center;background-size:auto 100%;' bindtap='goScreenInfo'>
-        <!-- <image src='{{bombScreen.attachment_path}}'></image> -->
-      </view>
+      <view class='top' style='background: url("{{bombScreen.attachment_path}}") no-repeat center center;background-size:auto 100%;' bindtap='goScreenInfo'></view>
+
+ <!-- <image src='{{bombScreen.attachment_path}}'></image> -->
+      <!-- <view class='top' bindtap='goScreenInfo'> 
+        <image  class='asxasxax' src='http://haiketest.coli688.com:8081/zhwx/userfiles/bombscreen/6343CA42B03C4B04963E26E3485E478F.png' mode='aspectFill'></image>
+      </view> -->
       <view class='line'></view>
       <view class='close-view' bindtap='closeView'>
         <image src='../../images/close.png'></image>
@@ -220,3 +224,14 @@
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose" catchtouchmove='notouch'>
   <view>暂无绑定用户信息</view>
 </i-modal>
+
+<!-- <view class='fake-tabbar'>
+  <view class='left'>
+    <image src='../../images/home2.png'></image>
+    <text>首页</text>
+  </view>
+  <view class='right'>
+    <image src='../../images/self1.png'></image>
+    <text>我的</text>
+  </view>
+</view> -->

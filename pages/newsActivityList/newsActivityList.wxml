@@ -1,8 +1,8 @@
 <!--pages/newsActivityInfo/newsActivityInfo.wxml-->
 <view class='news-activity-box'>
   <i-tabs current="{{ current }}" bindchange="handleChange">
-    <i-tab key="news" title="新闻"></i-tab>
     <i-tab key="activity" title="活动"></i-tab>
+    <i-tab key="news" title="新闻"></i-tab>
   </i-tabs>
   <view class='content' wx:if="{{current=='news'}}">
     <view class='news-item' wx:for="{{resList}}" wx:key="{{index}}" wx:value="{{item}}" bindtap='goNewsAtvInfo' data-atvID='{{item.id}}' data-type='{{item.type}}'>
