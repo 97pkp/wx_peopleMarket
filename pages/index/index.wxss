@@ -144,13 +144,16 @@ swiper image {
   width: 64rpx;
   height: 50rpx;
 }
+
 /* 新闻活动 */
-.news-activity{
+
+.news-activity {
   width: 670rpx;
   margin-top: 40rpx;
   /* background: #ffffff; */
 }
-.news-header{
+
+.news-header {
   height: 80rpx;
   width: 100%;
   display: flex;
@@ -158,31 +161,37 @@ swiper image {
   align-items: center;
   margin-bottom: 20rpx;
 }
-.news-title{
+
+.news-title {
   font-family: 'PingFang-SC-Medium';
-  color: #333333;
+  color: #333;
   font-size: 34rpx;
 }
-.news-more{
+
+.news-more {
   display: flex;
   align-items: center;
 }
-.news-more text{
+
+.news-more text {
   font-family: 'PingFang-SC-Medium';
   font-size: 24rpx;
-  color: #8D91A2;
+  color: #8d91a2;
 }
-.news-more image{
+
+.news-more image {
   width: 12rpx;
   height: 22rpx;
   margin-left: 10rpx;
 }
-.news-body{
+
+.news-body {
   width: 100%;
   height: 144rpx;
   position: relative;
 }
-.shade-view{
+
+.shade-view {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -191,52 +200,65 @@ swiper image {
   background: transparent;
   z-index: 5;
 }
-.news-body swiper{
+
+.news-body swiper {
   width: 100%;
   height: 100%;
 }
-.news-body .swiper-box{
+
+.news-body .swiper-box {
   width: 100%;
   height: 100%;
   display: flex;
 }
-.news-body image{
+
+.news-body image {
   width: 256rpx;
   height: 144rpx;
   margin-right: 24rpx;
 }
-.news-info{
+
+.news-info {
   font-family: 'PingFang-SC-Medium';
   font-size: 28rpx;
-  color: #333333;
+  color: #333;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
 }
-.news-info .news-txt{
+
+.news-info .news-txt {
   width: 376rpx;
   height: 80rpx;
-  display: -webkit-box;    
-  -webkit-box-orient: vertical;    
-  -webkit-line-clamp: 2;    
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   word-wrap: break-word;
   word-break: break-all;
 }
-.news-info .news-txt text{
+
+.news-info .news-txt text {
   word-wrap: break-word;
   word-break: break-all;
 }
 
-.news-info .date{
+/* .news-info .bottom-date{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5rpx;
+} */
+
+.news-info .date {
   font-size: 24rpx;
-  color: #7F8389;
+  color: #7f8389;
   margin-bottom: 5rpx;
 }
 
 /* 弹屏样式 */
-.popup-view-box{
+
+.popup-view-box {
   position: absolute;
   top: 0;
   left: 0;
@@ -245,7 +267,8 @@ swiper image {
   background: rgba(0, 0, 0, 0.5);
   z-index: 10;
 }
-.popup-view{
+
+.popup-view {
   position: absolute;
   width: 484rpx;
   height: 748rpx;
@@ -258,41 +281,44 @@ swiper image {
   flex-direction: column;
   align-items: center;
 }
-.popup-view .top{
+
+.popup-view .top {
   width: 100%;
   height: 628rpx;
   border-radius: 8rpx;
-  background: #ffffff;
+  background: #fff;
   overflow: hidden;
 }
-.asxasxax{
-  display: inline-block;
+
+.bomb-screen-img {
+  width: 100%;
   height: 100%;
 }
 
-
-
-.popup-view .line{
+.popup-view .line {
   width: 0;
   height: 40rpx;
   border: solid #ffffff;
   border-width: 0 2rpx;
 }
-.popup-view .close-view{
+
+.popup-view .close-view {
   width: 80rpx;
   height: 80rpx;
   border-radius: 40rpx;
-  background: #ffffff;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.popup-view .close-view image{
+
+.popup-view .close-view image {
   width: 36rpx;
   height: 36rpx;
 }
 
 /* 楼盘样式 */
+
 .hours {
   width: 100%;
   height: 44rpx;
@@ -495,8 +521,8 @@ swiper image {
   width: 150rpx;
 }
 
-
 /* 模拟tabbar */
+
 /* .fake-tabbar{
   width: 100%;
   height: 100rpx;

@@ -42,10 +42,6 @@ Page({
   // tab切换
   handleChange({ detail }) {
     if (detail.key == this.data.current) return
-    // wx.showLoading({
-    //   title: '加载中',
-    //   mask: true,
-    // })
     this.setData({
       current: detail.key,
       'requestPage.page': 1,
@@ -108,6 +104,14 @@ Page({
           }
           if (dataArr[i].end_date && dataArr[i].end_date.indexOf(' ') != -1) {
             dataArr[i].end_date = dataArr[i].end_date.split(' ')[0].split('-').join('.')
+          }
+          let activityEndDate = new Date(dataArr[i].end_date).getTime()
+          let nowDate = new Date().getFullYear() + '-' + Number(new Date().getMonth() + 1) + '-' + new Date().getDate()
+          nowDate = new Date(nowDate).getTime()   //当前网络时间 
+          if (activityEndDate < nowDate){
+            dataArr.splice(i,1)
+            i--
+            continue
           }
           activityList.push(dataArr[i])
         }

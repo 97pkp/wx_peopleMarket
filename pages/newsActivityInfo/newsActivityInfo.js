@@ -10,91 +10,138 @@ Page({
    * 页面的初始数据
    */
   data: {
-    newsAtvInfo:null,  //新闻活动数据项
-    type:0,   //默认项目为新闻
-    newsActivityId:'',  //活动id
-    isClickBtn:false,  //是否点击报名按钮
-    btnType:0, //按钮样式 0：活动报名，1：已报名，2：活动未开始，3：活动已结束
-    showBindUserInfo: false,  //是否显示绑定信息弹窗
+    newsAtvInfo: null, //新闻活动数据项
+    type: 0, //默认项目为新闻
+    newsActivityId: '', //活动id
+    btnType: 0, //按钮样式 0：活动报名，1：已报名，2：活动未开始，3：活动已结束
+    showBindUserInfo: false, //是否显示绑定信息弹窗
+    settingsEnroll:0, //是否允许报名
+
+    hideBtn:false,   //默认显示报名按钮
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function(options) {
     wx.showLoading({
       title: '加载中',
       mask: true,
     })
-    let that=this
-    this.setData({ newsActivityId: options.atvid, type: options.type})
-    if (options.type=="0"){
+    if (options.hideBtn){
+      this.setData({
+        hideBtn: true,
+      })
+    }
+    let that = this
+    this.setData({
+      newsActivityId: options.atvid,
+      type: options.type
+    })
+    if (options.type == "0") {
       wx.setNavigationBarTitle({
         title: '新闻'
       })
-    } else if (options.type == "1"){
+      that.findNewsActivityById()
+    } else if (options.type == "1") {
       wx.setNavigationBarTitle({
         title: '活动'
       })
-      this.findMyEnrollActivityById()
+      that.findMyEnrollActivityById()
     }
-    that.findNewsActivityById()
+    
   },
   //获取新闻活动详情
-  findNewsActivityById(){
-    let promise = { id: this.data.newsActivityId}
-    if (this.data.type=="0"){
-      promise.visitor_flag="1"
-    } 
+  findNewsActivityById() {
+    let promise = {
+      id: this.data.newsActivityId
+    }
+    if (this.data.type == "0") {
+      promise.visitor_flag = "1"
+    }
     $http(apiSetting.newsactivityFindNewsActivityById, promise).then((data) => {
-      if(!data.data) return
+      if (!data.data) {
+        return
+      }
       let newsAtvItem = data.data
       if (newsAtvItem.type == 0) {
         if (newsAtvItem.published_date && newsAtvItem.published_date.indexOf(' ') != -1) {
-          newsAtvItem.published_date = newsAtvItem.published_date.split(' ')[0].split('-').join('.')
+          newsAtvItem.published_date = newsAtvItem.published_date.split(' ')[0]
         }
       } else if (newsAtvItem.type == 1) {
         if (newsAtvItem.start_date && newsAtvItem.start_date.indexOf(' ') != -1) {
-          newsAtvItem.start_date = newsAtvItem.start_date.split(' ')[0].split('-').join('.')
+          newsAtvItem.start_date = newsAtvItem.start_date.split(' ')[0]
         }
         if (newsAtvItem.end_date && newsAtvItem.end_date.indexOf(' ') != -1) {
-          newsAtvItem.end_date = newsAtvItem.end_date.split(' ')[0].split('-').join('.')
+          newsAtvItem.end_date = newsAtvItem.end_date.split(' ')[0]
         }
-        let nowDate= new Date().getTime()   //当前网络时间
-        let activityEndTime = new Date(newsAtvItem.end_date).getTime()   //活动结束时间
-        let startTime = new Date(newsAtvItem.settings_enroll_startTime).getTime()   //报名开始时间
-        let endTime = new Date(newsAtvItem.settings_enroll_endTime).getTime()     //报名结束时间
-        //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
-        //如果活动结束时间在报名开始时间之后，则去判断活动报名时间是否开始
-        //如果活动结束时间在报名开始时间之前，则显示活动结束，禁用点击按钮
-        if (newsAtvItem.enroll_num<newsAtvItem.settings_enroll_number){
-          if (activityEndTime > startTime) {
-            if (startTime > nowDate) {
-              this.setData({ btnType: 2 })
-            }
-          } else {
-            if (activityEndTime <= nowDate) {
-              this.setData({ btnType: 4 })
-            } else {
-              this.setData({ btnType: 2 })
-            }
-          }
-          //如果活动结束时间在报名结束时间之后，则去判断活动报名时间是否结束
-          //如果活动结束时间在报名结束时间之前，则去判断活动结束时间，如果在现在时间之前，则活动结束
-          if (activityEndTime > endTime) {
-            if (endTime <= nowDate) {
-              this.setData({ btnType: 3 })
-            }
-          } else {
-            if (activityEndTime <= nowDate) {
-              this.setData({ btnType: 4 })
-            }
-          }
+
+        let month=0
+        let day=0
+        if (new Date().getMonth() + 1<10){
+          month = "0" + Number(new Date().getMonth() + 1) 
         }else{
-          this.setData({ btnType: 5 })
+          month = new Date().getMonth() + 1
+        }
+        if (new Date().getDate() < 10) {
+          day = "0" + Number(new Date().getDate())
+        } else {
+          day = new Date().getDate()
+        }
+        
+        let nowDate = new Date().getFullYear() + '-' + month+'-' + day
+        nowDate = new Date(nowDate).getTime()   //当前网络时间
+        
+        let activityEndTime = new Date(newsAtvItem.end_date).getTime()   //活动结束时间
+        if (newsAtvItem.settings_enroll_startTime && newsAtvItem.settings_enroll_startTime.indexOf(' ') != -1){
+          newsAtvItem.settings_enroll_startTime = newsAtvItem.settings_enroll_startTime.split(' ')[0]
+        }
+        if (newsAtvItem.settings_enroll_endTime && newsAtvItem.settings_enroll_endTime.indexOf(' ') != -1) {
+          newsAtvItem.settings_enroll_endTime = newsAtvItem.settings_enroll_endTime.split(' ')[0]
+        }
+        let startTime = new Date(newsAtvItem.settings_enroll_startTime).getTime() //报名开始时间
+        let endTime = new Date(newsAtvItem.settings_enroll_endTime).getTime() //报名结束时间
+        
+        //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
+        //startTime：报名开始时间，endTime：报名结束时间，activityEndTime：活动结束时间，nowDate：当前时间
+        //1.如果活动结束时间小于当前时间，活动结束；否则去判断是否已报名
+        //2.如果已报名，显示已报名；如果没报名，去判断报名名额是否满了
+        //3.如果报名名额满了，提示，报名人数已满；否则判断开始时间
+        //4.如果报名开始时间大于当前报名时间，提示报名未开始；否则报名开始，去判断报名结束时间
+        //5.如果报名结束时间小于当前时间，报名结束；否则可以报名（默认）
+
+        //如果报名人数和限额为空或者，转化后不是纯数字，则将人数初始化为0
+        if (!newsAtvItem.enroll_num || isNaN(Number(newsAtvItem.enroll_num))){
+          newsAtvItem.enroll_num=0
+        }
+        if (!newsAtvItem.settings_enroll_number || isNaN(Number(newsAtvItem.settings_enroll_number))) {
+          newsAtvItem.settings_enroll_number = 0
+        }
+
+        if (activityEndTime <= nowDate) {
+          if (this.data.btnType !== 1){
+            this.setData({ btnType: 4 })
+          }
+        } else {  //活动没结束，判断是否已报名
+          if (this.data.btnType !== 1) {  //如果活动没报名，判断是否能报名
+            if (newsAtvItem.enroll_num < newsAtvItem.settings_enroll_number) {   //如果有名额，则显示报名按钮，否则报名人数满了
+              if (startTime > nowDate) {  //报名开始时间>当前时间，提示报名没开始,否则报名开始
+                this.setData({ btnType: 2 })
+              } else {
+                if (endTime < nowDate) {   //如果报名结束时间小于当前时间，报名结束
+                  this.setData({ btnType: 3 })
+                }
+              }
+            } else {
+              this.setData({ btnType: 5 })
+            }
+          }
         }
       }
-      this.setData({ newsAtvInfo:newsAtvItem})
+      this.setData({
+        newsAtvInfo: newsAtvItem,
+        settingsEnroll: newsAtvItem.settings_enroll
+      })
       let article = newsAtvItem.content
       WxParse.wxParse('article', 'html', article, this, 5);
       wx.hideLoading()
@@ -104,12 +151,18 @@ Page({
   },
 
   //查询是否已经报名
-  findMyEnrollActivityById(){
-    let promise = { id: this.data.newsActivityId, userId: app.globalData.userId}
+  findMyEnrollActivityById() {
+    let promise = {
+      id: this.data.newsActivityId,
+      userId: app.globalData.userId
+    }
     $http(apiSetting.newsactivityFindMyEnrollActivityById, promise).then((data) => {
-      if(data.list!=null){
-        this.setData({ btnType:1})
+      if (data.list != null) {
+        this.setData({
+          btnType: 1
+        })
       }
+      this.findNewsActivityById()
     }, (error) => {
       console.log(error)
     });
@@ -117,23 +170,79 @@ Page({
 
   //活动报名
   bindSub() {
-    if (this.data.btnType!=0) return
+    if (this.data.btnType == 1) return
     if (!app.globalData.isCheck) {
-      this.setData({ showBindUserInfo:true})
+      this.setData({
+        showBindUserInfo: true
+      })
       return
     }
-    let promise={
-      id: this.data.newsActivityId, 
-      user_id: app.globalData.userId 
+     //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
+    let btnType = this.data.btnType
+    if(btnType==2){
+      wx.showModal({
+        title: '报名未开始!',
+        confirmText: '关闭',
+        showCancel: false,
+        success(res) {
+          if (res.confirm) {
+            return
+          }
+        }
+      })
+      return
+    } else if (btnType == 3){
+      wx.showModal({
+        title: '报名已结束!',
+        confirmText: '关闭',
+        showCancel: false,
+        success(res) {
+          if (res.confirm) {
+            return
+          }
+        }
+      })
+      return
+    } else if (btnType == 4){
+      wx.showModal({
+        title: '活动已结束!',
+        confirmText: '关闭',
+        showCancel: false,
+        success(res) {
+          if (res.confirm) {
+            return
+          }
+        }
+      })
+      return
+    } else if (btnType == 5){
+      wx.showModal({
+        title: '活动报名名额已满!',
+        confirmText: '关闭',
+        showCancel: false,
+        success(res) {
+          if (res.confirm) {
+            return
+          }
+        }
+      })
+      return
+    }
+
+    let promise = {
+      id: this.data.newsActivityId,
+      user_id: app.globalData.userId
     }
     $http(apiSetting.newsactivityInsertActivityEnrollee, promise).then((data) => {
-      if(!data.code){
-        // this.setData({ isClickBtn: true })
-        this.setData({ btnType: 1})
+      if (data.code==0) {
+        this.setData({
+          btnType: 1,
+        })
+        this.findMyEnrollActivityById()
         wx.showModal({
           title: '报名成功',
           confirmText: '我的报名',
-          success(res){
+          success(res) {
             if (res.confirm) {
               wx.navigateTo({
                 url: '../myApply/myApply',
@@ -143,14 +252,26 @@ Page({
             }
           }
         })
-      }else{
-        // this.setData({ isClickBtn: false })
-        this.setData({ btnType: 0 })
+      } else if (data.code==-1){
+        this.setData({
+          btnType: 5
+        })
+        wx.showModal({
+          title: '报名失败' + data.message+"!",
+          confirmText: '关闭',
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              return
+            }
+          }
+        })
       }
     }, (error) => {
+      this.setData({
+        btnType: 0
+      })
       console.log(error)
-      // this.setData({ isClickBtn: false })
-      this.setData({ btnType: 0})
     });
   },
 
@@ -174,7 +295,9 @@ Page({
       }
     }
     app.globalData.boomScreen_ids = boomScreen_ids
-    this.setData({ isBannerClick: false })
+    this.setData({
+      isBannerClick: false
+    })
   },
   visibleOkClose() {
     this.setData({
@@ -186,49 +309,49 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
+  onReady: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
+  onHide: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  onUnload: function() {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
+  onPullDownRefresh: function() {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
+  onReachBottom: function() {
 
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function() {
 
   }
 })

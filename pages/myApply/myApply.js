@@ -115,7 +115,7 @@ Page({
   goNewsAtvInfo(e){
     let atvid = e.currentTarget.dataset.atvid
     wx.navigateTo({
-      url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=1",
+      url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=1"+"&hideBtn=true",
     })
   },
 

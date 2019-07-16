@@ -2,16 +2,28 @@
 <import src="../../wxParse/wxParse.wxml" />
 
 <view class='title'>{{newsAtvInfo.title}}</view>
+<view class='news-date news-atv-date' wx:if='{{type==0}}'>{{newsAtvInfo.published_date}}</view>
+<!-- <view class='atv-date news-atv-date' wx:if='{{type==1}}'>{{newsAtvInfo.start_date}} 至 {{newsAtvInfo.end_date}}</view> -->
 <view class='news-body'>
   <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
 </view>
 
-<button wx:if="{{type=='1' && btnType==0}}" class='can-apply' disabled='{{false}}' bindtap='bindSub'>活动报名</button>
-<button wx:if="{{type=='1' && btnType==1}}" class='canot-apply' disabled='{{true}}' >已报名</button>
-<button wx:if="{{type=='1' && btnType==2}}" class='canot-apply' disabled='{{true}}' >报名未开始</button>
-<button wx:if="{{type=='1' && btnType==3}}" class='canot-apply' disabled='{{true}}' >报名已结束</button>
-<button wx:if="{{type=='1' && btnType==4}}" class='canot-apply' disabled='{{true}}' >活动已结束</button>
-<button wx:if="{{type=='1' && btnType==5}}" class='canot-apply' disabled='{{true}}' >报名人数已满</button>
+
+<button wx:if="{{!hideBtn && settingsEnroll==1 && type=='1' && btnType!==1}}" class='can-apply btn' disabled='{{false}}' bindtap='bindSub'>报名</button>
+<button wx:if="{{!hideBtn && settingsEnroll==1 && type=='1' && btnType==1}}" class='can-apply btn' disabled='{{false}}' >已报名</button>
+<!-- <button wx:if="{{settingsEnroll==1 && type=='1' && btnType==2}}" class='canot-apply btn' disabled='{{true}}' >报名未开始</button>
+<button wx:if="{{settingsEnroll==1 && type=='1' && btnType==3}}" class='canot-apply btn' disabled='{{true}}' >报名已结束</button>
+<button wx:if="{{settingsEnroll==1 && type=='1' && btnType==4}}" class='canot-apply btn' disabled='{{true}}' >活动已结束</button>
+<button wx:if="{{settingsEnroll==1 && type=='1' && btnType==5}}" class='canot-apply btn' disabled='{{true}}' >报名人数已满</button> -->
+
+<view class='signUp' wx:if="{{settingsEnroll==1 && type=='1'}}">
+  <view class='top'>
+    <view class='now-num num-view'>已报名：{{newsAtvInfo.enroll_num}}</view>
+    <view class='all-num num-view'>报名限额：{{newsAtvInfo.settings_enroll_number}}</view>
+  </view>
+  <view class='sign-up-date'>报名时间：{{newsAtvInfo.settings_enroll_startTime}} 至 {{newsAtvInfo.settings_enroll_endTime}}</view>
+  <view class='activity-date'>活动时间：{{newsAtvInfo.start_date}} 至 {{newsAtvInfo.end_date}}</view>
+</view>
 
 <!-- 绑定用户信息弹窗 -->
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose" catchtouchmove='notouch'>

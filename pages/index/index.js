@@ -630,6 +630,15 @@ Page({
           if (newsList[i].end_date && newsList[i].end_date.indexOf(' ') != -1) {
             newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
           }
+          let activityEndDate = new Date(newsList[i].end_date).getTime()
+          let nowDate = new Date().getFullYear() + '-' + Number(new Date().getMonth() + 1) + '-' + new Date().getDate()
+          nowDate = new Date(nowDate).getTime()   //当前网络时间 
+          if (activityEndDate < nowDate) {
+            // newsList[i].isEnd = true
+            newsList.splice(i,1)
+            i--
+            continue
+          }
           _activityArr.push(newsList[i])
         }
       }
@@ -679,8 +688,6 @@ Page({
         newsList: newsList,
         showNewsList: newsList
       })
-
-      wx.hideLoading()
       return
     }
     let _newsList = this.data.newsList
@@ -708,7 +715,6 @@ Page({
   
   //新闻活动图片加载失败
   errorImgNews(e) {
-    
     if (e.type == 'error') {
       this.data.newsList[e.target.dataset.index].imgArr.upload_file_path = this.data.defaultImg
       this.setData({
@@ -779,6 +785,15 @@ Page({
     this.setData({
       isHavePopupView: false
     })
+  },
+
+  //弹屏图片加载失败
+  errorBombScreen(e){
+    if (e.type == 'error') {
+      this.setData({
+        'bombScreen.attachment_path': this.data.defaultImg
+      })
+    }
   },
   //查看轮播图详情
   lookBannerInfo(e){

@@ -8,7 +8,9 @@
     </view>
     <view class='right-check'>
       <text>切换城市</text>
-      <view class='right-icon'><image src='../../images/right.png'></image></view>
+      <view class='right-icon'>
+        <image src='../../images/right.png'></image>
+      </view>
     </view>
   </view>
   <!-- banner -->
@@ -41,8 +43,8 @@
     </view>
   </view>
 
-<!-- 新闻活动 -->
-<!-- wx:if="{{newsList.length}}" -->
+  <!-- 新闻活动 -->
+  <!-- wx:if="{{newsList.length}}" -->
   <view class='news-activity' wx:if="{{showNews}}">
     <view class='news-header'>
       <view class='news-title'>新闻活动</view>
@@ -54,13 +56,7 @@
     <view class='news-body'>
       <!-- 添加透明遮罩，防止swiper组件触摸滑动 -->
       <view class='shade-view' bindtap='goNewsActivityInfo'></view>
-      <swiper 
-        autoplay="{{true}}" 
-        interval="{{3000}}" 
-        vertical="{{true}}"
-        circular="{{true}}"
-        bindchange='newsChange'
-        >
+      <swiper autoplay="{{true}}" interval="{{3000}}" vertical="{{true}}" circular="{{true}}" bindchange='newsChange'>
         <block wx:for="{{showNewsList}}" wx:key="{{index}}">
           <swiper-item>
             <view class='swiper-box'>
@@ -68,8 +64,7 @@
               <view class='news-info'>
                 <view class='news-txt'>
                   <text wx:if="{{item.type==0}}">【新闻】</text>
-                  <text wx:if="{{item.type==1}}">【活动】</text>
-                  {{item.title}}
+                  <text wx:if="{{item.type==1}}">【活动】</text> {{item.title}}
                 </view>
                 <view class='date' wx:if="{{item.type==0}}">{{item.published_date}}</view>
                 <view class='date' wx:if="{{item.type==1}}">{{item.start_date}}-{{item.end_date}}</view>
@@ -85,12 +80,12 @@
   <!-- wx:if="{{isHavePopupView}}" -->
   <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}">
     <view class='popup-view'>
-      <view class='top' style='background: url("{{bombScreen.attachment_path}}") no-repeat center center;background-size:auto 100%;' bindtap='goScreenInfo'></view>
+      <!-- <view class='top' style='background: url("{{bombScreen.attachment_path}}") no-repeat center center;background-size:auto 100%;' bindtap='goScreenInfo'></view> -->
 
- <!-- <image src='{{bombScreen.attachment_path}}'></image> -->
-      <!-- <view class='top' bindtap='goScreenInfo'> 
-        <image  class='asxasxax' src='http://haiketest.coli688.com:8081/zhwx/userfiles/bombscreen/6343CA42B03C4B04963E26E3485E478F.png' mode='aspectFill'></image>
-      </view> -->
+      <!-- <image src='{{bombScreen.attachment_path}}'></image> -->
+      <view class='top' bindtap='goScreenInfo'>
+        <image class='bomb-screen-img' src='{{bombScreen.attachment_path}}' mode='aspectFill' binderror='errorBombScreen'></image>
+      </view>
       <view class='line'></view>
       <view class='close-view' bindtap='closeView'>
         <image src='../../images/close.png'></image>
@@ -154,7 +149,7 @@
   <!-- 周边楼盘详情 -->
   <view class='rim-list ' bindtap='goInformation' data-project_id='{{item.id}}' data-imgurl='{{item.pictureurl}}' wx:for='{{rimbuildinfolist}}' wx:key='index' wx:if="{{rimbuildinfolist.length}}">
     <view class='img'>
-      <image mode="aspectFill" src="{{item.pictureurl==''?defaultImg:item.pictureurl}}"  binderror="erroImage2" data-index='{{index}}'></image>
+      <image mode="aspectFill" src="{{item.pictureurl==''?defaultImg:item.pictureurl}}" binderror="erroImage2" data-index='{{index}}'></image>
     </view>
     <view class='hours-info'>
       <view class='top-info'>

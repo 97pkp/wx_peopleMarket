@@ -3,36 +3,68 @@
 
 page{
   background: #ffffff;
+  padding-bottom: 200rpx;
 }
 .title{
   text-align: center;
-  margin-top: 50rpx;
-  font-size: 40rpx;
+  font-size: 30rpx;
+  margin-top: 30rpx;
 }
+
+.news-atv-date{
+  font-size: 25rpx;
+  color: #7f8389;
+  text-align: center;
+  margin-top: 36rpx;
+}
+
 .news-body{
   margin-top: 20rpx;
   padding: 0 30rpx;
 }
+
+.btn{
+  width: 100rpx;
+  height: 100rpx;
+  position: fixed;
+  bottom: 240rpx;
+  right: 30rpx;
+  font-size: 26rpx;
+  padding: 0;
+}
+
 .can-apply{
-  width: 80%;
-  height: 80rpx;
   background: #20a0ff;
   color: #ffffff;
   text-align: center;
-  line-height: 80rpx;
-  border-radius: 20rpx;
-  margin: 100rpx auto;
+  line-height: 100rpx;
+  border-radius: 4rpx;
 }
-.canot-apply{
-  width: 80%;
-  height: 80rpx;
+/* .canot-apply{
   text-align: center;
-  line-height: 80rpx;
-  /* border-radius: 20rpx; */
-  margin: 100rpx auto;
-  /* background: #cccccc;
-  color: #333333; */
-}
+  line-height: 100rpx;
+} */
 image{
   width: 100% !important;
+}
+
+.signUp{
+  padding: 0 30rpx;
+  margin-top: 50rpx;
+  font-size: 24rpx;
+  color: #9a9a9a;
+  font-family: "PingFangTC-Regular";
+}
+.signUp .top{
+  display: flex;
+  margin-bottom: 32rpx;
+}
+.signUp .num-view{
+  width: 200rpx;
+}
+.signUp .all-num{
+  /* margin-left: 170rpx; */
+}
+.signUp .sign-up-date{
+  margin-bottom: 32rpx;
 }
