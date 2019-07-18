@@ -7,15 +7,17 @@ page{
 }
 .title{
   text-align: center;
-  font-size: 30rpx;
+  font-size: 40rpx;
   margin-top: 30rpx;
+  padding: 0 30rpx;
+  font-family: "PingFangTC-Regular";
 }
 
 .news-atv-date{
   font-size: 25rpx;
   color: #7f8389;
   text-align: center;
-  margin-top: 36rpx;
+  margin-top: 20rpx;
 }
 
 .news-body{
@@ -51,7 +53,7 @@ image{
 .signUp{
   padding: 0 30rpx;
   margin-top: 50rpx;
-  font-size: 24rpx;
+  font-size: 30rpx;
   color: #9a9a9a;
   font-family: "PingFangTC-Regular";
 }
@@ -60,7 +62,7 @@ image{
   margin-bottom: 32rpx;
 }
 .signUp .num-view{
-  width: 200rpx;
+  width: 260rpx;
 }
 .signUp .all-num{
   /* margin-left: 170rpx; */

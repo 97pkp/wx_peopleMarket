@@ -16,8 +16,8 @@ Page({
     btnType: 0, //按钮样式 0：活动报名，1：已报名，2：活动未开始，3：活动已结束
     showBindUserInfo: false, //是否显示绑定信息弹窗
     settingsEnroll:0, //是否允许报名
-
     hideBtn:false,   //默认显示报名按钮
+    webHref:'',  //新闻链接路径
   },
 
   /**
@@ -40,12 +40,12 @@ Page({
     })
     if (options.type == "0") {
       wx.setNavigationBarTitle({
-        title: '新闻'
+        title: '新闻详情'
       })
       that.findNewsActivityById()
     } else if (options.type == "1") {
       wx.setNavigationBarTitle({
-        title: '活动'
+        title: '活动详情'
       })
       that.findMyEnrollActivityById()
     }
@@ -61,6 +61,7 @@ Page({
     }
     $http(apiSetting.newsactivityFindNewsActivityById, promise).then((data) => {
       if (!data.data) {
+        wx.hideLoading()
         return
       }
       let newsAtvItem = data.data
@@ -146,6 +147,7 @@ Page({
       WxParse.wxParse('article', 'html', article, this, 5);
       wx.hideLoading()
     }, (error) => {
+      wx.hideLoading()
       console.log(error)
     });
   },
@@ -306,18 +308,24 @@ Page({
     })
   },
 
+  //超链接解析点击事件
+  wxParseTagATap: function (e) {
+    var href = e.currentTarget.dataset.src;
+    this.setData({ webHref: href})
+  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-
+    
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
-
+   
   },
 
   /**
@@ -331,7 +339,7 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function() {
-
+    
   },
 
   /**

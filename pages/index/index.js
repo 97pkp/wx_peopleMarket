@@ -333,6 +333,8 @@ Page({
               confirmColor: '#77C4FF',
               success(res) {
                 if (res.confirm) {
+                  that.setData({ isBannerClick: false, t: 0, _imgList: [], newsList: [], rimbuildinfolist:[]})
+                  // that.setData({ rimbuildinfolist: []})
                   let boomScreen_ids = app.globalData.boomScreen_ids
                   let storLocalCity = app.globalData.storLocalCity
                   for (let i = 0; i < boomScreen_ids.length; i++) {
@@ -355,7 +357,7 @@ Page({
                   that.getCityFindBuildInfoByCity()
                   return
                 } else if (res.cancel) {
-                  wx.hideLoading()
+                  // wx.hideLoading()
                   return
                 }
               }
@@ -488,7 +490,7 @@ Page({
       })
 
       // 获取周边楼盘
-      this.getRimBuildInfo();
+      this.getRimBuildInfo()
     }, (error) => {
       console.log(error)
     });
@@ -544,7 +546,7 @@ Page({
       })
 
       // 获取周边楼盘
-      this.getRimBuildInfo();
+      this.getRimBuildInfo()
 
     }, (error) => {
       console.log(error)
@@ -604,7 +606,12 @@ Page({
     let _newsArr = []
     let _activityArr = []
     let _allArr = []
-    let promise = {}
+    let promise = {
+      city_area_id: app.globalData.storLocalCity.id,
+      project_id: "", 
+      type: "", 
+      login_by: app.globalData.userId
+    }
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
       if (data.code === -1 || !data.list || !data.list.length){
         this.setData({ showNews:false})
@@ -613,7 +620,7 @@ Page({
       this.setData({ showNews: true})
       let newsList = data.list
       for (let i = 0; i < newsList.length; i++) {
-        if (newsList[i].enabled == 0) {
+        if (newsList[i].enabled == 1) {
           newsList.splice(i, 1)
           i--
           continue
@@ -741,7 +748,7 @@ Page({
     }
     let promise = {
       city_area_id: app.globalData.storLocalCity.id,
-      enabled: "1",
+      enabled: "0",
       type: ""
     }
     $http(apiSetting.bombscreenFindBombScreenByCityId, promise).then((data) => {

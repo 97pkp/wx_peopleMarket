@@ -209,13 +209,17 @@
   flex-direction: column;
   width: 21%;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 .client .step-info>view text:first-child{
   font-size: 24rpx;
 }
-.client .step-info>view text:last-child{
+.client .step-info>view text:nth-of-type(2){
   margin-top: 12rpx;
+  font-size: 20rpx;
+}
+.client .step-info>view text:last-child{
+  /* margin-top: 12rpx; */
   font-size: 20rpx;
 }
 .client .step-info .step-tj text:first-child{
@@ -474,7 +478,7 @@
 .drawer .content .plan {
   padding-left: 20rpx;
   padding-right: 40rpx;
-  margin-bottom: 120rpx;
+  margin-bottom: 200rpx;
 }
 
 .drawer .content .plan>view:last-child {

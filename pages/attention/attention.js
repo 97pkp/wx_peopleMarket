@@ -51,7 +51,7 @@ Page({
     if (this.data.isHide) {
       this.setData({
         'pageData.page': 1,
-        'pageData.isPage': true
+        'pageData.isPage': true,
       })
       this.getProjectApiFindProjectListByMyConc([])
     }
@@ -62,7 +62,9 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function() {
-    this.data.isHide = true
+    this.setData({
+      isHide: true
+    })
   },
 
   /**
@@ -121,8 +123,10 @@ Page({
         this.setData({
           'pageData.isPage': false
         })
-        if (this.data.attentionList.length==1){
-          this.setData({ attentionList:[]})
+        if (this.data.attentionList.length == 1) {
+          this.setData({
+            attentionList: []
+          })
         }
         wx.hideLoading()
         return

@@ -21,6 +21,7 @@
     <block wx:for="{{imgUrls}}" wx:key='{{index}}'>
       <swiper-item>
         <image mode="aspectFill" src="{{item.url==''?defaultImg:item.url}}" width="355" height="150" binderror="erroImage1" data-index='{{index}}' bindtap='lookBannerInfo' data-item='{{item}}'></image>
+        <!-- bindtap='lookBannerInfo' data-item='{{item}}' -->
       </swiper-item>
     </block>
   </swiper>
@@ -45,7 +46,7 @@
 
   <!-- 新闻活动 -->
   <!-- wx:if="{{newsList.length}}" -->
-  <view class='news-activity' wx:if="{{showNews}}">
+  <view class='news-activity' wx:if="{{newsList.length}}">
     <view class='news-header'>
       <view class='news-title'>新闻活动</view>
       <view class='news-more' bindtap='goNewsActivityList' data-url='../newsActivityList/newsActivityList'>
@@ -53,9 +54,9 @@
         <image src='../../images/right.png'></image>
       </view>
     </view>
-    <view class='news-body'>
+    <view class='news-body'> 
       <!-- 添加透明遮罩，防止swiper组件触摸滑动 -->
-      <view class='shade-view' bindtap='goNewsActivityInfo'></view>
+    <view class='shade-view' bindtap='goNewsActivityInfo'></view>
       <swiper autoplay="{{true}}" interval="{{3000}}" vertical="{{true}}" circular="{{true}}" bindchange='newsChange'>
         <block wx:for="{{showNewsList}}" wx:key="{{index}}">
           <swiper-item>
@@ -80,9 +81,6 @@
   <!-- wx:if="{{isHavePopupView}}" -->
   <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}">
     <view class='popup-view'>
-      <!-- <view class='top' style='background: url("{{bombScreen.attachment_path}}") no-repeat center center;background-size:auto 100%;' bindtap='goScreenInfo'></view> -->
-
-      <!-- <image src='{{bombScreen.attachment_path}}'></image> -->
       <view class='top' bindtap='goScreenInfo'>
         <image class='bomb-screen-img' src='{{bombScreen.attachment_path}}' mode='aspectFill' binderror='errorBombScreen'></image>
       </view>

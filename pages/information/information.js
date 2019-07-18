@@ -3,16 +3,20 @@ import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import fileUrl from '../../http/fileServeUrl.js'
 import appid from '../../http/appID.js'
-
 const app = getApp()
 
 Page({
   data: {
+    startX: 0,
+    noTouchPic: false,
+
     defaultImg: '../../images/defaultImg.png',
     videoPath: '', //视频路径
+    _videoPath: '', //视频暂存路径
     isFullView: false, //视频全屏播放
     isVideo: false, //显示视频
-    _isNoVideo:false,  //用于下拉刷新时isVideo是否要变化的判断
+    isLoadVideo: false, //是否加载视频控件
+    _isNoVideo: false, //用于下拉刷新时isVideo是否要变化的判断
     imgVdoIndex: 0, //视频图片切换下标
     // 打开导航的需要参数
     mapInfo: {
@@ -36,7 +40,7 @@ Page({
     islookall: false, //是否查看全部亮点
     autoplay: false,
     interval: 5000,
-    duration: 1000,
+    duration: 500,
 
     mainpriceOrCommission: 0, //0代表显示主力均价提示，1表示佣金规则
     phone: '', //联系我们-电话
@@ -154,24 +158,104 @@ Page({
   },
 
   //点击播放视频
-  startPlay() {
+  startPlay(e) {
+    this.setData({
+      isFullView: true,
+      videoPath: this.data._videoPath,
+      // isLoadVideo: true
+    })
     this.videoContext = wx.createVideoContext('myvideo', this);
     this.videoContext.requestFullScreen({
       direction: 0
     });
-    this.setData({
-      isFullView: true
-    })
-
+    // setTimeout(() => {
+    //   this.videoContext = wx.createVideoContext('myvideo', this);
+    //   this.videoContext.requestFullScreen({
+    //     direction: 0
+    //   });
+    // }, 500)
   },
+
   //监听进入退出全屏
   fullScreen(e) {
     if (!e.detail.fullScreen) {
+      this.videoContext.pause()
       this.setData({
+        // isLoadVideo: false,
         isFullView: false
       })
+    } else {
+      this.videoContext.play()
     }
   },
+
+  //监听进度条变化
+  bindtimeupdate(e) {
+    // console.log(e)
+    // console.log(e.detail.currentTime)
+  },
+
+
+  //广告图（图片）禁止右滑动露出左白边
+  // noTouchPic：false: 不滑动    noTouchPic：true:滑动
+  touchMoveBanner(e) {
+    let bannerLength = 0
+    let bannerindex = this.data.bannerindex
+    //获取轮播图总长度
+    if (this.data._videoPath != '') {
+      bannerLength = this.data.imgUrls.length + 1
+    } else {
+      bannerLength = this.data.imgUrls.length
+    }
+    if (bannerLength <= 1) {
+      this.setData({
+        noTouchPic: false
+      })
+      return
+    } else {
+      if (bannerindex == 0) {
+        let nextClientX = e.changedTouches[0].clientX
+        if (nextClientX > this.data.startX) {
+          this.setData({
+            noTouchPic: false
+          })
+          return
+        } else {
+          this.setData({
+            noTouchPic: true
+          })
+        }
+      } else if (bannerindex == bannerLength - 1) {
+        let nextClientX = e.changedTouches[0].clientX
+        if (nextClientX < this.data.startX) {
+          this.setData({
+            noTouchPic: false
+          })
+          return
+        } else {
+          this.setData({
+            noTouchPic: true
+          })
+        }
+      } else {
+        this.setData({
+          noTouchPic: true
+        })
+      }
+    }
+  },
+  touchStartBanner(e) {
+    this.setData({
+      startX: e.changedTouches[0].clientX
+    })
+  },
+  touchEndBanner(e) {
+    this.setData({
+      startX: 0,
+      noTouchPic: false
+    })
+  },
+
   //切换图片和视频
   selImgVdo(e) {
     if (e.target.dataset.type == undefined) return
@@ -199,23 +283,28 @@ Page({
         let videoList = data.data[0]
         if (videoList.upload_file_path) {
           that.setData({
-            videoPath: that.data.imgpath + videoList.upload_file_path,
+            _videoPath: that.data.imgpath + videoList.upload_file_path,
             auto: that.data.imgpath + videoList.upload_file_path2
           })
-          if (that.data._isNoVideo){
-            that.setData({ isVideo:false,_isNoVideo:false})
-          }else{
-            that.setData({ isVideo: true})
+          if (that.data._isNoVideo) {
+            that.setData({
+              isVideo: false,
+              _isNoVideo: false
+            })
+          } else {
+            that.setData({
+              isVideo: true
+            })
           }
         } else {
           that.setData({
-            videoPath: '',
+            _videoPath: '',
             isVideo: false
           })
         }
       } else {
         that.setData({
-          videoPath: '',
+          _videoPath: '',
           isVideo: false
         })
       }
@@ -234,7 +323,7 @@ Page({
       title: '加载中',
       mask: true,
     })
-    if (app.globalData.sessionKey == ''){
+    if (app.globalData.sessionKey == '') {
       that.loginFun()
     }
     /*
@@ -395,6 +484,7 @@ Page({
       })
     }).then(() => {
       this.isHaveBuildsImg(this.data.buildsimg)
+      this.setData({ isLoadVideo: true })   //当获取到楼盘图后渲染出video组件，路径为空，当点击播放后，将获取到的视频路径动态赋值给video的src，并切到全屏播放视频
       wx.hideLoading()
     }), (error) => {
       console.log(error)
@@ -675,10 +765,12 @@ Page({
 
   //关注 按钮事件
   toAttention() {
-    if (this.data.isClickAttention){
+    if (this.data.isClickAttention) {
       return
     }
-    this.setData({ isClickAttention: true})
+    this.setData({
+      isClickAttention: true
+    })
     this.Users()
   },
 
@@ -787,7 +879,7 @@ Page({
     let current = e.detail.current
     let source = e.detail.source
     if (source != "touch") return
-    if (current === 0 && this.data.videoPath != '') {
+    if (current === 0 && this.data._videoPath != '') {
       this.setData({
         isVideo: true
       })
@@ -797,7 +889,7 @@ Page({
       })
     }
     this.setData({
-      bannerindex: current
+      bannerindex: current,
     })
   },
   //查看更多详细信息
@@ -828,7 +920,7 @@ Page({
   goRecommend() {
     this.setData({
       pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
-      isClickAttention:false
+      isClickAttention: false
     })
     this.Users()
     // wx.navigateTo({
@@ -983,8 +1075,10 @@ Page({
   onPullDownRefresh() {
     // 显示导航栏加载框
     wx.showNavigationBarLoading()
-    if (!this.data.isVideo){
-      this.setData({_isNoVideo : true})
+    if (!this.data.isVideo) {
+      this.setData({
+        _isNoVideo: true
+      })
     }
     this.onLoad(this.data.optionsObj)
   },
@@ -1003,7 +1097,6 @@ Page({
     wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {
-          // wx.hideTabBar()
           that.setData({
             showBgpack: true
           })
@@ -1086,8 +1179,8 @@ Page({
   },
 
   //手机号请求函数
-  reqPhoneNum(reqPromise){
-    let that=this
+  reqPhoneNum(reqPromise) {
+    let that = this
     let promise = reqPromise
     $http(apiSetting.userGetWxPhone, promise).then((data) => {
       let phoneData = JSON.parse(data.data)
@@ -1132,7 +1225,9 @@ Page({
       showBgpack: false,
       showPhonepack: false
     })
-    this.setData({ isClickAttention: false })   //点击取消弹窗后，把关注按钮变为false,变成可点击状态
+    this.setData({
+      isClickAttention: false
+    }) //点击取消弹窗后，把关注按钮变为false,变成可点击状态
   },
   //绑定用户信息弹窗按钮
   visibleOk() {
@@ -1144,15 +1239,17 @@ Page({
     this.setData({
       showBindUserInfo: false
     })
-    this.setData({ isClickAttention: false })   //点击取消弹窗后，把关注按钮变为false,变成可点击状态
+    this.setData({
+      isClickAttention: false
+    }) //点击取消弹窗后，把关注按钮变为false,变成可点击状态
   },
   //滑动事件
   notouch() {
     return
   },
   //重新登录请求
-  loginFun(){
-    let that=this
+  loginFun() {
+    let that = this
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId

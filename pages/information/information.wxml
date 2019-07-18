@@ -1,30 +1,43 @@
 <!--pages/information/information.wxml-->
 <view class="information {{visible2?'preventTouchMove':''}}">
   <!-- banner图 -->
-  <view class='num' wx:if="{{bannerlength>0 && videoPath==''}}">
+  <view class='num' wx:if="{{bannerlength>0 && _videoPath==''}}">
     <text>{{bannerindex+1}}</text>/{{bannerlength}}
   </view>
-  <view class='num' wx:if="{{bannerlength<=0 && videoPath==''}}">
+  <view class='num' wx:if="{{bannerlength<=0 && _videoPath==''}}">
     <text>{{bannerindex}}</text>/{{bannerlength}}
   </view>
-  <view class='num' wx:if="{{bannerlength>0 && videoPath!='' && !isVideo}}">
+  <view class='num' wx:if="{{bannerlength>0 && _videoPath!='' && !isVideo}}">
     <text>{{bannerindex}}</text>/{{bannerlength}}
   </view>
-  <view class='num' wx:if="{{bannerlength<=0 && videoPath!='' && !isVideo}}">
+  <view class='num' wx:if="{{bannerlength<=0 && _videoPath!='' && !isVideo}}">
     <text>{{bannerindex}}</text>/{{bannerlength}}
   </view>
 
   <view class='img-video-sel' bindtap='selImgVdo'>
-    <view class="video-tag {{isVideo?'fffBg':''}}" data-type='{{0}}' wx:if="{{videoPath!==''}}">视频</view>
-    <view class="img-tag {{!isVideo?'fffBg':''}}" data-type='{{1}}' wx:if="{{videoPath!==''}}">图片</view>
+    <view class="video-tag {{isVideo?'fffBg':''}}" data-type='{{0}}' wx:if="{{_videoPath!==''}}">视频</view>
+    <view class="img-tag {{!isVideo?'fffBg':''}}" data-type='{{1}}' wx:if="{{_videoPath!==''}}">图片</view>
   </view>
   <!-- 视频播放元素 -->
-  <video wx:if="{{isFullView}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{true}}' src="{{videoPath}}" bindfullscreenchange="fullScreen" bindended="closeVideo" controls="{{true}}" show-center-play-btn='{{false}}' custom-cache='{{false}}'
-    vslide-gesture-in-fullscreen='{{false}}'></video>
-  <swiper wx:if="{{true}}" autoplay="{{false}}" interval="{{interval}}" duration="{{duration}}" bindchange='bannerChange' current='{{bannerindex}}'>
+  <video 
+   wx:if="{{isLoadVideo}}" 
+   id='myvideo' 
+   class='{{fullScreen?"show":"hide"}}' 
+   autoplay='{{true}}' 
+   src="{{videoPath}}" 
+   bindfullscreenchange="fullScreen" 
+   controls="{{true}}" 
+   show-center-play-btn='{{false}}' 
+   custom-cache='{{false}}' 
+   vslide-gesture-in-fullscreen='{{false}}'
+   bindtimeupdate='bindtimeupdate'
+  ></video>
+  
+  <swiper wx:if="{{true}}" autoplay="{{false}}" interval="{{interval}}" duration="{{duration}}" bindchange='bannerChange' current='{{bannerindex}}'  style='z-index:10'>
     <!-- 视频展示块 -->
-    <block wx:if="{{videoPath!==''}}">
-      <swiper-item>
+    <block wx:if="{{_videoPath!==''}}">
+      <swiper-item bindtouchstart="touchStartBanner" bindtouchend="touchEndBanner" catchtouchmove='{{noTouchPic?"":"touchMoveBanner"}}'>
+      <!-- <swiper-item> -->
         <view class='video-cover' wx:if="{{1}}">
           <image src='{{auto}}' binderror="erroVideoImage"></image>
           <view bindtap='startPlay' wx:if="{{!isFullView}}">
@@ -35,11 +48,14 @@
     </block>
     <!-- 图片展示块 -->
     <block wx:for="{{imgUrls}}" wx:key="{{index}}">
-      <swiper-item>
+    <swiper-item bindtouchstart="touchStartBanner" bindtouchend="touchEndBanner" catchtouchmove='{{noTouchPic?"":"touchMoveBanner"}}'>
+      <!-- <swiper-item> -->
         <image class='main-img' mode="aspectFill" src='{{item==""?defaultImg:item}}' binderror="erroImage2" data-index='{{index}}' bindtap='goBuildimg'></image>
       </swiper-item>
     </block>
   </swiper>
+
+  
 
   <!-- 详情 -->
   <view class='info'>
@@ -271,3 +287,4 @@
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
   <view>暂无绑定用户信息</view>
 </i-modal>
+

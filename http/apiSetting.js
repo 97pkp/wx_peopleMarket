@@ -4,33 +4,33 @@ const serviceModule = {
     method: 'post'
   },
   //新闻活动列表
-  newsactivityFindNewsActivitys:{
+  newsactivityFindNewsActivitys: {
     url: '/newsactivity/findNewsActivitys',
     method: 'post'
   },
   //查询某一项新闻活动
-  newsactivityFindNewsActivityById:{
+  newsactivityFindNewsActivityById: {
     url: '/newsactivity/findNewsActivityById',
     method: 'post'
   },
   //获取新闻活动缩略图
-  newsactivityFindAttachRelationById:{
+  newsactivityFindAttachRelationById: {
     url: '/newsactivity/findAttachRelationById',
     method: 'post'
   },
   //查询活动是否已经报名
-  newsactivityFindMyEnrollActivityById:{
+  newsactivityFindMyEnrollActivityById: {
     url: '/newsactivity/findMyEnrollActivityById',
-      method: 'post'
+    method: 'post'
   },
 
   //活动报名
-  newsactivityInsertActivityEnrollee:{
+  newsactivityInsertActivityEnrollee: {
     url: '/newsactivity/insertActivityEnrollee',
     method: 'post'
   },
   //查询单个弹屏信息
-  bombscreenFindBombScreenByCityId:{
+  bombscreenFindBombScreenByCityId: {
     url: '/bombscreen/findBombScreenByCityId',
     method: 'post'
   },
@@ -55,7 +55,7 @@ const serviceModule = {
     url: '/user/getUserInfo',
     method: 'post'
   },
-  userUpdateUserInfo:{  //更新用户信息
+  userUpdateUserInfo: { //更新用户信息
     url: '/user/updateUserInfo',
     method: 'post'
   },
@@ -84,13 +84,13 @@ const serviceModule = {
     url: '/recommend/addAgencyCustom',
     method: 'post'
   },
-  
-  recommendGetHouseHoldType:{
+
+  recommendGetHouseHoldType: {
     url: '/recommend/getHouseHoldType',
     method: 'post'
   },
 
-  
+
   // 根据用户及经纪人类型获取渠道(废弃)
   // recommendFindCanalByUser: {
   //   url: '/recommend/findCanalByUser',
@@ -123,23 +123,21 @@ const serviceModule = {
     method: 'post'
   },
   // 获取全号隐号数据
-  recommendGetRecommendItem:{
+  recommendGetRecommendItem: {
     url: '/recommend/getRecommendItem',
     method: 'post'
   },
   //获取城市列表
-  recommendGetCityList:{
+  recommendGetCityList: {
     url: '/recommend/getCityList',
     method: 'post'
   },
 
-
-  //获取佣金信息
+  //获取佣金信息(废弃)
   // recommendCommissionInfoList: {
   //   url: '/recommend/commissionInfoList',
   //   method: 'post'
   // },
-
 
   projectApiFindProjectInfoById: { //详情-获取项目信息
     url: '/projectApi/findProjectInfoById',
@@ -161,7 +159,7 @@ const serviceModule = {
     url: '/projectApi/findProjectImagesListByType',
     method: 'post'
   },
-  projectApiFindProjectVideoListById:{  //详情-获取展示视频
+  projectApiFindProjectVideoListById: { //详情-获取展示视频
     url: '/projectApi/findProjectVideoListById',
     method: 'post'
   },
@@ -200,12 +198,12 @@ const serviceModule = {
     method: 'post'
   },
   //领取卡券
-  apiCouponGetCoupon:{
+  apiCouponGetCoupon: {
     url: '/api/coupon/getCoupon',
     method: 'post'
   },
   //我的优惠券列表
-  apiCouponList:{
+  apiCouponList: {
     url: '/api/coupon/receivedList',
     method: 'post'
   },

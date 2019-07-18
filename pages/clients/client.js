@@ -54,7 +54,11 @@ Page({
   bindDateChangeStart(e) {
     let startDate = e.detail.value
     if (startDate > this.data.dataIntervalEnd) {
-      this.handleWarning()
+      wx.showToast({
+        title: '请选择正确的开始时间!',
+        icon: 'none',
+        duration: 2000
+      })
       return
     }
     this.setData({
@@ -65,7 +69,11 @@ Page({
   bindDateChangeEnd(e) {
     let endDate=e.detail.value
     if (endDate < this.data.dataIntervalStart){
-      this.handleWarning()
+      wx.showToast({
+        title: '请选择正确的结束时间!',
+        icon: 'none',
+        duration: 2000
+      })
       return
     }
     this.setData({
@@ -73,13 +81,7 @@ Page({
     })
     this.setData({ 'selectList.endDate': e.detail.value })
   },
-  handleWarning() {
-    wx.showToast({
-      title: '请选择正确的结束时间!',
-      icon: 'none',
-      duration: 2000
-    })
-  },
+
   // 选择城市标签
   selCity(e){
     if (e.target.dataset.citytagid === undefined) return
@@ -224,15 +226,19 @@ Page({
           list[i].cjDate = ''
         }
         if (list[i].tjDate.indexOf(' ') !== -1) {
+          list[i].tjDate_time = list[i].tjDate.split(' ')[1]
           list[i].tjDate = list[i].tjDate.split(' ')[0]
         }
         if (list[i].lfDate.indexOf(' ') !== -1) {
+          list[i].lfDate_time = list[i].lfDate.split(' ')[1]
           list[i].lfDate = list[i].lfDate.split(' ')[0]
         }
         if (list[i].rgDate.indexOf(' ') !== -1) {
+          list[i].rgDate_time = list[i].rgDate.split(' ')[1]
           list[i].rgDate = list[i].rgDate.split(' ')[0]
         }
         if (list[i].cjDate.indexOf(' ') !== -1) {
+          list[i].cjDate_time = list[i].cjDate.split(' ')[1]
           list[i].cjDate = list[i].cjDate.split(' ')[0]
         }
       }

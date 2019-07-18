@@ -22,9 +22,10 @@ Page({
     //请求参数列表
     requestList:{
       type:'0',
-      city_id:'',
+      city_area_id: app.globalData.storLocalCity.id,
       city_area_id:'',
-      project_id:''
+      project_id:'',
+      login_by: app.globalData.userId
     },
     isPage: true,   //是否有下一页
     _imgList: [], //新闻图片列表
@@ -88,7 +89,7 @@ Page({
       let newsList=[]
       let activityList=[]
       for (let i = 0; i < dataArr.length; i++) {
-        if (dataArr[i].enabled == 0) {
+        if (dataArr[i].enabled == 1) {
           dataArr.splice(i, 1)
           i--
           continue

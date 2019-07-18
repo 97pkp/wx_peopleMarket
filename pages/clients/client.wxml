@@ -85,20 +85,24 @@
         <view class='step-tj'>
           <text>推荐</text>
           <text>{{item.tjDate}}</text>
+          <text>{{item.tjDate_time}}</text>
         </view>
         <view class='step-lf'>
           <text>来访</text>
           <text>{{item.lfDate}}</text>
+          <text>{{item.lfDate_time}}</text>
         </view>
         <view class='step-rg'>
           <text>认购</text>
           <text>{{item.rgDate}}</text>
+          <text>{{item.rgDate_time}}</text>
         </view>
         <view class='step-cj'>
           <text>成交</text>
           <!-- <text wx:if="{{item.cjDate && item.commissioninfo !== null && item.commissioninfo !== '' && item.commissioninfo !== undefined && item.commissioninfo !== 'null'}}">{{item.cjDate}}</text> -->
           <text wx:if="{{item.cjDate && item.status==1 }}">{{item.cjDate}}</text>
-        <text wx:else></text>
+          <text wx:if="{{item.cjDate && item.status==1 }}">{{item.cjDate_time}}</text>
+          <text wx:else></text>
         </view>
       </view>
     </view>
@@ -113,8 +117,8 @@
     </view> -->
   </view>
   <!-- 悬浮窗 -->
-  <view class='floating'>
-    <view bindtap='goRecommend'>
+  <view class='floating'  bindtap='goRecommend'>
+    <view>
       <view class='icon'>
         <image src='../../images/tuijian.png'></image>
       </view>
@@ -152,8 +156,9 @@
             mode = "selector"
             >
             <view class="picker">
-              <text wx:if='{{itemPakerIndex===null}}'></text>
-              <text wx:else>{{showItemInfo[itemPakerIndex].projectName}}</text>
+              <!-- <text wx:if='{{itemPakerIndex===null}}'></text>
+              <text wx:else>{{showItemInfo[itemPakerIndex].projectName}}</text> -->
+              <text>{{showItemInfo[itemPakerIndex].projectName?showItemInfo[itemPakerIndex].projectName:"请选择"}}</text>
             </view>
           </picker>
         </view>
@@ -170,7 +175,7 @@
               mode="date"
               value="{{date}}"
               start="2019-01-01"
-              end="2029-01-01"
+              end="2029-12-31"
               bindchange="bindDateChangeStart"
             >
               <view class="picker">
@@ -187,7 +192,7 @@
               mode="date"
               value="{{date}}"
               start="2019-01-01"
-              end="2029-01-01"
+              end="2029-12-31"
               bindchange="bindDateChangeEnd"
             >
               <view class="picker">
