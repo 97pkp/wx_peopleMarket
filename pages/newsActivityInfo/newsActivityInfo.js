@@ -18,6 +18,7 @@ Page({
     settingsEnroll:0, //是否允许报名
     hideBtn:false,   //默认显示报名按钮
     webHref:'',  //新闻链接路径
+    isWebClick:false,  //超链接点击
   },
 
   /**
@@ -144,12 +145,27 @@ Page({
         settingsEnroll: newsAtvItem.settings_enroll
       })
       let article = newsAtvItem.content
+      // let article ='<a href="https://www.baidu.com">柚子</a>'
       WxParse.wxParse('article', 'html', article, this, 5);
       wx.hideLoading()
     }, (error) => {
       wx.hideLoading()
       console.log(error)
     });
+  },
+
+
+  //超链接解析点击事件
+  wxParseTagATap: function (e) {
+    //url地址转码，防止网址出现中文后ios解析不出来显示白屏的问题
+    let href = e.currentTarget.dataset.src
+    if (href.search('http://') == -1 && href.search('https://') == -1) {
+      href = 'https://' + href
+    }
+    href = encodeURIComponent(href)
+    wx.navigateTo({
+      url: '../webView/webView?search=' + href + "&type=" + this.data.type,
+    })
   },
 
   //查询是否已经报名
@@ -308,12 +324,6 @@ Page({
     })
   },
 
-  //超链接解析点击事件
-  wxParseTagATap: function (e) {
-    var href = e.currentTarget.dataset.src;
-    this.setData({ webHref: href})
-  },
-
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
@@ -332,7 +342,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function() {
-
+    this.setData({ webHref: '', isWebClick: false})
   },
 
   /**

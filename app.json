@@ -17,7 +17,8 @@
     "pages/brokertext/brokertext",
     "pages/newsActivityList/newsActivityList",
     "pages/newsActivityInfo/newsActivityInfo",
-    "pages/myApply/myApply"
+    "pages/myApply/myApply",
+    "pages/webView/webView"
   ],
   "window": {
     "backgroundTextStyle": "light",

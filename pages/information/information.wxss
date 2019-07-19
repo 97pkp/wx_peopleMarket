@@ -80,8 +80,8 @@ swiper .main-img {
 }
 
 #myvideo {
-  width: 2rpx;
-  height: 403rpx;
+  width: 1rpx;
+  height: 1rpx;
   position: absolute;
   top: 0;
   left: 50%;

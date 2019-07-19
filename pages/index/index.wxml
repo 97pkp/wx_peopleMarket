@@ -46,7 +46,7 @@
 
   <!-- 新闻活动 -->
   <!-- wx:if="{{newsList.length}}" -->
-  <view class='news-activity' wx:if="{{newsList.length}}">
+  <view class='news-activity' wx:if="{{showNewsList.length}}">
     <view class='news-header'>
       <view class='news-title'>新闻活动</view>
       <view class='news-more' bindtap='goNewsActivityList' data-url='../newsActivityList/newsActivityList'>

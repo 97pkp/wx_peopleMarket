@@ -1,7 +1,7 @@
 <!--pages/newsActivityInfo/newsActivityInfo.wxml-->
 <import src="../../wxParse/wxParse.wxml" />
 
-<view class='title'>{{newsAtvInfo.title}}</view>
+<view class='title {{type==1?"atv-title":""}}'>{{newsAtvInfo.title}}</view>
 <view class='news-date news-atv-date' wx:if='{{type==0}}'>{{newsAtvInfo.published_date}}</view>
 <!-- <view class='atv-date news-atv-date' wx:if='{{type==1}}'>{{newsAtvInfo.start_date}} 至 {{newsAtvInfo.end_date}}</view> -->
 <view class='news-body'>
@@ -16,7 +16,7 @@
 <button wx:if="{{settingsEnroll==1 && type=='1' && btnType==4}}" class='canot-apply btn' disabled='{{true}}' >活动已结束</button>
 <button wx:if="{{settingsEnroll==1 && type=='1' && btnType==5}}" class='canot-apply btn' disabled='{{true}}' >报名人数已满</button> -->
 
-<view class='signUp' wx:if="{{settingsEnroll==1 && type=='1'}}">
+<view class='signUp' wx:if="{{settingsEnroll==1 && type=='1' && newsAtvInfo!=null}}">
   <view class='top'>
     <view class='now-num num-view'>已报名：{{newsAtvInfo.enroll_num}}</view>
     <view class='all-num num-view'>报名限额：{{newsAtvInfo.settings_enroll_number}}</view>
@@ -25,9 +25,12 @@
   <view class='activity-date'>活动时间：{{newsAtvInfo.start_date}} 至 {{newsAtvInfo.end_date}}</view>
 </view>
 
+<view class='signUp' wx:if="{{settingsEnroll==0 && type=='1' && newsAtvInfo!=null}}">
+  <view class='activity-date'>活动时间：{{newsAtvInfo.start_date}} 至 {{newsAtvInfo.end_date}}</view>
+</view>
+
+
 <!-- 绑定用户信息弹窗 -->
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose" catchtouchmove='notouch'>
   <view>暂无绑定用户信息</view>
 </i-modal>
-
-<web-view wx:if='{{webHref!==""}}' src='{{webHref}}'></web-view>

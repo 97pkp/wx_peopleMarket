@@ -301,7 +301,7 @@ Page({
       that.getCityFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
-      that.hideLoading()
+      wx.hideLoading()
     });
   },
 
@@ -381,7 +381,7 @@ Page({
       that.getCitySessionFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
-      that.hideLoading()
+      wx.hideLoading()
     });
 
   },

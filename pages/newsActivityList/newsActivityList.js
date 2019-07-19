@@ -22,8 +22,7 @@ Page({
     //请求参数列表
     requestList:{
       type:'0',
-      city_area_id: app.globalData.storLocalCity.id,
-      city_area_id:'',
+      city_area_id: '',
       project_id:'',
       login_by: app.globalData.userId
     },
@@ -73,6 +72,8 @@ Page({
     let reqPath = JSON.parse(JSON.stringify(apiSetting.newsactivityFindNewsActivitys) ) 
     reqPath.url += "?page=" + this.data.requestPage.page + "&perpage=" + this.data.requestPage.perpage
     let promise = JSON.parse(JSON.stringify(this.data.requestList)) 
+    promise.city_area_id = app.globalData.storLocalCity.id
+    
 
     if (this.data.current=="news"){
       promise.type='0'
