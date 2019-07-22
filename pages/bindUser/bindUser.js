@@ -12,6 +12,25 @@ Page({
    */
   data: {
     isEdit: false, //是否修改
+    // 区号：+86(港:+852,澳:+853,台:+886)
+    phoneHeaderArray: [{
+        city: '大陆',
+        mobileFlag: '+86'
+      },
+      {
+        city: '香港',
+        mobileFlag: '+852'
+      },
+      {
+        city: '澳门',
+        mobileFlag: '+853'
+      },
+      {
+        city: '台湾',
+        mobileFlag: '+886'
+      }
+    ],
+    index: 0, //客户电话区号选择默认下标   
     // 用户信息参数
     userInfo: {
       agencyAccount: '',
@@ -128,12 +147,12 @@ Page({
 
   },
 
-  bindPickerChange(e) {
-    this.setData({
-      arrayIndex: e.detail.value
-    })
-    this.data.userInfo.brokertype = this.data.array[e.detail.value]
-  },
+  // bindPickerChange(e) {
+  //   this.setData({
+  //     arrayIndex: e.detail.value
+  //   })
+  //   this.data.userInfo.brokertype = this.data.array[e.detail.value]
+  // },
 
   // 获取验证码
   getNoteCode() {
@@ -446,5 +465,29 @@ Page({
         url: '../index/index?ifChange=' + 1
       })
     })
-  }
+  },
+  //电话地区选择
+  bindPickerChange(e) {
+    this.setData({
+      index: e.detail.value,
+      // 'reportList.mobileFlag': this.data.array[e.detail.value].mobileFlag
+    })
+    if (e.detail.value == 0) {
+      this.setData({
+        numberMaxLength: 11
+      })
+    } else if (e.detail.value == 1) {
+      this.setData({
+        numberMaxLength: 8
+      })
+    } else if (e.detail.value == 2) {
+      this.setData({
+        numberMaxLength: 8
+      })
+    } else if (e.detail.value == 3) {
+      this.setData({
+        numberMaxLength: 10
+      })
+    }
+  },
 })

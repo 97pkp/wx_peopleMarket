@@ -44,7 +44,7 @@
           </picker>
           <image src='../../images/godown.png'></image>
         </view>
-        <view class='phont-header-box'>
+        <view class='phone-header-box'>
           <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}" range-key='city'>
             <view class="picker phone-header">
               {{array[index].mobileFlag}}

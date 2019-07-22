@@ -227,7 +227,6 @@ Page({
         numberMaxLength: 10
       })
     }
-
   },
   //隐号全号选择
   bindPickerChangePhoneType(e) {

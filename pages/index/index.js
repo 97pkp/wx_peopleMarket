@@ -614,7 +614,7 @@ Page({
     }
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
       if (data.code === -1 || !data.list || !data.list.length){
-        this.setData({ showNews:false})
+        this.setData({ showNews: false, showNewsList:[]})
         return
       } 
       this.setData({ showNews: true})

@@ -29,7 +29,7 @@
   position: relative;
 }
 
-.phone-type-box, .phont-header-box {
+.phone-type-box, .phone-header-box {
   width: 95rpx;
   height: 100rpx;
   display: flex;
@@ -39,12 +39,12 @@
   margin-right: 10rpx;
 }
 
-.phone-type-box picker, .phont-header-box picker {
+.phone-type-box picker, .phone-header-box picker {
   display: flex;
   flex: 1;
 }
 
-.phone-type-box image, .phont-header-box image {
+.phone-type-box image, .phone-header-box image {
   width: 16rpx;
   height: 10rpx;
 }

@@ -15,10 +15,10 @@ Page({
     newsActivityId: '', //活动id
     btnType: 0, //按钮样式 0：活动报名，1：已报名，2：活动未开始，3：活动已结束
     showBindUserInfo: false, //是否显示绑定信息弹窗
-    settingsEnroll:0, //是否允许报名
-    hideBtn:false,   //默认显示报名按钮
-    webHref:'',  //新闻链接路径
-    isWebClick:false,  //超链接点击
+    settingsEnroll: 0, //是否允许报名
+    hideBtn: false, //默认显示报名按钮
+    webHref: '', //新闻链接路径
+    isWebClick: false, //超链接点击
   },
 
   /**
@@ -29,7 +29,7 @@ Page({
       title: '加载中',
       mask: true,
     })
-    if (options.hideBtn){
+    if (options.hideBtn) {
       this.setData({
         hideBtn: true,
       })
@@ -50,7 +50,7 @@ Page({
       })
       that.findMyEnrollActivityById()
     }
-    
+
   },
   //获取新闻活动详情
   findNewsActivityById() {
@@ -78,11 +78,11 @@ Page({
           newsAtvItem.end_date = newsAtvItem.end_date.split(' ')[0]
         }
 
-        let month=0
-        let day=0
-        if (new Date().getMonth() + 1<10){
-          month = "0" + Number(new Date().getMonth() + 1) 
-        }else{
+        let month = 0
+        let day = 0
+        if (new Date().getMonth() + 1 < 10) {
+          month = "0" + Number(new Date().getMonth() + 1)
+        } else {
           month = new Date().getMonth() + 1
         }
         if (new Date().getDate() < 10) {
@@ -90,12 +90,12 @@ Page({
         } else {
           day = new Date().getDate()
         }
-        
-        let nowDate = new Date().getFullYear() + '-' + month+'-' + day
-        nowDate = new Date(nowDate).getTime()   //当前网络时间
-        
-        let activityEndTime = new Date(newsAtvItem.end_date).getTime()   //活动结束时间
-        if (newsAtvItem.settings_enroll_startTime && newsAtvItem.settings_enroll_startTime.indexOf(' ') != -1){
+
+        let nowDate = new Date().getFullYear() + '-' + month + '-' + day
+        nowDate = new Date(nowDate).getTime() //当前网络时间
+
+        let activityEndTime = new Date(newsAtvItem.end_date).getTime() //活动结束时间
+        if (newsAtvItem.settings_enroll_startTime && newsAtvItem.settings_enroll_startTime.indexOf(' ') != -1) {
           newsAtvItem.settings_enroll_startTime = newsAtvItem.settings_enroll_startTime.split(' ')[0]
         }
         if (newsAtvItem.settings_enroll_endTime && newsAtvItem.settings_enroll_endTime.indexOf(' ') != -1) {
@@ -103,7 +103,7 @@ Page({
         }
         let startTime = new Date(newsAtvItem.settings_enroll_startTime).getTime() //报名开始时间
         let endTime = new Date(newsAtvItem.settings_enroll_endTime).getTime() //报名结束时间
-        
+
         //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
         //startTime：报名开始时间，endTime：报名结束时间，activityEndTime：活动结束时间，nowDate：当前时间
         //1.如果活动结束时间小于当前时间，活动结束；否则去判断是否已报名
@@ -113,30 +113,49 @@ Page({
         //5.如果报名结束时间小于当前时间，报名结束；否则可以报名（默认）
 
         //如果报名人数和限额为空或者，转化后不是纯数字，则将人数初始化为0
-        if (!newsAtvItem.enroll_num || isNaN(Number(newsAtvItem.enroll_num))){
-          newsAtvItem.enroll_num=0
+        if (!newsAtvItem.enroll_num || isNaN(Number(newsAtvItem.enroll_num))) {
+          newsAtvItem.enroll_num = 0
         }
         if (!newsAtvItem.settings_enroll_number || isNaN(Number(newsAtvItem.settings_enroll_number))) {
           newsAtvItem.settings_enroll_number = 0
         }
 
         if (activityEndTime <= nowDate) {
-          if (this.data.btnType !== 1){
-            this.setData({ btnType: 4 })
+          if (this.data.btnType !== 1) {
+            this.setData({
+              btnType: 4
+            })
           }
-        } else {  //活动没结束，判断是否已报名
-          if (this.data.btnType !== 1) {  //如果活动没报名，判断是否能报名
-            if (newsAtvItem.enroll_num < newsAtvItem.settings_enroll_number) {   //如果有名额，则显示报名按钮，否则报名人数满了
-              if (startTime > nowDate) {  //报名开始时间>当前时间，提示报名没开始,否则报名开始
-                this.setData({ btnType: 2 })
-              } else {
-                if (endTime < nowDate) {   //如果报名结束时间小于当前时间，报名结束
-                  this.setData({ btnType: 3 })
-                }
-              }
+        } else { //活动没结束，判断是否已报名
+          if (this.data.btnType !== 1) { //如果活动没报名，判断是否能报名
+            if (startTime > nowDate) { //报名开始时间>当前时间，提示报名没开始,否则报名开始
+              this.setData({
+                btnType: 2
+              })
             } else {
-              this.setData({ btnType: 5 })
+              if (endTime < nowDate) { //如果报名结束时间小于当前时间，报名结束
+                this.setData({
+                  btnType: 3
+                })
+              }
             }
+            // if (newsAtvItem.enroll_num < newsAtvItem.settings_enroll_number) { //如果有名额，则显示报名按钮，否则报名人数满了
+            //   if (startTime > nowDate) { //报名开始时间>当前时间，提示报名没开始,否则报名开始
+            //     this.setData({
+            //       btnType: 2
+            //     })
+            //   } else {
+            //     if (endTime < nowDate) { //如果报名结束时间小于当前时间，报名结束
+            //       this.setData({
+            //         btnType: 3
+            //       })
+            //     }
+            //   }
+            // } else {
+            //   this.setData({
+            //     btnType: 5
+            //   })
+            // }
           }
         }
       }
@@ -156,11 +175,15 @@ Page({
 
 
   //超链接解析点击事件
-  wxParseTagATap: function (e) {
+  wxParseTagATap: function(e) {
     //url地址转码，防止网址出现中文后ios解析不出来显示白屏的问题
     let href = e.currentTarget.dataset.src
-    if (href.search('http://') == -1 && href.search('https://') == -1) {
-      href = 'https://' + href
+    if (href.search('https://') == -1) {
+      if (href.search('http://') == -1){
+        href = 'https://' + href
+      }else{
+        href=href.replace('http', 'https')
+      }
     }
     href = encodeURIComponent(href)
     wx.navigateTo({
@@ -195,9 +218,9 @@ Page({
       })
       return
     }
-     //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
+    //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
     let btnType = this.data.btnType
-    if(btnType==2){
+    if (btnType == 2) {
       wx.showModal({
         title: '报名未开始!',
         confirmText: '关闭',
@@ -209,7 +232,7 @@ Page({
         }
       })
       return
-    } else if (btnType == 3){
+    } else if (btnType == 3) {
       wx.showModal({
         title: '报名已结束!',
         confirmText: '关闭',
@@ -221,7 +244,7 @@ Page({
         }
       })
       return
-    } else if (btnType == 4){
+    } else if (btnType == 4) {
       wx.showModal({
         title: '活动已结束!',
         confirmText: '关闭',
@@ -233,7 +256,7 @@ Page({
         }
       })
       return
-    } else if (btnType == 5){
+    } else if (btnType == 5) {
       wx.showModal({
         title: '活动报名名额已满!',
         confirmText: '关闭',
@@ -252,7 +275,7 @@ Page({
       user_id: app.globalData.userId
     }
     $http(apiSetting.newsactivityInsertActivityEnrollee, promise).then((data) => {
-      if (data.code==0) {
+      if (data.code == 0) {
         this.setData({
           btnType: 1,
         })
@@ -270,12 +293,12 @@ Page({
             }
           }
         })
-      } else if (data.code==-1){
+      } else if (data.code == -1) {
         this.setData({
           btnType: 5
         })
         wx.showModal({
-          title: '报名失败' + data.message+"!",
+          title: '报名失败' + data.message + "!",
           confirmText: '关闭',
           showCancel: false,
           success(res) {
@@ -328,28 +351,31 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function() {
-    
+
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
-   
+
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function() {
-    this.setData({ webHref: '', isWebClick: false})
+    this.setData({
+      webHref: '',
+      isWebClick: false
+    })
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function() {
-    
+
   },
 
   /**

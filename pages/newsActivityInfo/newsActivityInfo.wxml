@@ -17,10 +17,10 @@
 <button wx:if="{{settingsEnroll==1 && type=='1' && btnType==5}}" class='canot-apply btn' disabled='{{true}}' >报名人数已满</button> -->
 
 <view class='signUp' wx:if="{{settingsEnroll==1 && type=='1' && newsAtvInfo!=null}}">
-  <view class='top'>
-    <view class='now-num num-view'>已报名：{{newsAtvInfo.enroll_num}}</view>
-    <view class='all-num num-view'>报名限额：{{newsAtvInfo.settings_enroll_number}}</view>
-  </view>
+  <!-- <view class='top'>
+    <view class='now-num num-view'>已报名：{{newsAtvInfo.enroll_num==null?0:newsAtvInfo.enroll_num}}</view>
+    <view class='all-num num-view'>报名限额：{{newsAtvInfo.settings_enroll_number==null?0:newsAtvInfo.settings_enroll_number}}</view>
+  </view> -->
   <view class='sign-up-date'>报名时间：{{newsAtvInfo.settings_enroll_startTime}} 至 {{newsAtvInfo.settings_enroll_endTime}}</view>
   <view class='activity-date'>活动时间：{{newsAtvInfo.start_date}} 至 {{newsAtvInfo.end_date}}</view>
 </view>
