@@ -21,7 +21,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 50px;
+  height: 100%;
 }
 
 .inp input {
@@ -86,4 +86,42 @@
 
 .genderSty::after {
   border: none;
+}
+
+
+
+.phone-box{
+  height: 100%;
+  float: right;
+}
+.phone-header-box {
+  width: 106rpx;
+  height: 98rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  float: left;
+  margin-right: 10rpx;
+  color: #b4b9cb;
+}
+
+.phone-header-box picker {
+  display: flex;
+  flex: 1;
+  text-align: center;
+}
+
+.phone-header-box picker .picker{
+  width: 90rpx;
+  height: 98rpx;
+}
+
+.phone-header-box image {
+  width: 16rpx;
+  height: 10rpx;
+  margin-top: 6rpx;
+}
+
+.phone-inp{
+  width: 200rpx;
 }

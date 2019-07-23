@@ -14,7 +14,7 @@ page{
   width: calc(100% - 60rpx);
   height: 144rpx;
   display: flex;
-  border-bottom: 2rpx solid #cccccc;
+  /* border-bottom: 2rpx solid #cccccc; */
 }
 
 .news-item image{

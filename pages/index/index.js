@@ -6,6 +6,7 @@ import $http from '../../http/http.js'
 import fileUrl from '../../http/fileServeUrl.js'
 import mapKey from '../../http/mapKey.js'
 import appid from '../../http/appID.js'
+import util from '../../utils/util.js'
 
 const QQMapWX = require('../../utils/qqmap-wx-jssdk.min.js')
 const wxMap = new QQMapWX({
@@ -836,6 +837,12 @@ Page({
     })
     this.Users()
   },
+  // pageTobind: util.throttle(function(e){
+  //   this.setData({
+  //     pageUrl: e.target.dataset.url,
+  //   })
+  //   this.Users()
+  // },2000),
   //轮播图错误图片
   erroImage1(e) {
     if (e.type == 'error') {
@@ -1086,5 +1093,5 @@ Page({
   //滑动事件
   notouch() {
     return
-  }
+  },
 })

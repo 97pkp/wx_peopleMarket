@@ -12,25 +12,6 @@ Page({
    */
   data: {
     isEdit: false, //是否修改
-    // 区号：+86(港:+852,澳:+853,台:+886)
-    phoneHeaderArray: [{
-        city: '大陆',
-        mobileFlag: '+86'
-      },
-      {
-        city: '香港',
-        mobileFlag: '+852'
-      },
-      {
-        city: '澳门',
-        mobileFlag: '+853'
-      },
-      {
-        city: '台湾',
-        mobileFlag: '+886'
-      }
-    ],
-    index: 0, //客户电话区号选择默认下标   
     // 用户信息参数
     userInfo: {
       agencyAccount: '',
@@ -41,8 +22,10 @@ Page({
       myName: '',
       phone: '',
       sex: '男',
-      wxid: ''
+      wxid: '',
+      // mobileFlag:'+86'
     },
+    mobileFlag:'+86',
     trench: '', //留电渠道
     showAgencyAccount: '', //中介账户
     //渠道验证码失败
@@ -63,12 +46,33 @@ Page({
     isnote: true,
     onHideTime: null, // 记录切换后台时间
     gender: null,
+
+    // 区号：+86(港:+852,澳:+853,台:+886)
+    phoneHeaderArray: [{
+      city: '大陆',
+      mobileFlag: '+86'
+    },
+    {
+      city: '香港',
+      mobileFlag: '+852'
+    },
+    {
+      city: '澳门',
+      mobileFlag: '+853'
+    },
+    {
+      city: '台湾',
+      mobileFlag: '+886'
+    }
+    ],
+    numberMaxLength: 11, //电话号最大长度
+    numberIndex: 0, //客户电话区号选择默认下标   
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     // console.log(app.globalData.bindUserInfo)
     this.getProjectApiFindOtherDictValues()
     if (app.globalData.isCheck) {
@@ -112,14 +116,14 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
+  onReady: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
+  onShow: function () {
     if (!this.data.isnote) {
       let diff = Math.round(new Date().getTime() / 1000) - this.data.onHideTime
       this.data.downTime = this.data.downTime - diff
@@ -129,30 +133,30 @@ Page({
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {
+  onHide: function () {
     this.data.onHideTime = Math.round(new Date().getTime() / 1000)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {
+  onUnload: function () {
     this.endSetInter()
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
-  // bindPickerChange(e) {
-  //   this.setData({
-  //     arrayIndex: e.detail.value
-  //   })
-  //   this.data.userInfo.brokertype = this.data.array[e.detail.value]
-  // },
+  bindPickerChange(e) {
+    this.setData({
+      arrayIndex: e.detail.value
+    })
+    this.data.userInfo.brokertype = this.data.array[e.detail.value]
+  },
 
   // 获取验证码
   getNoteCode() {
@@ -169,7 +173,8 @@ Page({
     let that = this
     let promise1 = {
       mobile: that.data.userInfo.phone,
-      openid: app.globalData.openid
+      openid: app.globalData.openid,
+      mobileFlag: that.data.mobileFlag
     }
     if (promise1.openid == null) {
       wx.login({
@@ -194,7 +199,7 @@ Page({
         wx.hideLoading()
         if (data.code == 0) {
           // 开启计时器
-          that.data.setInter = setInterval(function() {
+          that.data.setInter = setInterval(function () {
             that.data.downTime = that.data.downTime - 1
             if (that.data.downTime <= 0) {
               that.endSetInter()
@@ -419,7 +424,7 @@ Page({
         content: '后台' + this.data.showTipCode.message,
         showCancel: false,
         confirmText: "关闭",
-        success: function() {
+        success: function () {
 
         }
       })
@@ -466,11 +471,13 @@ Page({
       })
     })
   },
+
   //电话地区选择
-  bindPickerChange(e) {
+  bindPickerNumberChange(e) {
     this.setData({
-      index: e.detail.value,
-      // 'reportList.mobileFlag': this.data.array[e.detail.value].mobileFlag
+      numberIndex: e.detail.value,
+      'userInfo.mobileFlag': this.data.phoneHeaderArray[e.detail.value].mobileFlag,
+      'userInfo.phone':''
     })
     if (e.detail.value == 0) {
       this.setData({
@@ -490,4 +497,5 @@ Page({
       })
     }
   },
+  
 })

@@ -21,7 +21,6 @@
     <block wx:for="{{imgUrls}}" wx:key='{{index}}'>
       <swiper-item>
         <image mode="aspectFill" src="{{item.url==''?defaultImg:item.url}}" width="355" height="150" binderror="erroImage1" data-index='{{index}}' bindtap='lookBannerInfo' data-item='{{item}}'></image>
-        <!-- bindtap='lookBannerInfo' data-item='{{item}}' -->
       </swiper-item>
     </block>
   </swiper>
@@ -217,14 +216,3 @@
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose" catchtouchmove='notouch'>
   <view>暂无绑定用户信息</view>
 </i-modal>
-
-<!-- <view class='fake-tabbar'>
-  <view class='left'>
-    <image src='../../images/home2.png'></image>
-    <text>首页</text>
-  </view>
-  <view class='right'>
-    <image src='../../images/self1.png'></image>
-    <text>我的</text>
-  </view>
-</view> -->

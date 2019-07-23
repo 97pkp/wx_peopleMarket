@@ -74,7 +74,6 @@ Page({
     let promise = JSON.parse(JSON.stringify(this.data.requestList)) 
     promise.city_area_id = app.globalData.storLocalCity.id
     
-
     if (this.data.current=="news"){
       promise.type='0'
     } else if (this.data.current =="activity"){
