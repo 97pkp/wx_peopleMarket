@@ -3,6 +3,7 @@ const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import appid from '../../http/appID.js'
+import util from '../../utils/util.js'
 
 const {
   $Message
@@ -98,17 +99,19 @@ Page({
   //   })
   // },
 
-  pageTobind(e) {
+  // pageTobind(e) {
+  //   this.setData({
+  //     pageUrl: e.target.dataset.url
+  //   })
+  //   this.Users()
+  // },
+  pageTobind: util.throttle(function(e){
     this.setData({
       pageUrl: e.target.dataset.url
     })
     this.Users()
-
-    // let pageUrl = e.target.dataset.url
-    // wx.navigateTo({
-    //   url: pageUrl
-    // })
-  },
+  },1500),
+  
 
   //跳转绑定信息页
   pageTobindUser(e) {

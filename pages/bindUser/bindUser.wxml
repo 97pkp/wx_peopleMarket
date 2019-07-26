@@ -43,7 +43,7 @@
 
 
 
-<li style='position:relative'>
+    <li style='position:relative'>
       <span class='title'>手机号</span>
       <view class='phone-box' style='margin-right:{{isEdit? "160rpx":""}}'>
         <view class='phone-header-box' wx:if="{{isEdit}}">
@@ -55,7 +55,7 @@
           <image src='../../images/godown.png'></image>
         </view>
 
-        <span class="inp phone-inp" >
+        <span class="inp phone-inp">
           <input placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='{{numberMaxLength}}' placeholder="请输入手机号" bindinput='phoneBind' />
         </span>
       </view>

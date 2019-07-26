@@ -1,6 +1,7 @@
 // pages/clients/client.js
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
+import util from '../../utils/util.js'
 const app=getApp()
 
 Page({
@@ -358,11 +359,18 @@ Page({
     });
   },
   //跳转推荐页面
-  goRecommend(){
+  // goRecommend(){
+  //   wx.navigateTo({
+  //     url: '../recommend/recommend',
+  //   })
+  // },
+
+  goRecommend: util.throttle(function(){
     wx.navigateTo({
       url: '../recommend/recommend',
     })
-  },
+  },1500),
+
   // 页面到达底部
   onReachBottom() {
     // 判断是否翻页

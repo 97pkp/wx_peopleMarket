@@ -88,12 +88,11 @@
   border: none;
 }
 
-
-
-.phone-box{
+.phone-box {
   height: 100%;
   float: right;
 }
+
 .phone-header-box {
   width: 106rpx;
   height: 98rpx;
@@ -111,7 +110,7 @@
   text-align: center;
 }
 
-.phone-header-box picker .picker{
+.phone-header-box picker .picker {
   width: 90rpx;
   height: 98rpx;
 }
@@ -122,6 +121,6 @@
   margin-top: 6rpx;
 }
 
-.phone-inp{
+.phone-inp {
   width: 200rpx;
 }

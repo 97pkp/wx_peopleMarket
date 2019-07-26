@@ -39,7 +39,7 @@ Page({
       reportMobile: '',
       reportName: '',
       reportType: '',
-      sex: ''
+      sex: '',
     },
     city_id: '', //城市id
     gender: 1, //性别

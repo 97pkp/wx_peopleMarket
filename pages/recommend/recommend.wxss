@@ -91,7 +91,7 @@
 .bindSub {
   height: 80rpx;
   font-size: 30rpx;
-  margin: 40rpx 40rpx 0;
+  margin: 40rpx 40rpx 150rpx;
   background-color: #20a0ff;
   color: #fff;
 }

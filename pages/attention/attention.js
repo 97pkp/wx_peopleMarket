@@ -3,6 +3,8 @@ const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import fileUrl from '../../http/fileServeUrl.js'
+import util from '../../utils/util.js'
+
 Page({
 
   /**
@@ -135,12 +137,19 @@ Page({
   },
 
   //查看关注列表楼盘详情
-  goInformation(e) {
+  // goInformation(e) {
+  //   let project_id = e.currentTarget.dataset.project_id
+  //   wx.navigateTo({
+  //     url: '../information/information?project_id=' + project_id,
+  //   })
+  // },
+  goInformation: util.throttle(function(e){
     let project_id = e.currentTarget.dataset.project_id
     wx.navigateTo({
       url: '../information/information?project_id=' + project_id,
     })
-  },
+  },1500),
+
 
   // 页面到达底部
   onReachBottom() {

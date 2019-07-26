@@ -4,6 +4,7 @@ const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import fileUrl from '../../http/fileServeUrl.js'
+import util from '../../utils/util.js'
 
 Page({
 
@@ -112,12 +113,19 @@ Page({
   },
 
   //跳转活动详情页
-  goNewsAtvInfo(e){
+  // goNewsAtvInfo(e){
+  //   let atvid = e.currentTarget.dataset.atvid
+  //   wx.navigateTo({
+  //     url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=1"+"&hideBtn=true",
+  //   })
+  // },
+  goNewsAtvInfo: util.throttle(function(e){
     let atvid = e.currentTarget.dataset.atvid
     wx.navigateTo({
-      url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=1"+"&hideBtn=true",
+      url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=1" + "&hideBtn=true",
     })
-  },
+  },1500),
+
 
   /**
    * 生命周期函数--监听页面加载

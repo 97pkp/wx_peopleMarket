@@ -2,8 +2,10 @@
 // const url = 'https://qmyx.coli688.com/zhwx-api'
 // 海客测试地址
 const url = 'http://haiketest.coli688.com:8090/zhwx-api'
+
 // 测试地址
 // const url = 'http://39.98.191.16/zhwx-api'
+
 
 
 let $httpServer = function(opts, data) {

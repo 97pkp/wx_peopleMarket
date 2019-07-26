@@ -3,6 +3,7 @@ import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import fileUrl from '../../http/fileServeUrl.js'
 import appid from '../../http/appID.js'
+import util from '../../utils/util.js'
 const app = getApp()
 
 Page({
@@ -773,6 +774,18 @@ Page({
     })
     this.Users()
   },
+  // toAttention:util.throttle(function(){
+  //   console.log('asx')
+  //   if (this.data.isClickAttention) {
+  //     console.log('asxasxx')
+  //     return
+  //   }
+  //   this.setData({
+  //     isClickAttention: true
+  //   })
+  //   this.Users()
+  // },1500),
+
 
   attentionProject() {
     this.setData({
@@ -917,16 +930,20 @@ Page({
   },
 
   //去推荐
-  goRecommend() {
+  // goRecommend() {
+  //   this.setData({
+  //     pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
+  //     isClickAttention: false
+  //   })
+  //   this.Users()
+  // },
+  goRecommend: util.throttle(function(){
     this.setData({
       pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
       isClickAttention: false
     })
     this.Users()
-    // wx.navigateTo({
-    //   url: '../recommend/recommend?project_id=' + this.data.project_id,
-    // })
-  },
+  },1500),
 
   toPhone() {
     wx.makePhoneCall({
@@ -958,7 +975,7 @@ Page({
   },
   //打开内置地图
   openMapInWx(type) {
-    let that = this
+    let that = this    
     if (type == 1) {
       if (!this.data.mapInfo.salesLatitude || !this.data.mapInfo.salesAddress) {
         return

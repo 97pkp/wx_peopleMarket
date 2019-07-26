@@ -3,6 +3,7 @@ const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import fileUrl from '../../http/fileServeUrl.js'
+import util from '../../utils/util.js'
 
 Page({
 
@@ -55,13 +56,21 @@ Page({
   },
 
   //跳转详情页
-  goNewsAtvInfo(e){
+  // goNewsAtvInfo(e){
+  //   let atvid = e.currentTarget.dataset.atvid
+  //   let type = e.currentTarget.dataset.type
+  //   wx.navigateTo({
+  //     url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid+"&type="+type,
+  //   })
+  // }, 
+  goNewsAtvInfo: util.throttle(function(e){
     let atvid = e.currentTarget.dataset.atvid
     let type = e.currentTarget.dataset.type
     wx.navigateTo({
-      url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid+"&type="+type,
+      url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=" + type,
     })
-  },
+  },1500),
+
 
   //获取新闻活动信息
   getNewsActivity() {

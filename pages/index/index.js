@@ -66,6 +66,7 @@ Page({
     _imgList: [], //新闻图片存放
 
     bombScreen: {}, //城市弹屏信息
+    showLine: false,//是否显示弹屏的关闭按钮，当图片加载完之后显示出来
     isBannerClick: false,  //是否点击轮播图
     showNews:false,
   },
@@ -87,29 +88,51 @@ Page({
     })
   },
   //跳转详情页
-  goInformation(e) {
+  // goInformation(e) {
+  //   let project_id = e.currentTarget.dataset.project_id
+  //   this.setData({
+  //     pageUrl: '../information/information?project_id=' + project_id,
+  //     isBuildClick: true
+  //   })
+  //   this.Users()
+  // },
+  goInformation:util.throttle(function(e){
     let project_id = e.currentTarget.dataset.project_id
     this.setData({
       pageUrl: '../information/information?project_id=' + project_id,
       isBuildClick: true
     })
     this.Users()
+  },500),
 
-    // let imgurl = e.currentTarget.dataset.imgurl
-    // wx.navigateTo({
-    //   url: '../information/information?project_id=' + project_id   //+ '&&imgurl=' + imgurl
-    // })
-  },
   //跳转新闻活动列表页
-  goNewsActivityList(e) {
+  // goNewsActivityList(e) {
+  //   this.setData({
+  //     pageUrl: e.currentTarget.dataset.url,
+  //     isNewsClick: true
+  //   })
+  //   this.Users()
+  // }, 
+  
+  goNewsActivityList:util.throttle(function(e){
     this.setData({
       pageUrl: e.currentTarget.dataset.url,
       isNewsClick: true
     })
     this.Users()
-  },
+  },500),
+
   //新闻活动直接跳转详情页
-  goNewsActivityInfo() {
+  // goNewsActivityInfo() {
+  //   let newsList = this.data.newsList
+  //   let newsCurrent = this.data.newsCurrent
+  //   this.setData({
+  //     pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + newsList[newsCurrent].id + '&type=' + newsList[newsCurrent].type,
+  //     isNewsClick: true
+  //   })
+  //   this.Users()
+  // },
+  goNewsActivityInfo:util.throttle(function(){
     let newsList = this.data.newsList
     let newsCurrent = this.data.newsCurrent
     this.setData({
@@ -117,7 +140,7 @@ Page({
       isNewsClick: true
     })
     this.Users()
-  },
+  },500),
 
 
 
@@ -190,7 +213,6 @@ Page({
 
   // 位置授权操作
   accreditOperate() {
-    wx.showTabBar()
     let that = this;
     // 判断本地是否有数据
     if (app.globalData.storLocalCity && ifChange === undefined) {
@@ -760,6 +782,42 @@ Page({
         return
       }
       let bombScreen = data.data
+      
+      let showStartDate = bombScreen.show_start_date
+      // showStartDate='2019-06-20 12:00:00'
+      if (showStartDate){
+        showStartDate = this.dateCut(0,showStartDate)
+      }
+      let showEndDate = bombScreen.show_end_date
+      // showEndDate ='2019-08-20 12:00:00'
+      if (showEndDate){
+        showEndDate = this.dateCut(1,showEndDate)
+      }
+      let nowDate=new Date()
+      nowDate = util.formatTime(nowDate)  //.split(' ')[0] + ' ' + hours+':00:00'
+      //如果弹屏开始时间和结束时间都没有，默认不显示弹屏
+      //如果有开始时间，没有结束时间，则如果开始时间大于当前时间就不显示，如果开始时间小于当前时间就显示
+      //如果没有开始时间，有结束时间，则如果结束时间大于当前时间就显示，如果结束时间小于当前时间就不显示
+      //如果开始时间和结束时间都有，则如果当前时间在时间区间内就显示，不在时间区间内就不显示
+      //2019-07-22 13:49:21
+      if (!showStartDate && !showEndDate){
+        return
+      }else{
+        if (showStartDate && !showEndDate){
+          if (showStartDate > nowDate){
+            return
+          }
+        } else if (!showStartDate && showEndDate){
+          if (showEndDate < nowDate) {
+            return
+          }
+        } else if (showStartDate && showEndDate ){
+          if (showStartDate > nowDate || showEndDate < nowDate){
+            return
+          }
+        }
+      }
+
       app.globalData.boomScreen_ids.push({
         boomScreen_history_id: bombScreen.city_area_id
       })
@@ -772,9 +830,45 @@ Page({
       console.log(error)
     }
   },
+  //弹屏展示时间截取
+  //2019-07-22 13:49:21
+  dateCut(type,date){
+    let dateVal = date
+    if(type==0){
+      if (dateVal.split(' ')[1].split(':')[0]<10){
+        dateVal = dateVal.split(' ')[0] + ' 0' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
+      }else{
+        dateVal = dateVal.split(' ')[0] + ' ' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
+      }
+    }else if(type==1){
+      if (dateVal.split(' ')[1].split(':')[0] - 0 + 1<10){
+        dateVal = dateVal.split(' ')[0] + ' 0' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
+      }else{
+        dateVal = dateVal.split(' ')[0] + ' ' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
+      }
+    }
+    dateVal=dateVal.replace(/-/g,'/')
+    // dateVal = dateVal.split('年')[0] + '/' + dateVal.split('年')[1].split('月')[0] + '/' + dateVal.split('年')[1].split('月')[1].split('日')[0] + ' ' + dateVal.split('年')[1].split('月')[1].split('日')[1].split('时')[0]+':00:00'
+    console.log(dateVal)
+    return dateVal
+  },
 
   //点击弹窗进入详情页
-  goScreenInfo() {
+  // goScreenInfo() {
+  //   //type:0  新闻；1：活动；2:项目
+  //   let bombScreen = this.data.bombScreen
+  //   if (bombScreen.type == '2') {
+  //     this.setData({
+  //       pageUrl: '../information/information?project_id=' + bombScreen.association_soures_id,
+  //     })
+  //   } else {
+  //     this.setData({
+  //       pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + bombScreen.association_soures_id + "&type=" + bombScreen.type,
+  //     })
+  //   }
+  //   this.Users()
+  // },
+  goScreenInfo:util.throttle(function(){
     //type:0  新闻；1：活动；2:项目
     let bombScreen = this.data.bombScreen
     if (bombScreen.type == '2') {
@@ -787,12 +881,18 @@ Page({
       })
     }
     this.Users()
-  },
+  },500),
+
   //关闭弹屏窗口
   closeView() {
     this.setData({
-      isHavePopupView: false
+      isHavePopupView: false,
+      showLine:false
     })
+  },
+
+  imgLoadOk(e) {
+    this.setData({ showLine: true })
   },
 
   //弹屏图片加载失败
@@ -804,16 +904,26 @@ Page({
     }
   },
   //查看轮播图详情
-  lookBannerInfo(e){
+  // lookBannerInfo(e){
+  //   if (this.data.isBannerClick) return
+  //   let bannerItem = e.target.dataset.item
+  //   if (bannerItem.type === undefined || bannerItem.type == 2) return
+  //   this.setData({ 
+  //     isBannerClick: true,
+  //     pageUrl: "../newsActivityInfo/newsActivityInfo?atvid=" + bannerItem.association_soures_id + "&type=" + bannerItem.type
+  //   })
+  //   this.Users()
+  // },
+  lookBannerInfo: util.throttle(function(e){
     if (this.data.isBannerClick) return
     let bannerItem = e.target.dataset.item
     if (bannerItem.type === undefined || bannerItem.type == 2) return
-    this.setData({ 
+    this.setData({
       isBannerClick: true,
       pageUrl: "../newsActivityInfo/newsActivityInfo?atvid=" + bannerItem.association_soures_id + "&type=" + bannerItem.type
     })
     this.Users()
-  },
+  },500),
 
   // 获取绑定用户信息
   getUserGetUserInfo(val) {
@@ -831,18 +941,18 @@ Page({
   },
 
   // 页面跳转
-  pageTobind(e) {
-    this.setData({
-      pageUrl: e.target.dataset.url,
-    })
-    this.Users()
-  },
-  // pageTobind: util.throttle(function(e){
+  // pageTobind(e) {
   //   this.setData({
   //     pageUrl: e.target.dataset.url,
   //   })
   //   this.Users()
-  // },2000),
+  // },
+  pageTobind: util.throttle(function(e){
+    this.setData({
+      pageUrl: e.target.dataset.url,
+    })
+    this.Users()
+  },2000),
   //轮播图错误图片
   erroImage1(e) {
     if (e.type == 'error') {
@@ -1043,6 +1153,7 @@ Page({
 
   //取消授权窗
   cancelTip() {
+    wx.showTabBar()
     this.setData({
       showBgpack: false,
       showPhonepack: false,
@@ -1094,4 +1205,6 @@ Page({
   notouch() {
     return
   },
+
+  
 })

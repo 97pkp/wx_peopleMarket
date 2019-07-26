@@ -6,5 +6,3 @@ const fileUrl = 'http://haiketest.coli688.com:8081/zhwx/userfiles'
 // const fileUrl = 'http://39.98.191.16/zhwx/userfiles'
 
 export default fileUrl
-
-
