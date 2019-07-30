@@ -30,7 +30,8 @@ Page({
     swiperCurrent: 0, //轮播图下标
 
     newsList: [], //暂存的新闻活动数据列表
-    showNewsList:[],  //用于显示的新闻活动数据
+    showNewsList: [], //用于显示的新闻活动数据
+    showTheCityNewsList: [], //用于存放当前城市的新闻活动数据
 
     // 查询城市参数
     cityInfo: {
@@ -61,14 +62,21 @@ Page({
     isBuildClick: false, //是否楼盘列表点击
     isNewsClick: false, //是否是新闻点击
     isHavePopupView: false, //是否有弹屏信息
-    newsCurrent:0, //默认新闻活动下标
+    newsCurrent: 0, //默认新闻活动下标
     t: 0, //新闻模块循环变量初始为0
     _imgList: [], //新闻图片存放
 
     bombScreen: {}, //城市弹屏信息
-    showLine: false,//是否显示弹屏的关闭按钮，当图片加载完之后显示出来
-    isBannerClick: false,  //是否点击轮播图
-    showNews:false,
+    showLine: false, //是否显示弹屏的关闭按钮，当图片加载完之后显示出来
+    isBannerClick: false, //是否点击轮播图
+    // showNews: false,
+    //弹屏请求参数
+    bombScreenReq: {
+      city_area_id: '全部',
+      enabled: "0",
+      status: "0",
+      type: ""
+    },
   },
   // 切换城市
   changeCity() {
@@ -96,14 +104,14 @@ Page({
   //   })
   //   this.Users()
   // },
-  goInformation:util.throttle(function(e){
+  goInformation: util.throttle(function(e) {
     let project_id = e.currentTarget.dataset.project_id
     this.setData({
       pageUrl: '../information/information?project_id=' + project_id,
       isBuildClick: true
     })
     this.Users()
-  },500),
+  }, 500),
 
   //跳转新闻活动列表页
   // goNewsActivityList(e) {
@@ -113,14 +121,14 @@ Page({
   //   })
   //   this.Users()
   // }, 
-  
-  goNewsActivityList:util.throttle(function(e){
+
+  goNewsActivityList: util.throttle(function(e) {
     this.setData({
       pageUrl: e.currentTarget.dataset.url,
       isNewsClick: true
     })
     this.Users()
-  },500),
+  }, 500),
 
   //新闻活动直接跳转详情页
   // goNewsActivityInfo() {
@@ -132,7 +140,7 @@ Page({
   //   })
   //   this.Users()
   // },
-  goNewsActivityInfo:util.throttle(function(){
+  goNewsActivityInfo: util.throttle(function() {
     let newsList = this.data.newsList
     let newsCurrent = this.data.newsCurrent
     this.setData({
@@ -140,7 +148,7 @@ Page({
       isNewsClick: true
     })
     this.Users()
-  },500),
+  }, 500),
 
 
 
@@ -324,7 +332,7 @@ Page({
       that.getCityFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
-      wx.hideLoading()
+      wx.hideLoading() //城市列表获取失败，停止等待
     });
   },
 
@@ -356,7 +364,14 @@ Page({
               confirmColor: '#77C4FF',
               success(res) {
                 if (res.confirm) {
-                  that.setData({ isBannerClick: false, t: 0, _imgList: [], newsList: [], rimbuildinfolist:[]})
+                  that.setData({
+                    isBannerClick: false,
+                    t: 0,
+                    _imgList: [],
+                    newsList: [],
+                    rimbuildinfolist: [],
+                    swiperCurrent: 0
+                  })
                   // that.setData({ rimbuildinfolist: []})
                   let boomScreen_ids = app.globalData.boomScreen_ids
                   let storLocalCity = app.globalData.storLocalCity
@@ -404,7 +419,7 @@ Page({
       that.getCitySessionFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
-      wx.hideLoading()
+      wx.hideLoading() //获取城市列表失败，停止等待
     });
 
   },
@@ -589,13 +604,16 @@ Page({
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
     $http(apiSetting.projectApiFindProjectListByCity, promise).then((data) => {
-      wx.hideLoading()
+      // wx.hideLoading()
+      // if (!that.data.newsList.length && !that.data.showNewsList.length){
+      //   wx.hideLoading()
+      // }
       let rimbuildinfo = []
       if (data.list.length > 0) {
         rimbuildinfo = [...that.data.rimbuildinfolist, ...data.list]
       } else {
         that.data.rimBuildPage.isPage = false
-        wx.hideLoading()
+        // wx.hideLoading()
         return
       }
 
@@ -624,23 +642,32 @@ Page({
     });
   },
 
-  //获取新闻活动信息
+  //获取全部城市新闻活动信息
   getNewsActivity() {
     let _newsArr = []
     let _activityArr = []
     let _allArr = []
     let promise = {
       city_area_id: app.globalData.storLocalCity.id,
-      project_id: "", 
-      type: "", 
+      // city_area_id: "全部",
+      project_id: "",
+      type: "",
       login_by: app.globalData.userId
     }
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
-      if (data.code === -1 || !data.list || !data.list.length){
-        this.setData({ showNews: false, showNewsList:[]})
+      if (data.code === -1 || !data.list || !data.list.length) {
+        this.setData({
+          // showNews: false,
+          showNewsList: [],
+          newsList: []
+        })
+        // this.getNewsActivityByCity()
+        wx.hideLoading()
         return
-      } 
-      this.setData({ showNews: true})
+      }
+      // this.setData({
+      //   showNews: true
+      // })
       let newsList = data.list
       for (let i = 0; i < newsList.length; i++) {
         if (newsList[i].enabled == 1) {
@@ -661,11 +688,14 @@ Page({
             newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
           }
           let activityEndDate = new Date(newsList[i].end_date).getTime()
-          let nowDate = new Date().getFullYear() + '-' + Number(new Date().getMonth() + 1) + '-' + new Date().getDate()
-          nowDate = new Date(nowDate).getTime()   //当前网络时间 
+          // let nowDate = new Date().getFullYear() + '-' + Number(new Date().getMonth() + 1) + '-' + new Date().getDate()
+          let nowDate = new Date()
+          nowDate = util.formatTime(nowDate)
+          nowDate = nowDate.replace(/\//g, '-')
+          nowDate = new Date(nowDate).getTime() //当前网络时间 
           if (activityEndDate < nowDate) {
             // newsList[i].isEnd = true
-            newsList.splice(i,1)
+            newsList.splice(i, 1)
             i--
             continue
           }
@@ -674,8 +704,20 @@ Page({
       }
 
       //如果新闻活动个数不足6个，则显示全部；超过6个，不足三个的显示全部，另一项自动补全为6个
-      if (_newsArr.length + _activityArr.length <= 6) {
+      if (_newsArr.length + _activityArr.length < 6) {
         _allArr = _allArr.concat(_newsArr, _activityArr)
+        this.setData({
+          newsList: _allArr
+        })
+
+        this.findAttachRelationById(_allArr.length)
+        // this.getNewsActivityByCity()
+      } else if (_newsArr.length + _activityArr.length == 6) {
+        _allArr = _allArr.concat(_newsArr, _activityArr)
+        this.setData({
+          newsList: _allArr
+        })
+        this.findAttachRelationById(_allArr.length)
       } else {
         if (_newsArr.length >= 3) {
           if (_activityArr.length >= 3) {
@@ -688,13 +730,119 @@ Page({
           _activityArr.length = 6 - _newsArr.length
         }
         _allArr = _allArr.concat(_newsArr, _activityArr)
+        this.setData({
+          newsList: _allArr
+        })
+        this.findAttachRelationById(_allArr.length)
       }
-      this.setData({
-        newsList: _allArr
-      })
-      this.findAttachRelationById(_allArr.length)
+      // this.setData({
+      //   newsList: _allArr
+      // })
+      // this.findAttachRelationById(_allArr.length)
     })
   },
+  //获取当前城市新闻活动信息
+  getNewsActivityByCity() {
+    let _newsArr = []
+    let _activityArr = []
+    let _allArr = []
+    let promise = {
+      city_area_id: app.globalData.storLocalCity.id,
+      project_id: "",
+      type: "",
+      login_by: app.globalData.userId
+    }
+
+    $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
+      if (data.code === -1 || !data.list || !data.list.length) {
+        wx.hideLoading()
+        return
+      }
+
+      let newsList = data.list
+      for (let i = 0; i < newsList.length; i++) {
+        if (newsList[i].enabled == 1) {
+          newsList.splice(i, 1)
+          i--
+          continue
+        }
+        if (newsList[i].type == 0) {
+          if (newsList[i].published_date && newsList[i].published_date.indexOf(' ') != -1) {
+            newsList[i].published_date = newsList[i].published_date.split(' ')[0].split('-').join('.')
+          }
+          _newsArr.push(newsList[i])
+        } else if (newsList[i].type == 1) {
+          if (newsList[i].start_date && newsList[i].start_date.indexOf(' ') != -1) {
+            newsList[i].start_date = newsList[i].start_date.split(' ')[0].split('-').join('.')
+          }
+          if (newsList[i].end_date && newsList[i].end_date.indexOf(' ') != -1) {
+            newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
+          }
+          let activityEndDate = new Date(newsList[i].end_date).getTime()
+
+          let nowDate = new Date()
+          nowDate = util.formatTime(nowDate)
+          nowDate = nowDate.replace(/\//g, '-')
+          nowDate = new Date(nowDate).getTime() //当前网络时间 
+          if (activityEndDate < nowDate) {
+            // newsList[i].isEnd = true
+            newsList.splice(i, 1)
+            i--
+            continue
+          }
+          _activityArr.push(newsList[i])
+        }
+      }
+      let newsArr = this.data.newsList
+      _allArr = _allArr.concat(_newsArr, _activityArr)
+      if (_allArr.length + newsArr.length <= 6) {
+        newsArr = newsArr.concat(_allArr)
+        // newsArr=newsArr.concat(newsArr, _allArr)
+        this.setData({
+          newsList: newsArr
+        })
+        this.findAttachRelationById(newsArr.length)
+      } else {
+        //原数据中新闻/活动类型数据
+        let news = []
+        let atvs = []
+        for (let i = 0; i < newsArr.length; i++) {
+          if (newsArr[i].type == 0) {
+            news.push(newsArr[i])
+          } else if (newsArr[i].type == 1) {
+            atvs.push(newsArr[i])
+          }
+        }
+
+        news = news.concat(_newsArr)
+        atvs = atvs.concat(_activityArr)
+        if (news.length + atvs.length <= 6) {
+          newsArr = newsArr.concat(news, atvs)
+          this.setData({
+            newsList: newsArr
+          })
+        } else {
+          if (news.length >= 3) {
+            if (atvs.length >= 3) {
+              news.length = 3
+              atvs.length = 3
+            } else {
+              news.length = 6 - atvs.length
+            }
+          } else {
+            atvs.length = 6 - news.length
+          }
+          newsArr = []
+          newsArr = newsArr.concat(news, atvs)
+          this.setData({
+            newsList: newsArr
+          })
+          this.findAttachRelationById(newsArr.length)
+        }
+      }
+    })
+  },
+
   //获取新闻图片
   findAttachRelationById(newsAtvListLength) {
     let _t = this.data.t //_t=0
@@ -718,6 +866,7 @@ Page({
         newsList: newsList,
         showNewsList: newsList
       })
+      wx.hideLoading()
       return
     }
     let _newsList = this.data.newsList
@@ -738,11 +887,13 @@ Page({
     }
   },
   //新闻活动模块切换
-  newsChange(e){
-    let newsCurrent=e.detail.current
-    this.setData({ newsCurrent: newsCurrent})
+  newsChange(e) {
+    let newsCurrent = e.detail.current
+    this.setData({
+      newsCurrent: newsCurrent
+    })
   },
-  
+
   //新闻活动图片加载失败
   errorImgNews(e) {
     if (e.type == 'error') {
@@ -769,89 +920,126 @@ Page({
     } else {
       app.globalData.boomScreen_ids = []
     }
-    let promise = {
-      city_area_id: app.globalData.storLocalCity.id,
-      enabled: "0",
-      type: ""
-    }
+    let promise = this.data.bombScreenReq
     $http(apiSetting.bombscreenFindBombScreenByCityId, promise).then((data) => {
       if (!data.data) {
         this.setData({
           isHavePopupView: false
         })
+        if (this.data.bombScreenReq.city_area_id == '全部') {
+          this.setData({
+            'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
+          })
+          this.findBombScreenByCityId()
+        }
         return
       }
       let bombScreen = data.data
-      
       let showStartDate = bombScreen.show_start_date
+      if (showStartDate) {
+        showStartDate = new Date(showStartDate).getTime()
+      }
       // showStartDate='2019-06-20 12:00:00'
-      if (showStartDate){
-        showStartDate = this.dateCut(0,showStartDate)
-      }
+      // if (showStartDate) {
+      //   showStartDate = this.dateCut(0, showStartDate)
+      // }
       let showEndDate = bombScreen.show_end_date
-      // showEndDate ='2019-08-20 12:00:00'
-      if (showEndDate){
-        showEndDate = this.dateCut(1,showEndDate)
+      if (showEndDate) {
+        showEndDate = new Date(showEndDate).getTime()
       }
-      let nowDate=new Date()
-      nowDate = util.formatTime(nowDate)  //.split(' ')[0] + ' ' + hours+':00:00'
+      // showEndDate ='2019-08-20 12:00:00'
+      // if (showEndDate) {
+      //   showEndDate = this.dateCut(1, showEndDate)
+      // }
+      let nowDate = new Date().getTime()
+      // nowDate = util.formatTime(nowDate) //.split(' ')[0] + ' ' + hours+':00:00'
+      // console.log(nowDate)
+      // nowDate = new Date(nowDate).getTime()
+
+
       //如果弹屏开始时间和结束时间都没有，默认不显示弹屏
       //如果有开始时间，没有结束时间，则如果开始时间大于当前时间就不显示，如果开始时间小于当前时间就显示
       //如果没有开始时间，有结束时间，则如果结束时间大于当前时间就显示，如果结束时间小于当前时间就不显示
       //如果开始时间和结束时间都有，则如果当前时间在时间区间内就显示，不在时间区间内就不显示
       //2019-07-22 13:49:21
-      if (!showStartDate && !showEndDate){
+
+      if (!showStartDate && !showEndDate) {
+        if (this.data.bombScreenReq.city_area_id == '全部') {
+          this.setData({
+            'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
+          })
+          this.findBombScreenByCityId()
+        }
         return
-      }else{
-        if (showStartDate && !showEndDate){
-          if (showStartDate > nowDate){
+      } else {
+        if (showStartDate && !showEndDate) {
+          if (showStartDate > nowDate) {
+            if (this.data.bombScreenReq.city_area_id == '全部') {
+              this.setData({
+                'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
+              })
+              this.findBombScreenByCityId()
+            }
             return
           }
-        } else if (!showStartDate && showEndDate){
+        } else if (!showStartDate && showEndDate) {
           if (showEndDate < nowDate) {
+            if (this.data.bombScreenReq.city_area_id == '全部') {
+              this.setData({
+                'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
+              })
+              this.findBombScreenByCityId()
+            }
             return
           }
-        } else if (showStartDate && showEndDate ){
-          if (showStartDate > nowDate || showEndDate < nowDate){
+        } else if (showStartDate && showEndDate) {
+          if (showStartDate > nowDate || showEndDate < nowDate) {
+            if (this.data.bombScreenReq.city_area_id == '全部') {
+              this.setData({
+                'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
+              })
+              this.findBombScreenByCityId()
+            }
             return
           }
         }
       }
 
       app.globalData.boomScreen_ids.push({
-        boomScreen_history_id: bombScreen.city_area_id
+        // boomScreen_history_id: bombScreen.city_area_id
+        boomScreen_history_id: app.globalData.storLocalCity.id
       })
       bombScreen.attachment_path = this.data.imgpath + bombScreen.attachment_path
       this.setData({
         bombScreen: bombScreen,
         isHavePopupView: true
       })
+
     }), (error) => {
       console.log(error)
     }
   },
   //弹屏展示时间截取
   //2019-07-22 13:49:21
-  dateCut(type,date){
-    let dateVal = date
-    if(type==0){
-      if (dateVal.split(' ')[1].split(':')[0]<10){
-        dateVal = dateVal.split(' ')[0] + ' 0' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
-      }else{
-        dateVal = dateVal.split(' ')[0] + ' ' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
-      }
-    }else if(type==1){
-      if (dateVal.split(' ')[1].split(':')[0] - 0 + 1<10){
-        dateVal = dateVal.split(' ')[0] + ' 0' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
-      }else{
-        dateVal = dateVal.split(' ')[0] + ' ' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
-      }
-    }
-    dateVal=dateVal.replace(/-/g,'/')
-    // dateVal = dateVal.split('年')[0] + '/' + dateVal.split('年')[1].split('月')[0] + '/' + dateVal.split('年')[1].split('月')[1].split('日')[0] + ' ' + dateVal.split('年')[1].split('月')[1].split('日')[1].split('时')[0]+':00:00'
-    console.log(dateVal)
-    return dateVal
-  },
+  // dateCut(type, date) {
+  //   let dateVal = date
+  //   if (type == 0) {
+  //     if (dateVal.split(' ')[1].split(':')[0] < 10) {
+  //       dateVal = dateVal.split(' ')[0] + ' 0' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
+  //     } else {
+  //       dateVal = dateVal.split(' ')[0] + ' ' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
+  //     }
+  //   } else if (type == 1) {
+  //     if (dateVal.split(' ')[1].split(':')[0] - 0 + 1 < 10) {
+  //       dateVal = dateVal.split(' ')[0] + ' 0' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
+  //     } else {
+  //       dateVal = dateVal.split(' ')[0] + ' ' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
+  //     }
+  //   }
+  //   dateVal = dateVal.replace(/-/g, '/')
+  //   // dateVal = dateVal.split('年')[0] + '/' + dateVal.split('年')[1].split('月')[0] + '/' + dateVal.split('年')[1].split('月')[1].split('日')[0] + ' ' + dateVal.split('年')[1].split('月')[1].split('日')[1].split('时')[0]+':00:00'
+  //   return dateVal
+  // },
 
   //点击弹窗进入详情页
   // goScreenInfo() {
@@ -868,35 +1056,84 @@ Page({
   //   }
   //   this.Users()
   // },
-  goScreenInfo:util.throttle(function(){
-    //type:0  新闻；1：活动；2:项目
+  goScreenInfo: util.throttle(function() {
+    // type: 0：新闻，1：活动，2：项目，3：外链接，4：城市
     let bombScreen = this.data.bombScreen
-    if (bombScreen.type == '2') {
+
+    if (bombScreen.type == 4 && bombScreen.affiliation_cityareaid) {
+      let promise = {}
+      wx.showLoading({
+        title: '加载中',
+      })
+      $http(apiSetting.cityFindCityItems, promise).then((data) => {
+        let cityList = data.data
+        if (!data || !cityList) {
+          return
+        }
+
+        for (let i = 0; i < cityList.length; i++) {
+          if (cityList[i].id == bombScreen.affiliation_cityareaid) {
+            app.globalData.storLocalCity = cityList[i]
+            if (this.data.cityInfo.cityName) {
+              this.setData({
+                'cityInfo.cityName': cityList[i].city
+              })
+              wx.setStorageSync('storLocalCity', cityList[i])
+              app.globalData.storLocalCity = cityList[i]
+              let _storage = wx.getStorageSync('cityPromise') || {}
+              _storage.currentCity = cityList[i].city
+              wx.setStorageSync('cityPromise', _storage)
+            }
+            this.setData({
+              isBannerClick: false,
+              t: 0,
+              _imgList: [],
+              newsList: [],
+              rimbuildinfolist: [],
+              swiperCurrent: 0
+            })
+            this.findBombScreenByCityId()
+            this.getNewsActivity()
+            this.getCitySessionFindBuildInfoByCity()
+          }
+        }
+      }, (error) => {
+        console.log(error)
+      });
+      return
+    } else if (bombScreen.type == 3 && bombScreen.bomb_screen_url) {
+      this.setData({
+        pageUrl: '../webView/webView?search=' + bombScreen.bomb_screen_url,
+      })
+    } else if (bombScreen.type == '2') {
       this.setData({
         pageUrl: '../information/information?project_id=' + bombScreen.association_soures_id,
       })
-    } else {
+    } else if (bombScreen.type == 1 || bombScreen.type == 0) {
       this.setData({
         pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + bombScreen.association_soures_id + "&type=" + bombScreen.type,
       })
     }
+
     this.Users()
-  },500),
+  }, 500),
 
   //关闭弹屏窗口
   closeView() {
     this.setData({
       isHavePopupView: false,
-      showLine:false
+      showLine: false
     })
   },
 
   imgLoadOk(e) {
-    this.setData({ showLine: true })
+    this.setData({
+      showLine: true
+    })
   },
 
   //弹屏图片加载失败
-  errorBombScreen(e){
+  errorBombScreen(e) {
     if (e.type == 'error') {
       this.setData({
         'bombScreen.attachment_path': this.data.defaultImg
@@ -914,7 +1151,7 @@ Page({
   //   })
   //   this.Users()
   // },
-  lookBannerInfo: util.throttle(function(e){
+  lookBannerInfo: util.throttle(function(e) {
     if (this.data.isBannerClick) return
     let bannerItem = e.target.dataset.item
     if (bannerItem.type === undefined || bannerItem.type == 2) return
@@ -923,7 +1160,7 @@ Page({
       pageUrl: "../newsActivityInfo/newsActivityInfo?atvid=" + bannerItem.association_soures_id + "&type=" + bannerItem.type
     })
     this.Users()
-  },500),
+  }, 500),
 
   // 获取绑定用户信息
   getUserGetUserInfo(val) {
@@ -947,12 +1184,12 @@ Page({
   //   })
   //   this.Users()
   // },
-  pageTobind: util.throttle(function(e){
+  pageTobind: util.throttle(function(e) {
     this.setData({
       pageUrl: e.target.dataset.url,
     })
     this.Users()
-  },2000),
+  }, 2000),
   //轮播图错误图片
   erroImage1(e) {
     if (e.type == 'error') {
@@ -986,7 +1223,12 @@ Page({
     // 显示导航栏加载框
     wx.showNavigationBarLoading()
     ifChange = 2
-    this.setData({ isBannerClick: false, t: 0, _imgList: [], newsList:[]})
+    this.setData({
+      isBannerClick: false,
+      t: 0,
+      _imgList: [],
+      newsList: []
+    })
     this.onLoad()
   },
   // 停止刷新
@@ -1032,7 +1274,7 @@ Page({
                 that.setData({
                   isBuildClick: false,
                   isNewsClick: false,
-                  isBannerClick:false
+                  isBannerClick: false
                 })
               } else {
                 //若验证手机号已经授权，去判断受否绑定用户信息
@@ -1105,7 +1347,7 @@ Page({
           that.setData({
             isBuildClick: false,
             isNewsClick: false,
-            isBannerClick:false
+            isBannerClick: false
           })
           wx.navigateTo({
             url: that.data.pageUrl,
@@ -1172,12 +1414,14 @@ Page({
       }
     }
     app.globalData.boomScreen_ids = boomScreen_ids
-    this.setData({ isBannerClick: false})
+    this.setData({
+      isBannerClick: false
+    })
   },
   visibleOkClose() {
     this.setData({
       showBindUserInfo: false,
-      isBannerClick:false
+      isBannerClick: false
     })
   },
 
@@ -1206,5 +1450,5 @@ Page({
     return
   },
 
-  
+
 })

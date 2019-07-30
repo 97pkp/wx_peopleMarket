@@ -24,6 +24,12 @@ App({
     that.checkUpdateVersion()  
   },
 
+  // onHide:function(){
+  //   if (this.globalData.boomScreen_ids){
+  //     this.globalData.boomScreen_ids=[]
+  //   }
+  // },
+
   // 全局参数
   globalData: {
     isCheck: false,
@@ -75,4 +81,5 @@ App({
       })
     }
   },
+
 })

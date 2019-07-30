@@ -264,7 +264,7 @@ swiper image {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.7);
   z-index: 10;
 }
 
@@ -463,7 +463,7 @@ swiper image {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   font-size: 30rpx;
   z-index: 10;
 }

@@ -179,7 +179,6 @@ Page({
   wxParseTagATap: function(e) {
     //url地址转码，防止网址出现中文后ios解析不出来显示白屏的问题
     let href = e.currentTarget.dataset.src
-    console.log(href)
     if (href.search('https://') == -1) {
       if (href.search('http://') == -1){
         href = 'https://' + href

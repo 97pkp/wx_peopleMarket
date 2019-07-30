@@ -6,18 +6,18 @@ Page({
    */
   data: {
     search: '', //网站链接
-    type: 0, //类型：0  新闻；1  活动
+    // type: 0, //类型：0  新闻；1  活动
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-    let search = decodeURIComponent(options.search)
-    let type = options.type + '#wechat_redirect'
+    let search = decodeURIComponent(options.search) + '#wechat_redirect'
+    // let type = options.type + '#wechat_redirect'
     this.setData({
       search: search,
-      type: type
+      // type: type
     })
   },
 
