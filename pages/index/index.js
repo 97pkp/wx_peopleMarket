@@ -604,16 +604,11 @@ Page({
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
     $http(apiSetting.projectApiFindProjectListByCity, promise).then((data) => {
-      // wx.hideLoading()
-      // if (!that.data.newsList.length && !that.data.showNewsList.length){
-      //   wx.hideLoading()
-      // }
       let rimbuildinfo = []
       if (data.list.length > 0) {
         rimbuildinfo = [...that.data.rimbuildinfolist, ...data.list]
       } else {
         that.data.rimBuildPage.isPage = false
-        // wx.hideLoading()
         return
       }
 
@@ -780,7 +775,7 @@ Page({
             newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
           }
           let activityEndDate = new Date(newsList[i].end_date).getTime()
-          
+
           let nowDate = new Date()
           nowDate = util.formatTime(nowDate)
           nowDate = nowDate.replace(/\//g, '-')
@@ -844,6 +839,246 @@ Page({
     })
   },
 
+  // //获取全部城市新闻活动信息
+  // getNewsActivity() {
+  //   let _newsArr = []
+  //   let _activityArr = []
+  //   let _allArr = []
+  //   let promise = {
+  //     // city_area_id: app.globalData.storLocalCity.id,
+  //     city_area_id: "全部",
+  //     project_id: "",
+  //     type: "",
+  //     login_by: app.globalData.userId
+  //   }
+  //   $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
+  //     if (data.code === -1 || !data.list || !data.list.length) {
+  //       this.getNewsActivityByCity()
+  //       return
+  //     }
+
+  //     let newsList = data.list
+  //     for (let i = 0; i < newsList.length; i++) {
+  //       if (newsList[i].enabled == 1) {
+  //         newsList.splice(i, 1)
+  //         i--
+  //         continue
+  //       }
+  //       if (newsList[i].type == 0) {
+  //         if (newsList[i].published_date && newsList[i].published_date.indexOf(' ') != -1) {
+  //           newsList[i].published_date = newsList[i].published_date.split(' ')[0].split('-').join('.')
+  //         }
+  //         _newsArr.push(newsList[i])
+  //       } else if (newsList[i].type == 1) {
+  //         if (newsList[i].start_date && newsList[i].start_date.indexOf(' ') != -1) {
+  //           newsList[i].start_date = newsList[i].start_date.split(' ')[0].split('-').join('.')
+  //         }
+  //         if (newsList[i].end_date && newsList[i].end_date.indexOf(' ') != -1) {
+  //           newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
+  //         }
+  //         let activityEndDate = new Date(newsList[i].end_date).getTime()
+
+  //         let nowDate = new Date()
+  //         nowDate = util.formatTime(nowDate)
+  //         nowDate = nowDate.replace(/\//g, '-')
+  //         nowDate = new Date(nowDate).getTime() //当前网络时间 
+  //         if (activityEndDate < nowDate) {
+  //           newsList.splice(i, 1)
+  //           i--
+  //           continue
+  //         }
+  //         _activityArr.push(newsList[i])
+  //       }
+  //     }
+  //     //如果新闻活动个数不足6个，则显示全部；超过6个，不足三个的显示全部，另一项自动补全为6个
+  //     if (_newsArr.length + _activityArr.length < 6) {
+  //       _allArr = []
+  //       _allArr = _allArr.concat(_newsArr, _activityArr)
+  //       this.setData({
+  //         newsList: _allArr
+  //       })
+  //       this.getNewsActivityByCity()
+  //     } else if (_newsArr.length + _activityArr.length == 6) {
+  //       _allArr = []
+  //       _allArr = _allArr.concat(_newsArr, _activityArr)
+  //       this.setData({
+  //         newsList: _allArr
+  //       })
+  //       this.findAttachRelationById(_allArr.length)
+  //     } else {
+  //       if (_newsArr.length >= 3) {
+  //         if (_activityArr.length >= 3) {
+  //           _newsArr.length = 3
+  //           _activityArr.length = 3
+  //         } else {
+  //           _newsArr.length = 6 - _activityArr.length
+  //         }
+  //       } else {
+  //         _activityArr.length = 6 - _newsArr.length
+  //       }
+  //       this.findAttachRelationById(_allArr.length)
+  //     }
+  //   })
+  // },
+  // //获取当前城市新闻活动信息
+  // getNewsActivityByCity() {
+  //   let _newsArr = []
+  //   let _activityArr = []
+  //   let _allArr = []
+  //   let promise = {
+  //     city_area_id: app.globalData.storLocalCity.id,
+  //     project_id: "",
+  //     type: "",
+  //     login_by: app.globalData.userId
+  //   }
+  //   $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
+  //     if (data.code === -1 || !data.list || !data.list.length) {
+  //       this.setData({
+  //         showNewsList: []
+  //       })
+  //       wx.hideLoading()
+  //       return
+  //     }
+  //     let newsList = data.list
+  //     for (let i = 0; i < newsList.length; i++) {
+  //       if (newsList[i].enabled == 1) {
+  //         newsList.splice(i, 1)
+  //         i--
+  //         continue
+  //       }
+  //       if (newsList[i].type == 0) {
+  //         if (newsList[i].published_date && newsList[i].published_date.indexOf(' ') != -1) {
+  //           newsList[i].published_date = newsList[i].published_date.split(' ')[0].split('-').join('.')
+  //         }
+  //         _newsArr.push(newsList[i])
+  //       } else if (newsList[i].type == 1) {
+  //         if (newsList[i].start_date && newsList[i].start_date.indexOf(' ') != -1) {
+  //           newsList[i].start_date = newsList[i].start_date.split(' ')[0].split('-').join('.')
+  //         }
+  //         if (newsList[i].end_date && newsList[i].end_date.indexOf(' ') != -1) {
+  //           newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
+  //         }
+  //         let activityEndDate = new Date(newsList[i].end_date).getTime()
+
+  //         let nowDate = new Date()
+  //         nowDate = util.formatTime(nowDate)
+  //         nowDate = nowDate.replace(/\//g, '-')
+  //         nowDate = new Date(nowDate).getTime() //当前网络时间 
+  //         if (activityEndDate < nowDate) {
+  //           // newsList[i].isEnd = true
+  //           newsList.splice(i, 1)
+  //           i--
+  //           continue
+  //         }
+  //         _activityArr.push(newsList[i])
+  //       }
+  //     }
+
+  //     let newsArr = this.data.newsList
+  //     let news = []
+  //     let atvs = []
+  //     for (let i = 0; i < newsArr.length; i++) {
+  //       if (newsArr[i].type == 0) {
+  //         news.push(newsArr[i])
+  //       } else if (newsArr[i].type == 1) {
+  //         atvs.push(newsArr[i])
+  //       }
+  //     }
+  //     if (news.length + _newsArr.length <= 3 && atvs.length + _activityArr.length <= 3) {
+  //       news = news.concat(_newsArr)
+  //       atvs = atvs.concat(_activityArr)
+  //       _newsArr = []
+  //       _newsArr = _newsArr.concat(news, atvs)
+  //       this.setData({ newsList: _newsArr })
+
+  //     } else if (news.length + _newsArr.length <= 3 && atvs.length + _activityArr.length > 3) {
+  //       if (news.length + _newsArr.length + atvs.length > 6) {
+  //         news = news.concat(_newsArr)
+  //         news.length = 6 - atvs.length
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       } else if (news.length + _newsArr.length + atvs.length == 6) {
+  //         news = news.concat(_newsArr)
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       } else if (news.length + _newsArr.length + atvs.length < 6) {
+  //         if (news.length + _newsArr.length + atvs.length + _activityArr.length <= 6) {
+  //           news = news.concat(_newsArr)
+  //           atvs = atvs.concat(_activityArr)
+  //           _newsArr = []
+  //           _newsArr = _newsArr.concat(news, atvs)
+  //           this.setData({ newsList: _newsArr })
+  //         } else {
+  //           news = news.concat(_newsArr)
+  //           atvs = atvs.concat(_activityArr)
+  //           atvs.length = 6 - news.length
+  //           _newsArr = []
+  //           _newsArr = _newsArr.concat(news, atvs)
+  //           this.setData({ newsList: _newsArr })
+  //         }
+  //       }
+  //     } else if (news.length + _newsArr.length > 3 && atvs.length + _activityArr.length <= 3) {
+  //       if (atvs.length + _activityArr.length + news.length > 6) {
+  //         atvs = atvs.concat(_activityArr)
+  //         atvs.length = 6 - news.length
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       } else if (atvs.length + _activityArr.length + news.length == 6) {
+  //         atvs = atvs.concat(_activityArr)
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       } else if (atvs.length + _activityArr.length + news.length < 6) {
+  //         if (news.length + _newsArr.length + atvs.length + _activityArr.length <= 6) {
+  //           news = news.concat(_newsArr)
+  //           atvs = atvs.concat(_activityArr)
+  //           _newsArr = []
+  //           _newsArr = _newsArr.concat(news, atvs)
+  //           this.setData({ newsList: _newsArr })
+  //         } else {
+  //           news = news.concat(_newsArr)
+  //           atvs = atvs.concat(_activityArr)
+  //           news.length = 6 - atvs.length
+  //           _newsArr = []
+  //           _newsArr = _newsArr.concat(news, atvs)
+  //           this.setData({ newsList: _newsArr })
+  //         }
+  //       }
+  //     } else if (news.length + _newsArr.length > 3 && atvs.length + _activityArr.length > 3) {
+  //       if (news.length <= 3 && atvs.length <= 3) {
+  //         news = news.concat(_newsArr)
+  //         atvs = atvs.concat(_activityArr)
+  //         news.length = 3
+  //         atvs.length = 3
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       } else if (news.length <= 3 && atvs.length > 3) {
+  //         news = news.concat(_newsArr)
+  //         news.length = 6 - atvs.length
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       } else if (news.length > 3 && atvs.length <= 3) {
+  //         atvs = atvs.concat(_activityArr)
+  //         atvs.length = 6 - news.length
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       } else {
+  //         news.length = 3
+  //         atvs.length = 3
+  //         _newsArr = []
+  //         _newsArr = _newsArr.concat(news, atvs)
+  //         this.setData({ newsList: _newsArr })
+  //       }
+  //     }
+  //     this.findAttachRelationById(_newsArr.length)
+  //   })
+  // },
   //获取新闻图片
   findAttachRelationById(newsAtvListLength) {
     let _t = this.data.t //_t=0
@@ -909,13 +1144,41 @@ Page({
   //获取弹屏信息
   findBombScreenByCityId() {
     if (app.globalData.boomScreen_ids && app.globalData.boomScreen_ids != null) {
-      let boomScreen_ids = app.globalData.boomScreen_ids
+      let boomScreen_ids = JSON.parse(JSON.stringify(app.globalData.boomScreen_ids))
       for (let i = 0; i < boomScreen_ids.length; i++) {
-        if (app.globalData.storLocalCity.id == boomScreen_ids[i].boomScreen_history_id) {
-          this.setData({
-            isHavePopupView: false
-          })
-          return
+        // if (app.globalData.storLocalCity.id == boomScreen_ids[i].boomScreen_history_id) {
+        //读取全局变量，查询是否有当前城市的弹屏，没有弹屏，正常执行；有弹屏，判断显示时间是否过期
+        //判断显隐时间，如果结束时间小于当前时间，不再展示，并且删除此条数据；如果当前时间小于结束时间，判断是否是第二天
+        //如果是第二天，正常显示；如果不是第二天，不显示
+        // if (boomScreen_ids[i].bombScreen.city_area_id.indexOf(app.globalData.storLocalCity.id) != -1 || boomScreen_ids[i].bombScreen.city_area_id=="全部") {
+        if (boomScreen_ids[i].boomScreen_history_id == app.globalData.storLocalCity.id) {
+          let bombScreen = boomScreen_ids[i].bombScreen
+          let endDate = new Date(bombScreen.show_end_date)
+          let nowDate = new Date()
+          if (endDate.getTime() < nowDate.getTime()) {
+            boomScreen_ids.splice(i, 1)
+            app.globalData.boomScreen_ids = boomScreen_ids
+            break
+          } else {
+            let closeDate = new Date(boomScreen_ids[i].closeDate)
+            let oldYear = Number(closeDate.getFullYear())
+            let nowYear = Number(nowDate.getFullYear())
+            let oldMonth = Number(closeDate.getMonth())
+            let nowMonth = Number(nowDate.getMonth())
+            let oldDay = Number(closeDate.getDate())
+            let nowDay = Number(nowDate.getDate())
+            if (oldYear < nowYear || oldMonth < nowMonth || oldDay < nowDay) {
+              boomScreen_ids.splice(i, 1)
+              app.globalData.boomScreen_ids = boomScreen_ids
+              console.log(app.globalData.boomScreen_ids)
+              break
+            } else {
+              this.setData({
+                isHavePopupView: false
+              })
+              // return
+            }
+          }
         }
       }
     } else {
@@ -923,6 +1186,35 @@ Page({
     }
     let promise = this.data.bombScreenReq
     $http(apiSetting.bombscreenFindBombScreenByCityId, promise).then((data) => {
+      // data.data = {
+      //   affiliation_cityareaid: null,
+      //   association_soures_enabled: null,
+      //   association_soures_id: null,
+      //   association_soures_name: null,
+      //   attachment_id: "0291FF208958409ABB551092FFAD34B2",
+      //   attachment_path: "/bombscreen/6C8B3E635672466597A62192343BE041.jpeg",
+      //   bomb_screen_url: "https://mp.weixin.qq.com/s/2SXTIxwYEQ0c8OtPz9KcIw",
+      //   city_area_id: "全部",
+      //   city_area_name: null,
+      //   city_id: null,
+      //   city_name: null,
+      //   create_by: "0B028A493AE741948BE47E009AB67285",
+      //   create_date: "2019-07-31 16:45:11",
+      //   enabled: "0",
+      //   id: "B8EDA85865264ADE94C3C2A8D242E8B5",
+      //   published_date: "2019-07-31 16:45:11",
+      //   settings_mian_picture: "0",
+      //   show_end_date: "2019-08-02 00:00:00",
+      //   show_start_date: "2019-07-31 16:45:11",
+      //   status: "0",
+      //   title: "测10",
+      //   to_top: "0",
+      //   type: "3",
+      //   updateOperate: null,
+      //   update_by: "0B028A493AE741948BE47E009AB67285",
+      //   update_date: "2019-07-31 16:45:11",
+      // }
+      
       if (!data.data) {
         this.setData({
           isHavePopupView: false
@@ -940,24 +1232,12 @@ Page({
       if (showStartDate) {
         showStartDate = new Date(showStartDate).getTime()
       }
-      // showStartDate='2019-06-20 12:00:00'
-      // if (showStartDate) {
-      //   showStartDate = this.dateCut(0, showStartDate)
-      // }
       let showEndDate = bombScreen.show_end_date
       if (showEndDate) {
         showEndDate = new Date(showEndDate).getTime()
       }
-      // showEndDate ='2019-08-20 12:00:00'
-      // if (showEndDate) {
-      //   showEndDate = this.dateCut(1, showEndDate)
-      // }
       let nowDate = new Date().getTime()
-      // nowDate = util.formatTime(nowDate) //.split(' ')[0] + ' ' + hours+':00:00'
-      // console.log(nowDate)
-      // nowDate = new Date(nowDate).getTime()
-
-
+     
       //如果弹屏开始时间和结束时间都没有，默认不显示弹屏
       //如果有开始时间，没有结束时间，则如果开始时间大于当前时间就不显示，如果开始时间小于当前时间就显示
       //如果没有开始时间，有结束时间，则如果结束时间大于当前时间就显示，如果结束时间小于当前时间就不显示
@@ -1005,10 +1285,18 @@ Page({
           }
         }
       }
-
+      let _boomScreenIds = app.globalData.boomScreen_ids
+      console.log(_boomScreenIds)
+      for (let j = 0; j < _boomScreenIds.length;j++){
+        if (_boomScreenIds[j].bombScreen.id == bombScreen.id && _boomScreenIds[j].boomScreen_history_id==  app.globalData.storLocalCity.id){
+          return
+        }
+      }
       app.globalData.boomScreen_ids.push({
         // boomScreen_history_id: bombScreen.city_area_id
-        boomScreen_history_id: app.globalData.storLocalCity.id
+        boomScreen_history_id: app.globalData.storLocalCity.id,
+        bombScreen: bombScreen,
+        closeDate: null
       })
       bombScreen.attachment_path = this.data.imgpath + bombScreen.attachment_path
       this.setData({
@@ -1058,8 +1346,33 @@ Page({
   //   this.Users()
   // },
   goScreenInfo: util.throttle(function() {
+    let that = this
     // type: 0：新闻，1：活动，2：项目，3：外链接，4：城市
     let bombScreen = this.data.bombScreen
+    let endDate = new Date(bombScreen.show_end_date).getTime()
+    let nowDate = new Date().getTime()
+    if (endDate < nowDate) {
+      wx.showModal({
+        title: '活动已结束',
+        showCancel: false,
+        confirmText: "关闭",
+        success: function() {
+          that.setData({
+            bombScreen: '',
+            isHavePopupView: false
+          })
+        }
+      })
+      let historyIds = JSON.parse(JSON.stringify(app.globalData.boomScreen_ids))
+      for (let i = 0; i < historyIds.length; i++) {
+        if (historyIds[i].boomScreen_history_id == app.globalData.storLocalCity.id) {
+          historyIds.splice(i, 1)
+          break
+        }
+      }
+      app.globalData.boomScreen_ids = historyIds
+      return
+    }
 
     if (bombScreen.type == 4 && bombScreen.affiliation_cityareaid) {
       let promise = {}
@@ -1103,24 +1416,41 @@ Page({
       });
       return
     } else if (bombScreen.type == 3 && bombScreen.bomb_screen_url) {
-      this.setData({
-        pageUrl: '../webView/webView?search=' + bombScreen.bomb_screen_url,
+      // this.setData({
+      //   pageUrl: '../webView/webView?search=' + bombScreen.bomb_screen_url,
+      // })
+      wx.navigateTo({
+        url: '../webView/webView?search=' + bombScreen.bomb_screen_url,
       })
     } else if (bombScreen.type == '2') {
-      this.setData({
-        pageUrl: '../information/information?project_id=' + bombScreen.association_soures_id,
+      // this.setData({
+      //   pageUrl: '../information/information?project_id=' + bombScreen.association_soures_id,
+      // })
+      wx.navigateTo({
+        url: '../information/information?project_id=' + bombScreen.association_soures_id,
       })
     } else if (bombScreen.type == 1 || bombScreen.type == 0) {
-      this.setData({
-        pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + bombScreen.association_soures_id + "&type=" + bombScreen.type,
+      // this.setData({
+      //   pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + bombScreen.association_soures_id + "&type=" + bombScreen.type,
+      // })
+      wx.navigateTo({
+        url: '../newsActivityInfo/newsActivityInfo?atvid=' + bombScreen.association_soures_id + "&type=" + bombScreen.type,
       })
     }
 
-    this.Users()
+    // this.Users()
   }, 500),
 
   //关闭弹屏窗口
   closeView() {
+    let boomScreen_ids = JSON.parse(JSON.stringify(app.globalData.boomScreen_ids))
+    for (let i = 0; i < boomScreen_ids.length; i++) {
+      if (boomScreen_ids[i].boomScreen_history_id == app.globalData.storLocalCity.id) {
+        boomScreen_ids[i].closeDate = new Date()
+        app.globalData.boomScreen_ids = boomScreen_ids
+        break
+      }
+    }
     this.setData({
       isHavePopupView: false,
       showLine: false
