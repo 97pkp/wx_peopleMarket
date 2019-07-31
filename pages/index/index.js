@@ -669,6 +669,7 @@ Page({
       //   showNews: true
       // })
       let newsList = data.list
+
       for (let i = 0; i < newsList.length; i++) {
         if (newsList[i].enabled == 1) {
           newsList.splice(i, 1)
@@ -779,7 +780,7 @@ Page({
             newsList[i].end_date = newsList[i].end_date.split(' ')[0].split('-').join('.')
           }
           let activityEndDate = new Date(newsList[i].end_date).getTime()
-
+          
           let nowDate = new Date()
           nowDate = util.formatTime(nowDate)
           nowDate = nowDate.replace(/\//g, '-')

@@ -32,5 +32,5 @@ function throttle(fn, gapTime) {
 
 module.exports = {
   formatTime: formatTime,
-  throttle: throttle
+  throttle: throttle,
 }
