@@ -1153,8 +1153,9 @@ Page({
         // if (boomScreen_ids[i].bombScreen.city_area_id.indexOf(app.globalData.storLocalCity.id) != -1 || boomScreen_ids[i].bombScreen.city_area_id=="全部") {
         if (boomScreen_ids[i].boomScreen_history_id == app.globalData.storLocalCity.id) {
           let bombScreen = boomScreen_ids[i].bombScreen
+          bombScreen.show_end_date=bombScreen.show_end_date.replace(/-/g,'/')
           let endDate = new Date(bombScreen.show_end_date)
-          let nowDate = new Date()
+          let nowDate = new Date() 
           if (endDate.getTime() < nowDate.getTime()) {
             boomScreen_ids.splice(i, 1)
             app.globalData.boomScreen_ids = boomScreen_ids
@@ -1170,7 +1171,6 @@ Page({
             if (oldYear < nowYear || oldMonth < nowMonth || oldDay < nowDay) {
               boomScreen_ids.splice(i, 1)
               app.globalData.boomScreen_ids = boomScreen_ids
-              console.log(app.globalData.boomScreen_ids)
               break
             } else {
               this.setData({
@@ -1230,10 +1230,12 @@ Page({
       let bombScreen = data.data
       let showStartDate = bombScreen.show_start_date
       if (showStartDate) {
+        showStartDate=showStartDate.replace(/-/g,'/')
         showStartDate = new Date(showStartDate).getTime()
       }
       let showEndDate = bombScreen.show_end_date
       if (showEndDate) {
+        showEndDate = showEndDate.replace(/-/g, '/')
         showEndDate = new Date(showEndDate).getTime()
       }
       let nowDate = new Date().getTime()
@@ -1307,28 +1309,7 @@ Page({
       console.log(error)
     }
   },
-  //弹屏展示时间截取
-  //2019-07-22 13:49:21
-  // dateCut(type, date) {
-  //   let dateVal = date
-  //   if (type == 0) {
-  //     if (dateVal.split(' ')[1].split(':')[0] < 10) {
-  //       dateVal = dateVal.split(' ')[0] + ' 0' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
-  //     } else {
-  //       dateVal = dateVal.split(' ')[0] + ' ' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
-  //     }
-  //   } else if (type == 1) {
-  //     if (dateVal.split(' ')[1].split(':')[0] - 0 + 1 < 10) {
-  //       dateVal = dateVal.split(' ')[0] + ' 0' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
-  //     } else {
-  //       dateVal = dateVal.split(' ')[0] + ' ' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
-  //     }
-  //   }
-  //   dateVal = dateVal.replace(/-/g, '/')
-  //   // dateVal = dateVal.split('年')[0] + '/' + dateVal.split('年')[1].split('月')[0] + '/' + dateVal.split('年')[1].split('月')[1].split('日')[0] + ' ' + dateVal.split('年')[1].split('月')[1].split('日')[1].split('时')[0]+':00:00'
-  //   return dateVal
-  // },
-
+ 
   //点击弹窗进入详情页
   // goScreenInfo() {
   //   //type:0  新闻；1：活动；2:项目
