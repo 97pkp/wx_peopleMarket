@@ -1286,7 +1286,6 @@ Page({
         }
       }
       let _boomScreenIds = app.globalData.boomScreen_ids
-      console.log(_boomScreenIds)
       for (let j = 0; j < _boomScreenIds.length;j++){
         if (_boomScreenIds[j].bombScreen.id == bombScreen.id && _boomScreenIds[j].boomScreen_history_id==  app.globalData.storLocalCity.id){
           return
