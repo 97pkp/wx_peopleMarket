@@ -1143,6 +1143,7 @@ Page({
 
   //获取弹屏信息
   findBombScreenByCityId() {
+    let that=this
     if (app.globalData.boomScreen_ids && app.globalData.boomScreen_ids != null) {
       let boomScreen_ids = JSON.parse(JSON.stringify(app.globalData.boomScreen_ids))
       for (let i = 0; i < boomScreen_ids.length; i++) {
@@ -1153,9 +1154,12 @@ Page({
         // if (boomScreen_ids[i].bombScreen.city_area_id.indexOf(app.globalData.storLocalCity.id) != -1 || boomScreen_ids[i].bombScreen.city_area_id=="全部") {
         if (boomScreen_ids[i].boomScreen_history_id == app.globalData.storLocalCity.id) {
           let bombScreen = boomScreen_ids[i].bombScreen
-          bombScreen.show_end_date=bombScreen.show_end_date.replace(/-/g,'/')
-          let endDate = new Date(bombScreen.show_end_date)
-          let nowDate = new Date() 
+          // let endDate = new Date(bombScreen.display_end_date)
+          bombScreen.display_end_date = bombScreen.display_end_date.replace(/-/g, '/')
+          let endDate = new Date(bombScreen.display_end_date)
+          let nowDateStr = util.formatTime(new Date())
+          let nowDate = new Date(nowDateStr.split(' ')[0])
+        
           if (endDate.getTime() < nowDate.getTime()) {
             boomScreen_ids.splice(i, 1)
             app.globalData.boomScreen_ids = boomScreen_ids
@@ -1173,7 +1177,7 @@ Page({
               app.globalData.boomScreen_ids = boomScreen_ids
               break
             } else {
-              this.setData({
+              that.setData({
                 isHavePopupView: false
               })
               // return
@@ -1184,62 +1188,37 @@ Page({
     } else {
       app.globalData.boomScreen_ids = []
     }
-    let promise = this.data.bombScreenReq
+    let promise = that.data.bombScreenReq
     $http(apiSetting.bombscreenFindBombScreenByCityId, promise).then((data) => {
-      // data.data = {
-      //   affiliation_cityareaid: null,
-      //   association_soures_enabled: null,
-      //   association_soures_id: null,
-      //   association_soures_name: null,
-      //   attachment_id: "0291FF208958409ABB551092FFAD34B2",
-      //   attachment_path: "/bombscreen/6C8B3E635672466597A62192343BE041.jpeg",
-      //   bomb_screen_url: "https://mp.weixin.qq.com/s/2SXTIxwYEQ0c8OtPz9KcIw",
-      //   city_area_id: "全部",
-      //   city_area_name: null,
-      //   city_id: null,
-      //   city_name: null,
-      //   create_by: "0B028A493AE741948BE47E009AB67285",
-      //   create_date: "2019-07-31 16:45:11",
-      //   enabled: "0",
-      //   id: "B8EDA85865264ADE94C3C2A8D242E8B5",
-      //   published_date: "2019-07-31 16:45:11",
-      //   settings_mian_picture: "0",
-      //   show_end_date: "2019-08-02 00:00:00",
-      //   show_start_date: "2019-07-31 16:45:11",
-      //   status: "0",
-      //   title: "测10",
-      //   to_top: "0",
-      //   type: "3",
-      //   updateOperate: null,
-      //   update_by: "0B028A493AE741948BE47E009AB67285",
-      //   update_date: "2019-07-31 16:45:11",
-      // }
-      
       if (!data.data) {
-        this.setData({
+        that.setData({
           isHavePopupView: false
         })
-        if (this.data.bombScreenReq.city_area_id == '全部') {
-          this.setData({
+        if (that.data.bombScreenReq.city_area_id == '全部') {
+          that.setData({
             'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
           })
-          this.findBombScreenByCityId()
+          that.findBombScreenByCityId()
         }
         return
       }
       let bombScreen = data.data
-      let showStartDate = bombScreen.show_start_date
+      let showStartDate = bombScreen.display_start_date
       if (showStartDate) {
-        showStartDate=showStartDate.replace(/-/g,'/')
+        showStartDate = showStartDate.replace(/-/g, '/')
         showStartDate = new Date(showStartDate).getTime()
       }
-      let showEndDate = bombScreen.show_end_date
+      let showEndDate = bombScreen.display_end_date
       if (showEndDate) {
         showEndDate = showEndDate.replace(/-/g, '/')
         showEndDate = new Date(showEndDate).getTime()
       }
-      let nowDate = new Date().getTime()
-     
+      let showStartTime = bombScreen.display_start_time
+      let showEndTime = bombScreen.display_end_time
+      let nowDateStr = util.formatTime(new Date())
+      let nowDate = new Date(nowDateStr.split(' ')[0]).getTime()
+      let nowTime = nowDateStr.split(' ')[1]
+
       //如果弹屏开始时间和结束时间都没有，默认不显示弹屏
       //如果有开始时间，没有结束时间，则如果开始时间大于当前时间就不显示，如果开始时间小于当前时间就显示
       //如果没有开始时间，有结束时间，则如果结束时间大于当前时间就显示，如果结束时间小于当前时间就不显示
@@ -1247,49 +1226,59 @@ Page({
       //2019-07-22 13:49:21
 
       if (!showStartDate && !showEndDate) {
-        if (this.data.bombScreenReq.city_area_id == '全部') {
-          this.setData({
+        if (that.data.bombScreenReq.city_area_id == '全部') {
+          that.setData({
             'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
           })
-          this.findBombScreenByCityId()
+          that.findBombScreenByCityId()
         }
         return
       } else {
         if (showStartDate && !showEndDate) {
           if (showStartDate > nowDate) {
-            if (this.data.bombScreenReq.city_area_id == '全部') {
-              this.setData({
+            if (that.data.bombScreenReq.city_area_id == '全部') {
+              that.setData({
                 'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
               })
-              this.findBombScreenByCityId()
+              that.findBombScreenByCityId()
             }
             return
           }
         } else if (!showStartDate && showEndDate) {
           if (showEndDate < nowDate) {
-            if (this.data.bombScreenReq.city_area_id == '全部') {
-              this.setData({
+            if (that.data.bombScreenReq.city_area_id == '全部') {
+              that.setData({
                 'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
               })
-              this.findBombScreenByCityId()
+              that.findBombScreenByCityId()
             }
             return
           }
         } else if (showStartDate && showEndDate) {
           if (showStartDate > nowDate || showEndDate < nowDate) {
-            if (this.data.bombScreenReq.city_area_id == '全部') {
-              this.setData({
+            if (that.data.bombScreenReq.city_area_id == '全部') {
+              that.setData({
                 'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
               })
-              this.findBombScreenByCityId()
+              that.findBombScreenByCityId()
             }
             return
+          }else{
+            if (showStartTime > nowTime || showEndTime < nowTime) {
+              if (that.data.bombScreenReq.city_area_id == '全部') {
+                that.setData({
+                  'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
+                })
+                that.findBombScreenByCityId()
+              }
+              return
+            }
           }
         }
       }
       let _boomScreenIds = app.globalData.boomScreen_ids
-      for (let j = 0; j < _boomScreenIds.length;j++){
-        if (_boomScreenIds[j].bombScreen.id == bombScreen.id && _boomScreenIds[j].boomScreen_history_id==  app.globalData.storLocalCity.id){
+      for (let j = 0; j < _boomScreenIds.length; j++) {
+        if (_boomScreenIds[j].bombScreen.id == bombScreen.id && _boomScreenIds[j].boomScreen_history_id == app.globalData.storLocalCity.id) {
           return
         }
       }
@@ -1299,8 +1288,8 @@ Page({
         bombScreen: bombScreen,
         closeDate: null
       })
-      bombScreen.attachment_path = this.data.imgpath + bombScreen.attachment_path
-      this.setData({
+      bombScreen.attachment_path = that.data.imgpath + bombScreen.attachment_path
+      that.setData({
         bombScreen: bombScreen,
         isHavePopupView: true
       })
@@ -1309,7 +1298,29 @@ Page({
       console.log(error)
     }
   },
- 
+
+  //弹屏展示时间截取
+  //2019-07-22 13:49:21
+  // dateCut(type, date) {
+  //   let dateVal = date
+  //   if (type == 0) {
+  //     if (dateVal.split(' ')[1].split(':')[0] < 10) {
+  //       dateVal = dateVal.split(' ')[0] + ' 0' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
+  //     } else {
+  //       dateVal = dateVal.split(' ')[0] + ' ' + dateVal.split(' ')[1].split(':')[0] + ':00:00'
+  //     }
+  //   } else if (type == 1) {
+  //     if (dateVal.split(' ')[1].split(':')[0] - 0 + 1 < 10) {
+  //       dateVal = dateVal.split(' ')[0] + ' 0' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
+  //     } else {
+  //       dateVal = dateVal.split(' ')[0] + ' ' + (dateVal.split(' ')[1].split(':')[0] - 0 + 1) + ':00:00'
+  //     }
+  //   }
+  //   dateVal = dateVal.replace(/-/g, '/')
+  //   // dateVal = dateVal.split('年')[0] + '/' + dateVal.split('年')[1].split('月')[0] + '/' + dateVal.split('年')[1].split('月')[1].split('日')[0] + ' ' + dateVal.split('年')[1].split('月')[1].split('日')[1].split('时')[0]+':00:00'
+  //   return dateVal
+  // },
+
   //点击弹窗进入详情页
   // goScreenInfo() {
   //   //type:0  新闻；1：活动；2:项目
@@ -1329,9 +1340,13 @@ Page({
     let that = this
     // type: 0：新闻，1：活动，2：项目，3：外链接，4：城市
     let bombScreen = this.data.bombScreen
-    let endDate = new Date(bombScreen.show_end_date).getTime()
-    let nowDate = new Date().getTime()
-    if (endDate < nowDate) {
+    bombScreen.display_end_date=bombScreen.display_end_date.replace(/-/g,'/')
+    let endDate = new Date(bombScreen.display_end_date).getTime()
+    let showEndTime = bombScreen.display_end_time
+    let nowDateStr = util.formatTime(new Date())
+    let nowDate = new Date(nowDateStr.split(' ')[0]).getTime()
+    let nowTime = nowDateStr.split(' ')[1]
+    if (endDate < nowDate || endDate == nowDate && showEndTime < nowTime) {
       wx.showModal({
         title: '活动已结束',
         showCancel: false,
@@ -1355,6 +1370,13 @@ Page({
     }
 
     if (bombScreen.type == 4 && bombScreen.affiliation_cityareaid) {
+      if (bombScreen.affiliation_cityareaid==app.globalData.storLocalCity.id) {
+        this.setData({
+          isHavePopupView: false,
+          showLine: false
+        })
+        return
+      }
       let promise = {}
       wx.showLoading({
         title: '加载中',
@@ -1370,7 +1392,8 @@ Page({
             app.globalData.storLocalCity = cityList[i]
             if (this.data.cityInfo.cityName) {
               this.setData({
-                'cityInfo.cityName': cityList[i].city
+                'cityInfo.cityName': cityList[i].city,
+                'bombScreenReq.city_area_id':"全部"
               })
               wx.setStorageSync('storLocalCity', cityList[i])
               app.globalData.storLocalCity = cityList[i]
@@ -1535,6 +1558,7 @@ Page({
     wx.showNavigationBarLoading()
     ifChange = 2
     this.setData({
+      'bombScreenReq.city_area_id':"全部",
       isBannerClick: false,
       t: 0,
       _imgList: [],

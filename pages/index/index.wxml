@@ -77,12 +77,10 @@
   </view>
 
   <!-- 新闻活动弹屏 -->
-  <!-- wx:if="{{isHavePopupView}}" -->
   <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}">
     <view class='popup-view'>
       <view class='top' bindtap='goScreenInfo'>
         <image class='bomb-screen-img' src='{{bombScreen.attachment_path}}' mode='aspectFill' binderror='errorBombScreen' bindload='imgLoadOk'></image>
-        <!-- <image class='bomb-screen-img' src='../../images/timg.gif' mode='aspectFill' binderror='errorBombScreen' bindload='imgLoadOk'></image> -->
       </view>
       <view class='line' wx:if='{{showLine}}'></view>
       <view class='close-view' bindtap='closeView' wx:if='{{showLine}}'>
