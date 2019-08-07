@@ -53,9 +53,9 @@
         <image src='../../images/right.png'></image>
       </view>
     </view>
-    <view class='news-body'> 
+    <view class='news-body'>
       <!-- 添加透明遮罩，防止swiper组件触摸滑动 -->
-    <view class='shade-view' bindtap='goNewsActivityInfo'></view>
+      <view class='shade-view' bindtap='goNewsActivityInfo'></view>
       <swiper autoplay="{{true}}" interval="{{3000}}" vertical="{{true}}" circular="{{true}}" bindchange='newsChange'>
         <block wx:for="{{showNewsList}}" wx:key="{{index}}">
           <swiper-item>

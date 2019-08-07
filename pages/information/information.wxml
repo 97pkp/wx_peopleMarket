@@ -30,7 +30,6 @@
    show-center-play-btn='{{false}}' 
    custom-cache='{{false}}' 
    vslide-gesture-in-fullscreen='{{false}}'
-   bindtimeupdate='bindtimeupdate'
   ></video>
   
   <swiper wx:if="{{true}}" autoplay="{{false}}" interval="{{interval}}" duration="{{duration}}" bindchange='bannerChange' current='{{bannerindex}}'  style='z-index:10'>

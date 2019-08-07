@@ -6,7 +6,6 @@ Page({
    */
   data: {
     search: '', //网站链接
-    // type: 0, //类型：0  新闻；1  活动
   },
 
   /**
@@ -14,10 +13,8 @@ Page({
    */
   onLoad: function(options) {
     let search = decodeURIComponent(options.search) + '#wechat_redirect'
-    // let type = options.type + '#wechat_redirect'
     this.setData({
       search: search,
-      // type: type
     })
   },
 

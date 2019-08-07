@@ -6,7 +6,6 @@ import $http from '../../http/http.js'
 import util from '../../utils/util.js'
 
 Page({
-
   /**
    * 页面的初始数据
    */
@@ -140,23 +139,6 @@ Page({
                 })
               }
             }
-            // if (newsAtvItem.enroll_num < newsAtvItem.settings_enroll_number) { //如果有名额，则显示报名按钮，否则报名人数满了
-            //   if (startTime > nowDate) { //报名开始时间>当前时间，提示报名没开始,否则报名开始
-            //     this.setData({
-            //       btnType: 2
-            //     })
-            //   } else {
-            //     if (endTime < nowDate) { //如果报名结束时间小于当前时间，报名结束
-            //       this.setData({
-            //         btnType: 3
-            //       })
-            //     }
-            //   }
-            // } else {
-            //   this.setData({
-            //     btnType: 5
-            //   })
-            // }
           }
         }
       }
@@ -165,7 +147,6 @@ Page({
         settingsEnroll: newsAtvItem.settings_enroll
       })
       let article = newsAtvItem.content
-      // let article ='<a href="https://www.baidu.com">柚子</a>'
       WxParse.wxParse('article', 'html', article, this, 5);
       wx.hideLoading()
     }, (error) => {
@@ -174,18 +155,14 @@ Page({
     });
   },
 
-
   //超链接解析点击事件
   wxParseTagATap: function(e) {
     //url地址转码，防止网址出现中文后ios解析不出来显示白屏的问题
     let href = e.currentTarget.dataset.src
     if (href.search('https://') == -1) {
-      if (href.search('http://') == -1){
+      if (href.search('http://') == -1) {
         href = 'https://' + href
       }
-      // else{
-      //   href=href.replace('http', 'https')
-      // }
     }
     href = encodeURIComponent(href)
     wx.navigateTo({
@@ -212,113 +189,7 @@ Page({
   },
 
   //活动报名
-  // bindSub() {
-  //   if (this.data.btnType == 1) return
-  //   if (!app.globalData.isCheck) {
-  //     this.setData({
-  //       showBindUserInfo: true
-  //     })
-  //     return
-  //   }
-  //   //按钮样式 0：活动报名，1：已报名，2：报名未开始，3：报名已结束，4：活动已结束，5.名额满了
-  //   let btnType = this.data.btnType
-  //   if (btnType == 2) {
-  //     wx.showModal({
-  //       title: '报名未开始!',
-  //       confirmText: '关闭',
-  //       showCancel: false,
-  //       success(res) {
-  //         if (res.confirm) {
-  //           return
-  //         }
-  //       }
-  //     })
-  //     return
-  //   } else if (btnType == 3) {
-  //     wx.showModal({
-  //       title: '报名已结束!',
-  //       confirmText: '关闭',
-  //       showCancel: false,
-  //       success(res) {
-  //         if (res.confirm) {
-  //           return
-  //         }
-  //       }
-  //     })
-  //     return
-  //   } else if (btnType == 4) {
-  //     wx.showModal({
-  //       title: '活动已结束!',
-  //       confirmText: '关闭',
-  //       showCancel: false,
-  //       success(res) {
-  //         if (res.confirm) {
-  //           return
-  //         }
-  //       }
-  //     })
-  //     return
-  //   } else if (btnType == 5) {
-  //     wx.showModal({
-  //       title: '活动报名名额已满!',
-  //       confirmText: '关闭',
-  //       showCancel: false,
-  //       success(res) {
-  //         if (res.confirm) {
-  //           return
-  //         }
-  //       }
-  //     })
-  //     return
-  //   }
-
-  //   let promise = {
-  //     id: this.data.newsActivityId,
-  //     user_id: app.globalData.userId
-  //   }
-  //   $http(apiSetting.newsactivityInsertActivityEnrollee, promise).then((data) => {
-  //     if (data.code == 0) {
-  //       this.setData({
-  //         btnType: 1,
-  //       })
-  //       this.findMyEnrollActivityById()
-  //       wx.showModal({
-  //         title: '报名成功',
-  //         confirmText: '我的报名',
-  //         success(res) {
-  //           if (res.confirm) {
-  //             wx.navigateTo({
-  //               url: '../myApply/myApply',
-  //             })
-  //           } else if (res.cancel) {
-  //             return
-  //           }
-  //         }
-  //       })
-  //     } else if (data.code == -1) {
-  //       this.setData({
-  //         btnType: 5
-  //       })
-  //       wx.showModal({
-  //         title: '报名失败' + data.message + "!",
-  //         confirmText: '关闭',
-  //         showCancel: false,
-  //         success(res) {
-  //           if (res.confirm) {
-  //             return
-  //           }
-  //         }
-  //       })
-  //     }
-  //   }, (error) => {
-  //     this.setData({
-  //       btnType: 0
-  //     })
-  //     console.log(error)
-  //   });
-  // },
-
-  bindSub: util.throttle(function(){
+  bindSub: util.throttle(function() {
     if (this.data.btnType == 1) return
     if (!app.globalData.isCheck) {
       this.setData({
@@ -422,7 +293,7 @@ Page({
       })
       console.log(error)
     });
-  },1500),
+  }, 1500),
 
 
   //取消授权窗

@@ -10,7 +10,6 @@ Page({
   data: {
     startX: 0,
     noTouchPic: false,
-
     defaultImg: '../../images/defaultImg.png',
     videoPath: '', //视频路径
     _videoPath: '', //视频暂存路径
@@ -163,18 +162,11 @@ Page({
     this.setData({
       isFullView: true,
       videoPath: this.data._videoPath,
-      // isLoadVideo: true
     })
     this.videoContext = wx.createVideoContext('myvideo', this);
     this.videoContext.requestFullScreen({
       direction: 0
     });
-    // setTimeout(() => {
-    //   this.videoContext = wx.createVideoContext('myvideo', this);
-    //   this.videoContext.requestFullScreen({
-    //     direction: 0
-    //   });
-    // }, 500)
   },
 
   //监听进入退出全屏
@@ -182,20 +174,12 @@ Page({
     if (!e.detail.fullScreen) {
       this.videoContext.pause()
       this.setData({
-        // isLoadVideo: false,
         isFullView: false
       })
     } else {
       this.videoContext.play()
     }
   },
-
-  //监听进度条变化
-  bindtimeupdate(e) {
-    // console.log(e)
-    // console.log(e.detail.currentTime)
-  },
-
 
   //广告图（图片）禁止右滑动露出左白边
   // noTouchPic：false: 不滑动    noTouchPic：true:滑动
@@ -485,7 +469,9 @@ Page({
       })
     }).then(() => {
       this.isHaveBuildsImg(this.data.buildsimg)
-      this.setData({ isLoadVideo: true })   //当获取到楼盘图后渲染出video组件，路径为空，当点击播放后，将获取到的视频路径动态赋值给video的src，并切到全屏播放视频
+      this.setData({
+        isLoadVideo: true
+      }) //当获取到楼盘图后渲染出video组件，路径为空，当点击播放后，将获取到的视频路径动态赋值给video的src，并切到全屏播放视频
       wx.hideLoading()
     }), (error) => {
       console.log(error)
@@ -774,18 +760,6 @@ Page({
     })
     this.Users()
   },
-  // toAttention:util.throttle(function(){
-  //   console.log('asx')
-  //   if (this.data.isClickAttention) {
-  //     console.log('asxasxx')
-  //     return
-  //   }
-  //   this.setData({
-  //     isClickAttention: true
-  //   })
-  //   this.Users()
-  // },1500),
-
 
   attentionProject() {
     this.setData({
@@ -930,20 +904,13 @@ Page({
   },
 
   //去推荐
-  // goRecommend() {
-  //   this.setData({
-  //     pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
-  //     isClickAttention: false
-  //   })
-  //   this.Users()
-  // },
-  goRecommend: util.throttle(function(){
+  goRecommend: util.throttle(function() {
     this.setData({
       pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
       isClickAttention: false
     })
     this.Users()
-  },1500),
+  }, 1500),
 
   toPhone() {
     wx.makePhoneCall({
@@ -975,7 +942,7 @@ Page({
   },
   //打开内置地图
   openMapInWx(type) {
-    let that = this    
+    let that = this
     if (type == 1) {
       if (!this.data.mapInfo.salesLatitude || !this.data.mapInfo.salesAddress) {
         return
