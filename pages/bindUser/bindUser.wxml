@@ -1,13 +1,15 @@
 <!--pages/bindUser/bindUser.wxml-->
-<view>
+<view class='main-box'>
   <ul class='bindList'>
     <li>
-      <span class='title'>姓名</span>
-      <span class="inp">
-        <input placeholder-class="phcolor" value='{{userInfo.myName}}' type='text' placeholder="请输入姓名" disabled='{{!isEdit}}' bindinput='myNameBind' />
-      </span>
+      <view class='item-box'>
+        <span class='title'>姓名</span>
+        <span class="inp">
+          <input placeholder-class="phcolor" value='{{userInfo.myName}}' type='text' placeholder="请输入姓名" disabled='{{!isEdit}}' bindinput='myNameBind' />
+        </span>
+      </view>
     </li>
-    <li>
+    <!-- <li>
       <span class='title'>性别</span>
       <span class="" style='height:100rpx;float:right;' wx:if="{{isEdit}}">
         <button class='genderSty' data-val='男' bindtap='genderChange'>
@@ -24,92 +26,88 @@
       <span class="inp" wx:if="{{!isEdit}}">
         <input placeholder-class="phcolor" type='text' disabled value='{{userInfo.sex}}' />
       </span>
-    </li>
-    <!-- <li style='position:relative'>
-      <span class='title'>手机号</span>
-      <span class="inp" style='width:{{isEdit? "400rpx":""}}'>
-        <input placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='11' placeholder="请输入手机号" bindinput='phoneBind' />
-      </span>
-      <div wx:if="{{isEdit}}">
-        <view wx-if='{{!noteResult}}'>
-          <span wx:if='{{isnote}}' class='noteCode' bindtap='getNoteCode'>获取验证码</span>
-          <span wx:else class='noteCode' bindtap='noteCodeModalShow'>({{downTime}}s)</span>
-        </view>
-        <span wx:if="{{noteResult}}" class='noteCode' style='color:#0aba07'>
-          <icon type="success" size="14" /> 成功
-        </span>
-      </div>
     </li> -->
+    <li style='position:relative; border-bottom: 1rpx solid #e6e6e6;' >
+      <view class="item-box" style='border:0;height:98rpx;'>
+        <span class='title'>手机号</span>
+        <view class='phone-box' style='margin-right:{{isEdit? "160rpx":""}}'>
+          <view class='phone-header-box' wx:if="{{isEdit}}">
+            <picker bindchange="bindPickerNumberChange" value="{{numberIndex}}" range="{{phoneHeaderArray}}" range-key='city' disabled='{{noteResult}}'>
+              <view class="picker phone-header">
+                {{phoneHeaderArray[numberIndex].mobileFlag}}
+              </view>
+            </picker>
+            <image src='../../images/godown.png'></image>
+          </view>
 
-
-
-    <li style='position:relative'>
-      <span class='title'>手机号</span>
-      <view class='phone-box' style='margin-right:{{isEdit? "160rpx":""}}'>
-        <view class='phone-header-box' wx:if="{{isEdit}}">
-          <picker bindchange="bindPickerNumberChange" value="{{numberIndex}}" range="{{phoneHeaderArray}}" range-key='city' disabled='{{noteResult}}'>
-            <view class="picker phone-header">
-              {{phoneHeaderArray[numberIndex].mobileFlag}}
+          <span class="inp phone-inp">
+            <input class='phone-num' placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='{{numberMaxLength}}' placeholder="请输入手机号" bindinput='phoneBind' />
+          </span>
+        </view>
+        <div wx:if="{{isEdit}}">
+          <view wx-if='{{!noteResult}}'>
+            <span wx:if='{{isnote}}' class='noteCode' bindtap='getNoteCode'>获取验证码</span>
+            <span wx:else class='noteCode' bindtap='noteCodeModalShow'>({{downTime}}s)</span>
+          </view>
+          <span wx:if="{{noteResult}}" class='noteCode' style='color:#0aba07'>
+            <icon type="success" size="14" /> 成功
+          </span>
+        </div>
+      </view>
+    </li>
+   
+    <li class='item-picker'>
+      <view class='item-box' style='border:0;'>
+        <span class='title'>经纪人类型</span>
+        <span style='float:right;'>
+          <picker mode="selector" bindchange="bindPickerChange" range-key="" value='{{arrayIndex}}' range="{{array}}" disabled="{{!isEdit}}">
+            <view class="picker">
+              <text wx:if="{{arrayIndex == null}}" style='color:#B2B2B2;'>请选择经纪人类型</text> {{array[arrayIndex]}}
             </view>
           </picker>
-          <image src='../../images/godown.png'></image>
-        </view>
-
-        <span class="inp phone-inp">
-          <input placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='{{numberMaxLength}}' placeholder="请输入手机号" bindinput='phoneBind' />
         </span>
       </view>
-      <div wx:if="{{isEdit}}">
-        <view wx-if='{{!noteResult}}'>
-          <span wx:if='{{isnote}}' class='noteCode' bindtap='getNoteCode'>获取验证码</span>
-          <span wx:else class='noteCode' bindtap='noteCodeModalShow'>({{downTime}}s)</span>
-        </view>
-        <span wx:if="{{noteResult}}" class='noteCode' style='color:#0aba07'>
-          <icon type="success" size="14" /> 成功
+    </li>
+
+    <li wx-if="{{arrayIndex == 1}}" style='margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;' >
+      <view class='item-box' style='border:0;'>
+        <span class='title'>身份证号</span>
+        <span class="inp">
+          <input placeholder-class="phcolor" type='idcard' value='{{userInfo.idno}}' placeholder="请输入身份证号" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
         </span>
-      </div>
+      </view>
     </li>
-
-
-
-
-
-
-
-    <li>
-      <span class='title'>经纪人类型</span>
-      <span style='float:right;'>
-        <picker mode="selector" bindchange="bindPickerChange" range-key="" value='{{arrayIndex}}' range="{{array}}" disabled="{{!isEdit}}">
-          <view class="picker">
-            <text wx:if="{{arrayIndex == null}}">请选择</text> {{array[arrayIndex]}}
-          </view>
-        </picker>
-      </span>
+     <li wx-if="{{arrayIndex == 0 || arrayIndex == 2}}" style="margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;">
+      <view class='item-box' style='border:0;'>
+        <span class='title'>身份证号</span>
+        <span class="inp">
+          <input placeholder-class="phcolor" type='idcard' value='{{userInfo.idno}}' placeholder="{{isEdit?'请输入身份证号(非必填)':'未绑定'}}" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
+        </span>
+      </view>
     </li>
-
-    <li wx-if="{{arrayIndex == 1}}" style='margin-top:20rpx;'>
-      <span class='title'>身份证号</span>
-      <span class="inp">
-        <input placeholder-class="phcolor" type='idcard' value='{{userInfo.idno}}' placeholder="请输入身份证号" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
-      </span>
-    </li>
-    <li wx-if="{{arrayIndex == 2}}" style='margin-top:20rpx;'>
-      <span class='title'>渠道验证码</span>
-      <span class="inp">
-        <input placeholder-class="phcolor" type='number' value='{{userInfo.channelCode}}' placeholder="请输入渠道验证码" disabled="{{!isEdit}}" maxlength='11' bindinput='channelCodeBind' />
-      </span>
+    <li wx-if="{{arrayIndex == 2}}" style='margin-top:20rpx; border-top: 1rpx solid #e6e6e6;'>
+      <view class='item-box'>
+        <span class='title'>渠道验证码</span>
+        <span class="inp">
+          <input placeholder-class="phcolor" type='number' value='{{userInfo.channelCode}}' placeholder="请输入渠道验证码" disabled="{{!isEdit}}" maxlength='11' bindinput='channelCodeBind' />
+        </span>
+      </view>
     </li>
     <li wx-if="{{arrayIndex == 2}}">
-      <span class='title'>留电渠道</span>
-      <span class="inp">
-        <input placeholder-class="phcolor" type='text' value='{{trench}}' placeholder="" disabled />
-      </span>
+      <view class='item-box'>
+        <span class='title'>留电渠道</span>
+        <span class="inp">
+          <input placeholder-class="phcolor" type='text' value='{{trench}}' placeholder="" disabled />
+        </span>
+      </view>
     </li>
-    <li wx-if="{{arrayIndex == 2}}">
-      <span class='title'>中介账户</span>
-      <span class="inp">
-        <input placeholder-class="phcolor" type='text' value='{{showAgencyAccount}}' placeholder="" disabled />
-      </span>
+    <li wx-if="{{arrayIndex == 2}}" style='border-bottom: 1rpx solid #e6e6e6;'>
+      <view class='item-box' style='border:0;'>
+        <span class='title'>中介账户</span>
+        <span class="inp">
+          <input placeholder-class="phcolor" type='text' value='{{showAgencyAccount}}' placeholder="" disabled />
+        </span>
+      </view>
     </li>
   </ul>
 
@@ -130,32 +128,3 @@
 </view>
 
 <i-message id="message" />
-
-
-<!-- <ul class='bindList'>
- <li style='position:relative'>
-      <span class='title'>手机号</span>
-      <view class='phone-box'>
-        <view class='phone-header-box'>
-          <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}" range-key='city'>
-            <view class="picker phone-header">
-              {{array[index].mobileFlag}}
-            </view>
-          </picker>
-          <image src='../../images/godown.png'></image>
-        </view>
-        <span class="inp phone-inp" style='width:{{isEdit? "400rpx":""}}'>
-          <input placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='11' placeholder="请输入手机号" bindinput='phoneBind' />
-        </span>
-      </view>
-      <div wx:if="{{isEdit}}">
-        <view wx-if='{{!noteResult}}'>
-          <span wx:if='{{isnote}}' class='noteCode' bindtap='getNoteCode'>获取验证码</span>
-          <span wx:else class='noteCode' bindtap='noteCodeModalShow'>({{downTime}}s)</span>
-        </view>
-        <span wx:if="{{noteResult}}" class='noteCode' style='color:#0aba07'>
-          <icon type="success" size="14" /> 成功
-        </span>
-      </div>
-    </li>
-    </ul> -->

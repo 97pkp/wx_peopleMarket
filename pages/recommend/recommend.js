@@ -47,7 +47,9 @@ Page({
     arrayProjectIndex: null,
     phoneTypeIndex: 0, //隐号全号默认选择下标
     index: 0, //客户电话区号选择默认下标   
-    arrayNum: [{name:"全号"}], //隐号/全号选择 
+    arrayNum: [{
+      name: "全号"
+    }], //隐号/全号选择 
 
     // 区号：+86(港:+852,澳:+853,台:+886)
     array: [{
@@ -109,9 +111,9 @@ Page({
       })
       this.getCityInfo(options.project_id);
     } else {
-      if (this.data.reportList.reportType == "中介"){
+      if (this.data.reportList.reportType == "中介") {
         this.getRecommendItem(app.globalData.storLocalCity.id)
-      }else{
+      } else {
         this.getRecommendGetProjectList()
       }
     }
@@ -128,12 +130,12 @@ Page({
           'reportList.city': app.globalData.transienceCity.city,
           'reportList.projectId': '',
           'arrayProjectIndex': null,
-          recommentStr:'',
+          recommentStr: '',
           phoneText: ''
         })
-        if (this.data.reportList.reportType=="中介"){
+        if (this.data.reportList.reportType == "中介") {
           this.getRecommendItem(app.globalData.transienceCity.id)
-        }else{
+        } else {
           this.getRecommendGetProjectList()
         }
         // this.getRecommendGetProjectList()
@@ -149,7 +151,7 @@ Page({
     let cursor = e.detail.cursor
     let phoneText = this.data.phoneText
     phone = phone.replace(/[^0-9\*]/g, "")
-    if (this.data.arrayNum[this.data.phoneTypeIndex].name=='隐号') {
+    if (this.data.arrayNum[this.data.phoneTypeIndex].name == '隐号') {
       if (this.data.index == 0) {
         if (cursor > phoneText.length) {
           var reg = /^\d{3}$/g;
@@ -256,17 +258,20 @@ Page({
       url: '../citySelect/citySelect?city_id=' + this.data.city_id
     })
   },
- 
+
   // 获取全号隐号项
-  getRecommendItem(city){
-    let that=this
-    let promise={
+  getRecommendItem(city) {
+    let that = this
+    let promise = {
       openID: app.globalData.openid,
       city: city
     }
     $http(apiSetting.recommendGetRecommendItem, promise).then((data) => {
-     if(data.code==-1 || !data.data.length) return
-      that.setData({ phoneTypeIndex:0, arrayNum: data.data})
+      if (data.code == -1 || !data.data.length) return
+      that.setData({
+        phoneTypeIndex: 0,
+        arrayNum: data.data
+      })
       that.getRecommendGetProjectList()
     }, (error) => {
       console.log(error)
@@ -287,9 +292,9 @@ Page({
         'reportList.city': projectInfo.city_text,
         city_id: projectInfo.city
       })
-      if (app.globalData.bindUserInfo.brokertype == "中介"){
+      if (app.globalData.bindUserInfo.brokertype == "中介") {
         this.getRecommendItem(projectInfo.city)
-      }else{
+      } else {
         this.getRecommendGetProjectList()
       }
     }, (error) => {
@@ -301,7 +306,7 @@ Page({
     let that = this
     if (!this.data.city_id) {
       let cityInfo = wx.getStorageSync('storLocalCity')
-      if(!cityInfo){
+      if (!cityInfo) {
         return
       }
       this.setData({

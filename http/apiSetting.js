@@ -34,6 +34,12 @@ const serviceModule = {
     url: '/bombscreen/findBombScreenByCityId',
     method: 'post'
   },
+  
+  //查询是否是游戏用户
+  userGetUserCity:{
+    url: '/user/getUserCity',
+    method: 'post'
+  },
 
   cityFindBuildInfoByCity: {
     url: '/city/findBuildInfoByCity',

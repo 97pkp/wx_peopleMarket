@@ -20,7 +20,7 @@ Page({
       idno: '',
       myName: '',
       phone: '',
-      sex: '男',
+      sex: '未知',
       wxid: '',
       phoneFlag: '+86'
     },
@@ -428,21 +428,32 @@ Page({
         return
       }
     }
+    if (this.data.userInfo.idno){
+      let idno = this.data.userInfo.idno
+      if (idno.length !== 15 && idno.length !== 18 ){
+        $Message({
+          content: '请正确填写身份证号',
+          type: 'warning'
+        });
+        return
+      }
+    }
     if (this.data.arrayIndex == 2 && this.data.showTipCode.code !== 0) {
       wx.showModal({
         title: '修改失败',
         content: '后台' + this.data.showTipCode.message,
         showCancel: false,
         confirmText: "关闭",
-        success: function() {
-
-        }
+        success: function() {}
       })
       return
     }
 
     let that = this
     let promise = this.data.userInfo
+    if (this.data.userInfo.sex != "男" && this.data.userInfo.sex != "女"){
+      promise.sex = '未知'
+    }
     wx.showLoading()
     $http(apiSetting.userIdentifyUser, promise).then((data) => {
       if (data.code == 0) {

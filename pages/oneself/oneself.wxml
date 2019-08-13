@@ -14,15 +14,23 @@
   </view>
   <view>
     <ul class='controlList'>
-      <li style='margin-top:20rpx;' data-url='../clients/client' bindtap='pageTobind'>
-        <image class='iconImg' data-url='../clients/client' src="../../images/myrecommend.png"></image>我的推荐</li>
+      <li style='margin-top:20rpx;border-top: 1rpx solid #e6e6e6;' data-url='../clients/client' bindtap='pageTobind'>
+        <image class='iconImg' data-url='../clients/client' src="../../images/myrecommend.png"></image>
+        <span>我的推荐</span>
+      </li>
       <li data-url='../mycoupon/mycoupon' bindtap='pageTobind'>
-        <image class='iconImg' data-url='../mycoupon/mycoupon' src="../../images/myreduced.png"></image>我的优惠券</li>
+        <image class='iconImg' data-url='../mycoupon/mycoupon' src="../../images/myreduced.png"></image>
+        <span>我的优惠券</span>
+      </li>
       <li data-url='../attention/attention' bindtap='pageTobind'>
-        <image class='iconImg' data-url='../attention/attention' src="../../images/guanzhu.png"></image>我的关注</li>
-      <li style='border-bottom: 1rpx solid #e6e6e6;' data-url='../myApply/myApply' bindtap='pageTobind'>
-        <image class='iconImg activityIcon' data-url='../attention/attention' src="../../images/activity.png"></image>我的报名</li>
-      <li style='margin-top:20rpx;border-bottom: 1rpx solid #e6e6e6;' data-url='../setting/setting' bindtap='pageTobindSet'>
+        <image class='iconImg' data-url='../attention/attention' src="../../images/guanzhu.png"></image>
+        <span>我的关注</span>
+      </li>
+      <li data-url='../myApply/myApply' bindtap='pageTobind'>
+        <image class='iconImg activityIcon' data-url='../attention/attention' src="../../images/activity.png"></image>
+        <span>我的报名</span>
+      </li>
+      <li style='margin-top:20rpx;border-bottom: 1rpx solid #e6e6e6;border-top: 1rpx solid #e6e6e6;' data-url='../setting/setting' bindtap='pageTobindSet'>
         <image class='iconImg' data-url='../setting/setting' src="../../images/setting.png"></image>设置</li>
     </ul>
   </view>

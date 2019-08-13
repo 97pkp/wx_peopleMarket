@@ -1,16 +1,36 @@
 /* pages/bindUser/bindUser.wxss */
+.main-box{
+  border-top: 1rpx solid #e6e6e6;
 
+}
 .bindList li {
-  width: 100%;
+  /* width: 100%; */
+  width: calc(100% - 40rpx);
   height: 100rpx;
   line-height: 100rpx;
   display: block;
   background-color: #fff;
-  box-sizing: border-box;
-  border-bottom: 1rpx solid #e6e6e6;
-  padding: 0 35rpx 0 40rpx;
+  /* box-sizing: border-box; */
+  /* border-bottom: 1rpx solid #e6e6e6; */
+  /* padding: 0 35rpx 0 40rpx; */
+  padding: 0 0 0 40rpx;
   font-size: 30rpx;
   color: #111;
+}
+
+.item-picker{
+  margin-top: 20rpx;
+  border-top: 1rpx solid #e6e6e6;
+  border-bottom: 1rpx solid #e6e6e6;
+}
+
+.bindList li .item-box{
+  height: 100%;
+  width: 100%;
+  /* width: calc(100% - 35rpx); */
+  box-sizing: border-box;
+  padding-right: 35rpx;
+  border-bottom: 1rpx solid #e6e6e6;
 }
 
 .title {
@@ -26,7 +46,11 @@
 
 .inp input {
   width: 100%;
+  vertical-align: middle;
   text-align: right;
+}
+.inp .phone-num{
+  margin-top: 6rpx;
 }
 
 .phcolor {
@@ -35,22 +59,31 @@
 
 .bindSub {
   height: 80rpx;
+  width: 86.7%;
   font-size: 30rpx;
-  margin: 200rpx 40rpx 0;
+  position: absolute;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+  /* margin: 200rpx 40rpx 0; */
   background-color: #20a0ff;
   color: #fff;
 }
 
 .amendSub {
   height: 80rpx;
+  width: 86.7%;
   font-size: 30rpx;
-  margin: 200rpx 40rpx 0;
+  /* margin: 200rpx 40rpx 0; */
+  position: absolute;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
   background-color: #fff;
   color: #333;
 }
 
 .noteCode {
-  display: block;
   width: 150rpx;
   position: absolute;
   right: 35rpx;

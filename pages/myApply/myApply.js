@@ -14,16 +14,16 @@ Page({
   data: {
     defaultImg: '../../images/defaultImg.png',
     imgpath: fileUrl,
-    activityList:[],  //活动报名列表
+    activityList: [], //活动报名列表
     //分页请求参数
     requestPage: {
       page: 1,
       perpage: 20
     },
-    isPage:true,  //是否分页查询 默认是
+    isPage: true, //是否分页查询 默认是
     _imgList: [], //新闻图片列表
-    _index: 0,  //新加载数据起始下标
-    t: 0,  //循环变量初始0
+    _index: 0, //新加载数据起始下标
+    t: 0, //循环变量初始0
 
   },
 
@@ -35,15 +35,19 @@ Page({
     })
     let reqPath = JSON.parse(JSON.stringify(apiSetting.newsactivityFindMyEnrollActivityById))
     reqPath.url += "?page=" + this.data.requestPage.page + "&perpage=" + this.data.requestPage.perpage
-    let promise = { "userId": app.globalData.userId }
+    let promise = {
+      "userId": app.globalData.userId
+    }
     $http(reqPath, promise).then((data) => {
       if (!data.list || !data.list.length) {
-        this.setData({ isPage: false })
+        this.setData({
+          isPage: false
+        })
         wx.hideLoading()
         return
-      } 
-      let dataArr=data.list
-      for (let i = 0; i < dataArr.length;i++){
+      }
+      let dataArr = data.list
+      for (let i = 0; i < dataArr.length; i++) {
         if (dataArr[i].start_date && dataArr[i].start_date.indexOf(' ') != -1) {
           dataArr[i].start_date = dataArr[i].start_date.split(' ')[0].split('-').join('.')
         }
@@ -53,7 +57,10 @@ Page({
       }
 
       let _arr = [...this.data.activityList, ...dataArr]
-      this.setData({ activityList: _arr, _index: this.data.activityList.length })
+      this.setData({
+        activityList: _arr,
+        _index: this.data.activityList.length
+      })
       this.findAttachRelationById(dataArr.length)
     }, (error) => {
       wx.hideLoading()
@@ -89,7 +96,9 @@ Page({
 
     let _activityList = this.data.activityList
     // if (_t > atvListLength - 1) return
-    let promise = { id: _activityList[this.data._index + _t].id }
+    let promise = {
+      id: _activityList[this.data._index + _t].id
+    }
     let _arr = this.data._imgList
     $http(apiSetting.newsactivityFindAttachRelationById, promise).then((data) => {
       _arr.push(data.data[0])
@@ -113,66 +122,60 @@ Page({
   },
 
   //跳转活动详情页
-  // goNewsAtvInfo(e){
-  //   let atvid = e.currentTarget.dataset.atvid
-  //   wx.navigateTo({
-  //     url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=1"+"&hideBtn=true",
-  //   })
-  // },
-  goNewsAtvInfo: util.throttle(function(e){
+  goNewsAtvInfo: util.throttle(function(e) {
     let atvid = e.currentTarget.dataset.atvid
     wx.navigateTo({
       url: '../newsActivityInfo/newsActivityInfo?atvid=' + atvid + "&type=1" + "&hideBtn=true",
     })
-  },1500),
+  }, 1500),
 
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function(options) {
     this.findMyEnrollActivityListById()
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
+  onReady: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
+  onHide: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  onUnload: function() {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
+  onPullDownRefresh: function() {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
+  onReachBottom: function() {
     if (this.data.isPage) {
       this.data.t = 0
       this.data.requestPage.page++
@@ -183,7 +186,7 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function() {
 
   },
 

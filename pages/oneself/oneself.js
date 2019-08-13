@@ -88,30 +88,14 @@ Page({
   onReachBottom: function() {
 
   },
-  // visibleOk() {
-  //   wx.navigateTo({
-  //     url: "../bindUser/bindUser"
-  //   })
-  // },
-  // visibleOkClose() {
-  //   wx.reLaunch({
-  //     url: "../index/index"
-  //   })
-  // },
 
-  // pageTobind(e) {
-  //   this.setData({
-  //     pageUrl: e.target.dataset.url
-  //   })
-  //   this.Users()
-  // },
-  pageTobind: util.throttle(function(e){
+  pageTobind: util.throttle(function(e) {
     this.setData({
       pageUrl: e.target.dataset.url
     })
     this.Users()
-  },1500),
-  
+  }, 1500),
+
 
   //跳转绑定信息页
   pageTobindUser(e) {

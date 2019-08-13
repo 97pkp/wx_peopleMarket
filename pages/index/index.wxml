@@ -56,7 +56,7 @@
     <view class='news-body'>
       <!-- 添加透明遮罩，防止swiper组件触摸滑动 -->
       <view class='shade-view' bindtap='goNewsActivityInfo'></view>
-      <swiper autoplay="{{true}}" interval="{{3000}}" vertical="{{true}}" circular="{{true}}" bindchange='newsChange'>
+      <swiper autoplay="{{true}}" interval="{{3000}}" vertical="{{true}}" circular="{{true}}" bindanimationfinish='newsChange' current='{{newsCurrent}}'>
         <block wx:for="{{showNewsList}}" wx:key="{{index}}">
           <swiper-item>
             <view class='swiper-box'>
@@ -77,7 +77,7 @@
   </view>
 
   <!-- 新闻活动弹屏 -->
-  <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}">
+  <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}" style='opacity:{{screenOpacity}}'>
     <view class='popup-view'>
       <view class='top' bindtap='goScreenInfo'>
         <image class='bomb-screen-img' src='{{bombScreen.attachment_path}}' mode='aspectFill' binderror='errorBombScreen' bindload='imgLoadOk'></image>

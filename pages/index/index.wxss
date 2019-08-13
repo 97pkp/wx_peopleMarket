@@ -289,7 +289,7 @@ swiper image {
   /* height: 628rpx; */
   height: 840rpx;
   border-radius: 8rpx;
-  background: #fff;
+  background: transparent;
   overflow: hidden;
 }
 

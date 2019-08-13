@@ -4,18 +4,18 @@
     <li>
       <span class='title required'>城市</span>
       <span class="inp" bindtap='citySelcet'>
-        <input placeholder-class="phcolor" placeholder-style='color:#B4B9CB;' type='text' value="{{reportList.city}}" disabled  style='font-size:28rpx;'/>
+        <input placeholder-class="phcolor" placeholder-style='color:#B4B9CB;' type='text' value="{{reportList.city}}" disabled style='font-size:28rpx;' />
       </span>
     </li>
     <li>
       <span class='title required'>推荐楼盘</span>
       <span wx:if="{{recommentStr!==''}}" class="inp" style="text-align:left;display:block;" bindtap="setProject">{{recommentStr}}</span>
-      <span wx:if="{{recommentStr===''}}" class="place-sel" style="text-align:left;display:block;" bindtap="setProject">请选择</span>  
+      <span wx:if="{{recommentStr===''}}" class="place-sel" style="text-align:left;display:block;" bindtap="setProject">请选择</span>
     </li>
     <li>
       <span class='title required'>客户姓名</span>
       <span class="inp">
-        <input placeholder-class="phcolor" type='text' bindinput='customNameBind' placeholder="请输入姓名" placeholder-style='color:#B4B9CB;'/>
+        <input placeholder-class="phcolor" type='text' bindinput='customNameBind' placeholder="请输入姓名" placeholder-style='color:#B4B9CB;' />
       </span>
     </li>
     <li>
@@ -55,14 +55,14 @@
       </view>
 
       <span class="inp">
-        <input placeholder-class="phcolor" bindinput='customPhoneBind' value='{{phoneText}}' placeholder="请输入客户电话" placeholder-style='color:#B4B9CB;' maxlength='{{numberMaxLength}}'/>
+        <input placeholder-class="phcolor" bindinput='customPhoneBind' value='{{phoneText}}' placeholder="请输入客户电话" placeholder-style='color:#B4B9CB;' maxlength='{{numberMaxLength}}' />
       </span>
     </li>
-    
+
     <li>
       <span class='title'>意向户型</span>
       <view class='house-type-box'>
-        <picker bindchange="bindHouseTypeChange" value="{{houseHoldTypeListIndex}}" range="{{houseHoldTypeList}}" >
+        <picker bindchange="bindHouseTypeChange" value="{{houseHoldTypeListIndex}}" range="{{houseHoldTypeList}}">
           <view class="picker housetype-header" wx:if="{{isClickHouse}}">
             {{houseHoldTypeList[houseHoldTypeListIndex]}}
           </view>
@@ -73,7 +73,7 @@
       </view>
     </li>
     <li style="height:200rpx;margin-top:20rpx;margin-bottom:40rpx">
-      <textarea wx:if="{{!visible2 && !showPicker}}" class='textsty' style='' bindinput='remarkBind' placeholder="{{placeholderText}}" placeholder-style='color:#B4B9CB;'/>
+      <textarea wx:if="{{!visible2 && !showPicker}}" class='textsty' style='' bindinput='remarkBind' placeholder="{{placeholderText}}" placeholder-style='color:#B4B9CB;' />
       <view wx:else class='textsty' />
     </li>
     <li>
@@ -95,7 +95,7 @@
 
 <i-modal visible="{{visible2}}" bind:ok="handleCloseOk" bind:cancel="handleCloseNo" ok-text="我的推荐" cancel-text="首页" catchtouchmove='notouch'>
   <view class='back-box'>
-    <view class='success-list' wx:if="{{successProjectArr.length}}"  wx:for="{{successProjectArr}}" wx:key="{{index}}">
+    <view class='success-list' wx:if="{{successProjectArr.length}}" wx:for="{{successProjectArr}}" wx:key="{{index}}">
       <view class='icon_left'>
         <image src='../../images/tjsuccess.png'></image>
       </view>
@@ -118,11 +118,11 @@
 
 <i-message id="message" />
 
-<view class='picker-view' wx:if="{{showPicker}}" catchtap='cancelPicker' data-type='0' >
+<view class='picker-view' wx:if="{{showPicker}}" catchtap='cancelPicker' data-type='0'>
   <view class='content'>
     <view class='top'>
-      <text  bindtap='cancelPicker' data-type='0'>取消</text>
-      <text  bindtap='cancelPicker' data-type='1'>确定</text>
+      <text bindtap='cancelPicker' data-type='0'>取消</text>
+      <text bindtap='cancelPicker' data-type='1'>确定</text>
     </view>
     <view class='bottom'>
       <view class='list' wx:for="{{arrayProject}}" wx:key="{{index}}" data-index="{{index}}" bindtap='selTheItem'>

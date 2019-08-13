@@ -14,6 +14,7 @@ const formatNumber = n => {
   return n[1] ? n : '0' + n
 }
 
+//节流函数
 function throttle(fn, gapTime) {
   if (gapTime == null || gapTime == undefined) {
     gapTime = 500
