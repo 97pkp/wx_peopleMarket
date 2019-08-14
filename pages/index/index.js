@@ -188,14 +188,14 @@ Page({
             let promise = {
               openid: app.globalData.openid
             }
-            promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
+            // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
             $http(apiSetting.userGetUserCity, promise).then((data) => {
               let city = data.data.currentCity
               if (city) {
                 app.globalData.gameUserCity = city
               }
               that.accreditOperate()
-            }, (err) => {
+            }, (error) => {
               that.accreditOperate()
             })
           } else {
@@ -220,7 +220,7 @@ Page({
     let promise = {
       openid: app.globalData.openid
     }
-    promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
+    // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
     $http(apiSetting.userGetUserCity, promise).then((data) => {
       let city = data.data.currentCity
       if (city) {

@@ -6,6 +6,7 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": true,
+		"enhance": false,
 		"postcss": false,
 		"minified": false,
 		"newFeature": true,
@@ -23,7 +24,7 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.6.6",
-	"appid": "wx2c76d1701fb83748",
+	"appid": "wx2289fdf73d2ca3a9",
 	"projectname": "wx_peopleMarket",
 	"debugOptions": {
 		"hidedInDevtools": []
