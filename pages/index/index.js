@@ -13,7 +13,7 @@ const wxMap = new QQMapWX({
   key: mapKey
 });
 let ifChange; //全局变量，判断进入小程序加载的方式：登录加载/切换城市加载/返回跳转加载
-let _ifChange = false;
+let _ifChange = false; //用于判断是否是游戏弹屏返回小游戏
 const {
   $Message
 } = require('../../dist/base/index');
@@ -80,8 +80,8 @@ Page({
       type: ""
     },
     city_area_id: "全部", //新闻活动请求类型 ：全部 or 110100
-    newsLoadOK:false, // 新闻活动请求完成
-    rimBuildLoadOK:false,  // 周边楼盘请求完成
+    newsLoadOK: false, // 新闻活动请求完成
+    rimBuildLoadOK: false, // 周边楼盘请求完成
   },
   // 切换城市
   changeCity() {
@@ -420,7 +420,7 @@ Page({
                       'bombScreenReq.city_area_id': "全部",
                       city_area_id: "全部",
                       newsLoadOK: false,
-                      rimBuildLoadOK: false, 
+                      rimBuildLoadOK: false,
                     })
 
                     let boomScreen_ids = app.globalData.boomScreen_ids
@@ -686,7 +686,7 @@ Page({
       that.setData({
         rimbuildinfotaglist: _arr
       })
-     
+
       that.data.rimBuildLoadOK = true
       if (that.data.newsLoadOK && that.data.rimBuildLoadOK) {
         wx.hideLoading()
@@ -715,11 +715,11 @@ Page({
           })
           this.getNewsActivity()
         } else {
-          if (this.data.newsList.length){
+          if (this.data.newsList.length) {
             this.findAttachRelationById(this.data.newsList.length)
-          }else{
-            this.data.newsLoadOK=true
-            if (this.data.newsLoadOK && this.data.rimBuildLoadOK){
+          } else {
+            this.data.newsLoadOK = true
+            if (this.data.newsLoadOK && this.data.rimBuildLoadOK) {
               wx.hideLoading()
             }
           }
@@ -1721,7 +1721,7 @@ Page({
               rimbuildinfolist: [],
               swiperCurrent: 0,
               newsLoadOK: false, // 新闻活动请求完成
-              rimBuildLoadOK: false,  // 周边楼盘请求完成
+              rimBuildLoadOK: false, // 周边楼盘请求完成
             })
             this.findBombScreenByCityId()
             this.getNewsActivity()
@@ -1874,7 +1874,7 @@ Page({
       rimbuildinfolist: [],
       swiperCurrent: 0,
       newsLoadOK: false, // 新闻活动请求完成
-      rimBuildLoadOK: false,  // 周边楼盘请求完成
+      rimBuildLoadOK: false, // 周边楼盘请求完成
     })
     this.onLoad()
   },

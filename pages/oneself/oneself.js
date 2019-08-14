@@ -91,7 +91,7 @@ Page({
 
   pageTobind: util.throttle(function(e) {
     this.setData({
-      pageUrl: e.target.dataset.url
+      pageUrl: e.currentTarget.dataset.url
     })
     this.Users()
   }, 1500),
