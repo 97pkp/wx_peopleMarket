@@ -190,7 +190,14 @@ Page({
             }
             // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
             $http(apiSetting.userGetUserCity, promise).then((data) => {
+              if (data.status && data.status==404){
+                that.accreditOperate()
+                return
+              }
               let city = data.data.currentCity
+              if(city=="未知"){
+                city=""
+              }
               if (city) {
                 app.globalData.gameUserCity = city
               }
@@ -222,7 +229,14 @@ Page({
     }
     // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
     $http(apiSetting.userGetUserCity, promise).then((data) => {
+      if (data.status && data.status == 404) {
+        that.accreditOperate()
+        return
+      }
       let city = data.data.currentCity
+      if (city == "未知") {
+        city = ""
+      }
       if (city) {
         that.getCityList(city)
       } else {
