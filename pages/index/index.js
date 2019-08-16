@@ -154,63 +154,73 @@ Page({
       'rimBuildPage.isPage': true
     })
     // 登录
+    let ivs = "", encryptedData = "", unionid = "";
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        let promise = {
-          code: res.code
-        }
-
-        let cityPromise = wx.getStorageSync("cityPromise") || {}
-        promise.currentCity = cityPromise.currentCity
-        promise.positionCity = cityPromise.positionCity
-        $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
-          console.log('openid:' + data.data.openid)
-          console.log('status:' + data.data.status)
-          app.globalData.token = data.data['vx-zhwx-token']
-          app.globalData.openid = data.data.openid
-          app.globalData.status = data.data.status
-          app.globalData.sessionKey = data.data.sessionKey
-          if (data.data.isCheck == 0) {
-            app.globalData.isCheck = true
-          } else {
-            app.globalData.isCheck = false
-          }
-          if (data.data.status == 401) {
-            that.setData({
-              isPermit: true
-            })
-          }
-          app.globalData.userId = data.data.USERID
-          that.getUserGetUserInfo(data.data.openid)
-
-          if (ifChange == undefined) {
+        wx.getUserInfo({
+          success: rest => {
             let promise = {
-              openid: app.globalData.openid
+              code: res.code
             }
-            // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
-            $http(apiSetting.userGetUserCity, promise).then((data) => {
-              if (data.status && data.status==404){
+            let wxUserInfo = wx.getStorageSync("wxUserInfo") || {};
+            let cityPromise = wx.getStorageSync("cityPromise") || {}
+            promise.currentCity = cityPromise.currentCity
+            promise.positionCity = cityPromise.positionCity
+            promise.iv = rest.iv
+            promise.encryptedData = rest.encryptedData
+            $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
+              console.log('openid:' + data.data.openid)
+              console.log('status:' + data.data.status)
+              app.globalData.token = data.data['vx-zhwx-token']
+              app.globalData.openid = data.data.openid
+              app.globalData.status = data.data.status
+              app.globalData.sessionKey = data.data.sessionKey
+              if (data.data.isCheck == 0) {
+                app.globalData.isCheck = true
+              } else {
+                app.globalData.isCheck = false
+              }
+              if (data.data.status == 401) {
+                that.setData({
+                  isPermit: true
+                })
+              }
+              app.globalData.userId = data.data.USERID
+              that.getUserGetUserInfo(data.data.openid)
+
+              if (ifChange == undefined) {
+                let promise = {
+                  openid: app.globalData.openid
+                }
+                // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
+                $http(apiSetting.userGetUserCity, promise).then((data) => {
+                  if (data.status && data.status == 404) {
+                    that.accreditOperate()
+                    return
+                  }
+                  let city = data.data.currentCity
+                  if (city == "未知") {
+                    city = ""
+                  }
+                  if (city) {
+                    app.globalData.gameUserCity = city
+                  }
+                  that.accreditOperate()
+                }, (error) => {
+                  that.accreditOperate()
+                })
+              } else {
                 that.accreditOperate()
-                return
               }
-              let city = data.data.currentCity
-              if(city=="未知"){
-                city=""
-              }
-              if (city) {
-                app.globalData.gameUserCity = city
-              }
-              that.accreditOperate()
             }, (error) => {
-              that.accreditOperate()
+              console.log(error)
             })
-          } else {
-            that.accreditOperate()
+
+            
           }
-        }, (error) => {
-          console.log(error)
         })
+       
       }
     })
   },
