@@ -156,7 +156,7 @@ Page({
     // 登录
     wx.login({
       success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        // 发送 res.code 到后台换取 openId, sessionKey, userid
         let promise = {
           code: res.code
         }
@@ -215,6 +215,25 @@ Page({
     })
   },
   onShow: function() {
+    if (ifChange==3){
+      wx.showLoading({
+        title: '加载中',
+      })
+      this.setData({
+        'bombScreenReq.city_area_id': "全部",
+        city_area_id: "全部",
+        isBannerClick: false,
+        t: 0,
+        _imgList: [],
+        newsList: [],
+        rimbuildinfolist: [],
+        swiperCurrent: 0,
+        newsLoadOK: false, // 新闻活动请求完成
+        rimBuildLoadOK: false, // 周边楼盘请求完成
+      })
+      this.getUserCity()
+    }
+  
     this.setData({
       showBgpack: false, //是否显示用户信息授权窗口
       showPhonepack: false, //是否显示手机号授权窗口
@@ -260,7 +279,7 @@ Page({
       that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     } else if (ifChange == 3) { //弹屏小游戏返回首页
-      that.getUserCity()
+      // that.getUserCity()   
     } else {
       wx.getSetting({
         success(res) {
@@ -674,6 +693,7 @@ Page({
       } else {
         that.data.rimBuildLoadOK = true
         if (that.data.newsLoadOK && that.data.rimBuildLoadOK) {
+          ifChange = undefined
           wx.hideLoading()
         }
         that.data.rimBuildPage.isPage = false
@@ -967,6 +987,7 @@ Page({
       })
       this.data.newsLoadOK = true
       if (this.data.newsLoadOK && this.data.rimBuildLoadOK) {
+        ifChange = undefined
         wx.hideLoading()
       }
       return
