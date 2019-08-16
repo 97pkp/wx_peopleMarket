@@ -14,6 +14,7 @@ const wxMap = new QQMapWX({
 });
 let ifChange; //全局变量，判断进入小程序加载的方式：登录加载/切换城市加载/返回跳转加载
 let _ifChange = false; //用于判断是否是游戏弹屏返回小游戏
+let loginGetUserInfo=false ;   //用于判断是否是登录的时候获取授权
 const {
   $Message
 } = require('../../dist/base/index');
@@ -107,6 +108,7 @@ Page({
       pageUrl: '../information/information?project_id=' + project_id,
       isBuildClick: true
     })
+    loginGetUserInfo = false
     this.Users()
   }, 500),
 
@@ -116,6 +118,7 @@ Page({
       pageUrl: e.currentTarget.dataset.url,
       isNewsClick: true
     })
+    loginGetUserInfo = false
     this.Users()
   }, 500),
 
@@ -127,6 +130,7 @@ Page({
       pageUrl: '../newsActivityInfo/newsActivityInfo?atvid=' + newsList[newsCurrent].id + '&type=' + newsList[newsCurrent].type,
       isNewsClick: true
     })
+    loginGetUserInfo = false
     this.Users()
   }, 500),
 
@@ -140,10 +144,10 @@ Page({
     }
 
     let that = this
-    wx.showLoading({
-      title: '加载中',
-      mask: true,
-    })
+    // wx.showLoading({
+    //   title: '加载中',
+    //   mask: true,
+    // })
     that.setData({
       rimbuildinfolist: []
     })
@@ -156,74 +160,103 @@ Page({
     // 登录
     wx.login({
       success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-        wx.getUserInfo({
-          success: rest => {
-            let promise = {
-              code: res.code
-            }
-            
-            let cityPromise = wx.getStorageSync("cityPromise") || {}
-            promise.currentCity = cityPromise.currentCity
-            promise.positionCity = cityPromise.positionCity
-            promise.iv = rest.iv
-            promise.encryptedData = rest.encryptedData
-            $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
-              console.log('openid:' + data.data.openid)
-              console.log('status:' + data.data.status)
-              app.globalData.token = data.data['vx-zhwx-token']
-              app.globalData.openid = data.data.openid
-              app.globalData.status = data.data.status
-              app.globalData.sessionKey = data.data.sessionKey
-              if (data.data.isCheck == 0) {
-                app.globalData.isCheck = true
-              } else {
-                app.globalData.isCheck = false
-              }
-              if (data.data.status == 401) {
-                that.setData({
-                  isPermit: true
-                })
-              }
-              app.globalData.userId = data.data.USERID
-              that.getUserGetUserInfo(data.data.openid)
-
-              if (ifChange == undefined) {
-                let promise = {
-                  openid: app.globalData.openid
+        // 发送 res.code 到后台换取 openId, sessionKey, userid
+        let code = res.code
+        loginGetUserInfo=true
+        //检查用户信息授权
+        wx.getSetting({
+          success(res) {
+            if (!res.authSetting['scope.userInfo']) {
+              that.setData({
+                showBgpack: true,
+              })
+            } else {
+              wx.showLoading({
+                title: '加载中',
+                mask: true,
+              })
+              wx.getUserInfo({
+                success: rest => {
+                  let promise = {
+                    code: code
+                  }
+                  let cityPromise = wx.getStorageSync("cityPromise") || {}
+                  promise.currentCity = cityPromise.currentCity
+                  promise.positionCity = cityPromise.positionCity
+                  promise.iv = rest.iv
+                  promise.encryptedData = rest.encryptedData
+                  $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
+                    console.log('openid:' + data.data.openid)
+                    console.log('status:' + data.data.status)
+                    app.globalData.token = data.data['vx-zhwx-token']
+                    app.globalData.openid = data.data.openid
+                    app.globalData.unionId = data.data.unionId
+                    app.globalData.status = data.data.status
+                    app.globalData.sessionKey = data.data.sessionKey
+                    if (data.data.isCheck == 0) {
+                      app.globalData.isCheck = true
+                    } else {
+                      app.globalData.isCheck = false
+                    }
+                    if (data.data.status == 401) {
+                      that.setData({
+                        isPermit: true
+                      })
+                    }
+                    app.globalData.userId = data.data.USERID
+                    that.getUserGetUserInfo(data.data.openid)
+        
+                    if (ifChange == undefined) {
+                      let promise = {
+                        unionid: app.globalData.unionId
+                        // unionid:'oygNC1U6jeX_1--7LPtEJEmfTDcg'
+                      }
+                      $http(apiSetting.userGetUserCity, promise).then((data) => {
+                        if (data.status && data.status == 404) {
+                          that.accreditOperate()
+                          return
+                        }
+                        let city = data.data.currentCity
+                        if (city == "未知") {
+                          city = ""
+                        }
+                        if (city) {
+                          app.globalData.gameUserCity = city
+                        }
+                        that.accreditOperate()
+                      }, (error) => {
+                        that.accreditOperate()
+                      })
+                    } else {
+                      that.accreditOperate()
+                    }
+                  }, (error) => {
+                    console.log(error)
+                  })
                 }
-                // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
-                $http(apiSetting.userGetUserCity, promise).then((data) => {
-                  if (data.status && data.status == 404) {
-                    that.accreditOperate()
-                    return
-                  }
-                  let city = data.data.currentCity
-                  if (city == "未知") {
-                    city = ""
-                  }
-                  if (city) {
-                    app.globalData.gameUserCity = city
-                  }
-                  that.accreditOperate()
-                }, (error) => {
-                  that.accreditOperate()
-                })
-              } else {
-                that.accreditOperate()
-              }
-            }, (error) => {
-              console.log(error)
-            })
-
-            
+              })
+            }
           }
         })
-       
+
       }
     })
   },
   onShow: function() {
+    if (this.data.showBgpack){
+      return
+    }
+    let that =this 
+    wx.getSetting({
+      success(res) {
+        if (!res.authSetting['scope.userInfo']) {
+          that.setData({
+            showBgpack: true,
+          })
+          return
+        }
+      }
+    })
     if (ifChange==3){
       wx.showLoading({
         title: '加载中',
@@ -253,9 +286,9 @@ Page({
   getUserCity() {
     let that = this
     let promise = {
-      openid: app.globalData.openid
+      unionid: app.globalData.unionId
+      // unionid: 'oygNC1U6jeX_1--7LPtEJEmfTDcg'
     }
-    // promise.openid = 'oGKIT0fsLqw5ZJPa-IxUO2EwQt_I'
     $http(apiSetting.userGetUserCity, promise).then((data) => {
       if (data.status && data.status == 404) {
         that.accreditOperate()
@@ -388,6 +421,20 @@ Page({
           if (city.indexOf(cityList[i].city) !== -1) {
             wx.setStorageSync('storLocalCity', cityList[i])
             app.globalData.storLocalCity = cityList[i]
+            // 查询城市参数
+            that.setData({
+              'cityInfo.latitude': '',
+              'cityInfo.longitude': '',
+              'cityInfo.cityName': cityList[i].city
+            })
+            let cityPromise = wx.getStorageSync("cityPromise") || {}
+            cityPromise.currentCity = app.globalData.gameUserCity
+            wx.setStorageSync("cityPromise", cityPromise)
+            // that.findBombScreenByCityId()
+            // that.getNewsActivity()
+            // that.getCityFindBuildInfoByCity()
+          
+
             that.findBombScreenByCityId()
             that.getNewsActivity()
             that.getCityFindBuildInfoByCity()
@@ -395,6 +442,7 @@ Page({
           }
         }
       }
+      
       if (ifChange == 3 && !_ifChange) {
         that.getNowAddress(ifChange)
         return
@@ -438,7 +486,7 @@ Page({
       let cityList = data.data
       if (city) {
         for (let i = 0; i < cityList.length; i++) {
-          if (city.indexOf(cityList[i].city) !== -1) {
+          if (city.indexOf(cityList[i].city) !== -1 ) {
             if (ifChange !== 3) {
               wx.showModal({
                 title: '定位城市提示',
@@ -492,7 +540,22 @@ Page({
                 }
               })
               ifChange = undefined
+            }else{
+              wx.setStorageSync('storLocalCity', cityList[i])
+              that.setData({
+                'cityInfo.cityName': cityList[i].city
+              })
+              app.globalData.storLocalCity = cityList[i]
+              let _storage = wx.getStorageSync('cityPromise') || {}
+              _storage.currentCity = cityList[i].city
+              wx.setStorageSync('cityPromise', _storage)
+
+              that.findBombScreenByCityId()
+              that.getNewsActivity()
+              that.getCityFindBuildInfoByCity()
+              return
             }
+
           }
         }
       }
@@ -1851,6 +1914,7 @@ Page({
       isBannerClick: true,
       pageUrl: "../newsActivityInfo/newsActivityInfo?atvid=" + bannerItem.association_soures_id + "&type=" + bannerItem.type
     })
+    loginGetUserInfo = false
     this.Users()
   }, 500),
 
@@ -1874,6 +1938,7 @@ Page({
     this.setData({
       pageUrl: e.target.dataset.url,
     })
+    loginGetUserInfo = false
     this.Users()
   }, 2000),
   //轮播图错误图片
@@ -1942,13 +2007,16 @@ Page({
   Users() {
     let that = this
     //检查用户信息授权
+   
     wx.getSetting({
       success(res) {
+
         if (!res.authSetting['scope.userInfo']) {
           that.setData({
             showBgpack: true,
           })
         } else {
+          
           //获取缓存信息验证手机号授权
           let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
           if (JSON.stringify(wxDetailUserInfo) !== "{}") {
@@ -2010,8 +2078,17 @@ Page({
     this.userUpdata()
     this.setData({
       showBgpack: false,
+
       showPhonepack: true,
+      // showPhonepack: false,
+      
     })
+    if (loginGetUserInfo){
+      this.setData({ showPhonepack:false})
+      this.onLoad()
+    }else{
+      this.setData({ showPhonepack: true})
+    }
     this.getLocation()
   },
   //获取手机号
@@ -2086,11 +2163,27 @@ Page({
 
   //取消授权窗
   cancelTip() {
-    wx.showTabBar()
     this.setData({
-      showBgpack: false,
       showPhonepack: false,
     })
+    // if(loginGetUserInfo){
+    //   wx.showLoading({
+    //     title: '加载中',
+    //     mask: true,
+    //   })
+    //   wx.showTabBar()
+    //   this.setData({
+    //     showBgpack: false,
+    //     showPhonepack: false,
+    //   })
+    //   this.accreditOperate()
+    //   return
+    // }else{
+    //   this.setData({
+    //     showBgpack: false,
+    //     showPhonepack: false,
+    //   })
+    // }
   },
   //绑定用户信息弹窗按钮
   visibleOk() {
