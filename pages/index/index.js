@@ -160,10 +160,12 @@ Page({
         let promise = {
           code: res.code
         }
-
         let cityPromise = wx.getStorageSync("cityPromise") || {}
         promise.currentCity = cityPromise.currentCity
         promise.positionCity = cityPromise.positionCity
+
+
+
         $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
           console.log('openid:' + data.data.openid)
           console.log('status:' + data.data.status)
