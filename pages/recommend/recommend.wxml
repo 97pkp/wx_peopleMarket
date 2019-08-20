@@ -1,5 +1,5 @@
 <!--pages/recommend/recommend.wxml-->
-<view class='{{showPicker?"preventTouchMove":""}}'>
+<view class='{{showPicker?"preventTouchMove":""}} {{visible2?"preventTouchMove":""}}'>
   <ul class='list'>
     <li>
       <span class='title required'>城市</span>
@@ -93,14 +93,14 @@
   <button class='bindSub' disabled='{{subDisabled}}' bindtap='bindSub'>确认推荐</button>
 </view>
 
-<i-modal visible="{{visible2}}" bind:ok="handleCloseOk" bind:cancel="handleCloseNo" ok-text="我的推荐" cancel-text="首页" catchtouchmove='notouch'>
+<i-modal visible="{{visible2}}" bind:ok="handleCloseOk" bind:cancel="handleCloseNo" ok-text="我的推荐" cancel-text="首页" >
   <view class='back-box'>
     <view class='success-list' wx:if="{{successProjectArr.length}}" wx:for="{{successProjectArr}}" wx:key="{{index}}">
       <view class='icon_left'>
         <image src='../../images/tjsuccess.png'></image>
       </view>
       <view class='tip_right'>
-        <view>{{item}}推荐成功</view>
+        <view>{{item.project_name}}{{item.msg}}</view>
       </view>
     </view>
 
@@ -109,8 +109,8 @@
         <image src='../../images/tjerror.png'></image>
       </view>
       <view class='tip_right'>
-        <view>{{item}}推荐失败</view>
-        <view>此客户已是该项目的客户</view>
+        <view>{{item.project_name}}{{item.msg}}</view>
+        <!-- <view>此客户已是该项目的客户</view> -->
       </view>
     </view>
   </view>

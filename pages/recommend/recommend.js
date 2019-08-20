@@ -411,24 +411,23 @@ Page({
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.recommendAddAgencyCustom, promise).then((data) => {
       if (!data.code) {
-        let successProjectId = data.data.successProjectId
-        let errorProjectId = data.data.errorProjectId
+        let successProjectId = data.data.successProjects 
+        let errorProjectId = data.data.errorProjects
         let arrayProject = that.data.arrayProject
         let successArr = []
         let errorArr = []
         for (let i = 0; i < arrayProject.length; i++) {
           for (let j = 0; j < errorProjectId.length; j++) {
-            if (arrayProject[i].wxProjectId == errorProjectId[j]) {
-              errorArr.push(arrayProject[i].wxProjectName)
+            if (arrayProject[i].wxProjectId == errorProjectId[j].project_id) {
+              errorArr.push(errorProjectId[j])
             }
           }
           for (let k = 0; k < successProjectId.length; k++) {
-            if (arrayProject[i].wxProjectId == successProjectId[k]) {
-              successArr.push(arrayProject[i].wxProjectName)
+            if (arrayProject[i].wxProjectId == successProjectId[k].project_id) {
+              successArr.push(successProjectId[k])
             }
           }
         }
-
         this.setData({
           successProjectArr: successArr,
           errorProjectArr: errorArr,
@@ -541,7 +540,7 @@ Page({
     }
   },
   //遮罩穿透空事件
-  notouch() {
-    return
-  },
+  // notouch() {
+  //   return
+  // },
 })
