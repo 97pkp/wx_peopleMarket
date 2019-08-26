@@ -225,9 +225,9 @@
     </view>
   </view>
 </view>
-
+  
 <!-- 主力均价提示 -->
-<view class='model-view' wx:if='{{visible2}}' catchtouchmove='notouch'>
+<view class='model-view' wx:if='{{visible2}}' >
   <view class='shadow'></view>
   <view class='model-content'>
     <view wx:if='{{mainpriceOrCommission===0 && mainpricedescription}}'>{{mainpricedescription}}</view>

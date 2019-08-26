@@ -1057,6 +1057,11 @@ Page({
 
   // 下拉刷新
   onPullDownRefresh() {
+    //禁止刷新
+    if(this.data.visible2){
+      wx.stopPullDownRefresh()
+      return
+    }
     // 显示导航栏加载框
     wx.showNavigationBarLoading()
     if (!this.data.isVideo) {
