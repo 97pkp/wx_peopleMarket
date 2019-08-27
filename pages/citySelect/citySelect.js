@@ -16,7 +16,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     app.globalData.transienceCity = {}
     this.setData({
       selectCity: options.city_id
@@ -27,49 +27,49 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
+  onReady: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
+  onShow: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {
+  onHide: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {
+  onUnload: function () {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function() {
+  onReachBottom: function () {
 
   },
 
   //城市选择
   cityChange(e) {
     this.setData({
-      selectCity: e.target.dataset.item.id, 
+      selectCity: e.target.dataset.item.id,
       localCity: e.target.dataset.item
     })
     this.pageTobind()
@@ -79,7 +79,7 @@ Page({
   getCityList() {
     let that = this
     that.showLoading()
-    let promise = { openID: app.globalData.openid}
+    let promise = { openID: app.globalData.openid }
     $http(apiSetting.recommendGetCityList, promise).then((data) => {
       let newData = data.data
       let listData = []
@@ -99,6 +99,22 @@ Page({
       }
       that.setData({
         cityListData: listData
+      })
+
+      listData.map((preItem, index) => {
+        if (preItem.key == 'B') {
+          let results = {};
+          let result = [];
+          preItem.item.map((item, index) => {
+            results = {
+              city: item.city,
+              cityId: item.id,
+              cityPreId: item.area
+            };
+            result.push(results);
+          });
+          wx.setStorageSync('cityonly', result)
+        }
       })
       that.hideLoading()
     }, (error) => {

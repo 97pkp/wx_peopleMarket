@@ -53,21 +53,21 @@ Page({
 
     // 区号：+86(港:+852,澳:+853,台:+886)
     array: [{
-        city: '大陆',
-        mobileFlag: '+86'
-      },
-      {
-        city: '香港',
-        mobileFlag: '+852'
-      },
-      {
-        city: '澳门',
-        mobileFlag: '+853'
-      },
-      {
-        city: '台湾',
-        mobileFlag: '+886'
-      }
+      city: '大陆',
+      mobileFlag: '+86'
+    },
+    {
+      city: '香港',
+      mobileFlag: '+852'
+    },
+    {
+      city: '澳门',
+      mobileFlag: '+853'
+    },
+    {
+      city: '台湾',
+      mobileFlag: '+886'
+    }
     ],
     numberMaxLength: 11, //电话号最大长度
     houseHoldTypeList: [], //用户意向户型列表
@@ -78,8 +78,9 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     let that = this;
+
     //判断是否绑定用户信息
     if (app.globalData.isCheck) {
       let reportList = that.data.reportList
@@ -120,14 +121,41 @@ Page({
     this.getHouseHoldType()
   },
 
-  onShow: function() {
+  onShow: function () {
     //判断是否是从选择城市进入
     if (this.data.isCitySelect) {
+
       if (app.globalData.transienceCity.id) {
-        this.data.city_id = app.globalData.transienceCity.id
+        let cityOnly = wx.getStorageSync('cityonly');
+        let city = "", cityId = "";
+        for (let i in cityOnly) {
+          if (cityOnly[i].city == app.globalData.transienceCity.city) {
+            delete cityOnly[i];
+            cityOnly.unshift(cityOnly[i]);
+            cityOnly.map((items, index) => {
+              if (index == '0') {
+                city = app.globalData.transienceCity.city;
+                cityId = app.globalData.transienceCity.id;
+              } else {
+                city += ',' + items.city;
+                cityId += ',' + items.cityId;
+              }
+            });
+            break
+          } else {
+            city = app.globalData.transienceCity.city;
+            cityId = app.globalData.transienceCity.id;
+          }
+        }
+
+        // this.data.city_id = app.globalData.transienceCity.id
+        this.data.city_id = cityId
+
         this.setData({
-          'city_id': app.globalData.transienceCity.id,
-          'reportList.city': app.globalData.transienceCity.city,
+          // 'city_id': app.globalData.transienceCity.id,
+          // 'reportList.city': app.globalData.transienceCity.city,
+          'city_id': cityId,
+          'reportList.city': city,
           'reportList.projectId': '',
           'arrayProjectIndex': null,
           recommentStr: '',
@@ -288,6 +316,7 @@ Page({
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.projectApiFindProjectInfoById, promise).then((data) => {
       let projectInfo = data.data
+
       this.setData({
         'reportList.city': projectInfo.city_text,
         city_id: projectInfo.city
@@ -308,10 +337,32 @@ Page({
       let cityInfo = wx.getStorageSync('storLocalCity')
       if (!cityInfo) {
         return
+      };
+      let cityOnly = wx.getStorageSync('cityonly');
+      let city = "", cityId = "";
+      for (let i in cityOnly) {
+        if (cityOnly[i].city == app.globalData.storLocalCity.city) {
+          delete cityOnly[i];
+          cityOnly.unshift(cityOnly[i]);
+          cityOnly.map((items, index) => {
+            if (index == '0') {
+              city = app.globalData.storLocalCity.city;
+              cityId = app.globalData.storLocalCity.id;
+            } else {
+              city += ',' + items.city;
+              cityId += ',' + items.cityId;
+            }
+          });
+          break
+        } else {
+          city = app.globalData.storLocalCity.city;
+          cityId = app.globalData.storLocalCity.id;
+        }
       }
+
       this.setData({
-        'reportList.city': app.globalData.storLocalCity.city,
-        city_id: app.globalData.storLocalCity.id
+        'reportList.city': city,
+        city_id: cityId
       })
     }
     let promise = {
@@ -411,7 +462,7 @@ Page({
     promise.positionCity = cityPromise.positionCity
     $http(apiSetting.recommendAddAgencyCustom, promise).then((data) => {
       if (!data.code) {
-        let successProjectId = data.data.successProjects 
+        let successProjectId = data.data.successProjects
         let errorProjectId = data.data.errorProjects
         let arrayProject = that.data.arrayProject
         let successArr = []

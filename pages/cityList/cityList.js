@@ -17,7 +17,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     if (app.globalData.storLocalCity) {
       this.setData({
         localCity: app.globalData.storLocalCity,
@@ -30,42 +30,42 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
+  onReady: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
+  onShow: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {
+  onHide: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {
+  onUnload: function () {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function() {
+  onReachBottom: function () {
 
   },
 
@@ -91,11 +91,11 @@ Page({
     $http(apiSetting.cityFindCityItems, promise).then((data) => {
       let newData = data.data
       let listData = []
+
       for (let i in newData) {
         let findIndex = listData.findIndex((n) => {
           return n.key == newData[i].firstCn
         })
-
         if (findIndex == -1) {
           listData.push({
             'key': newData[i].firstCn,
@@ -107,6 +107,22 @@ Page({
       }
       that.setData({
         cityListData: listData
+      })
+
+      listData.map((preItem, index) => {
+        if (preItem.key == 'B') {
+          let results = {};
+          let result = [];
+          preItem.item.map((item, index) => {
+            results = {
+              city: item.city,
+              cityId: item.id,
+              cityPreId: item.area
+            };
+            result.push(results);
+          });
+          wx.setStorageSync('cityonly', result)
+        }
       })
       that.hideLoading()
     }, (error) => {
