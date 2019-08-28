@@ -340,25 +340,30 @@ Page({
       };
       let cityOnly = wx.getStorageSync('cityonly');
       let city = "", cityId = "";
-      for (let i in cityOnly) {
-        if (cityOnly[i].city == app.globalData.storLocalCity.city) {
-          delete cityOnly[i];
-          cityOnly.unshift(cityOnly[i]);
-          cityOnly.map((items, index) => {
-            if (index == '0') {
-              city = app.globalData.storLocalCity.city;
-              cityId = app.globalData.storLocalCity.id;
-            } else {
-              city += ',' + items.city;
-              cityId += ',' + items.cityId;
-            }
-          });
-          break
-        } else {
-          city = app.globalData.storLocalCity.city;
-          cityId = app.globalData.storLocalCity.id;
-        }
-      }
+      if (cityOnly){
+       for (let i in cityOnly) {
+         if (cityOnly[i].city == app.globalData.storLocalCity.city) {
+           delete cityOnly[i];
+           cityOnly.unshift(cityOnly[i]);
+           cityOnly.map((items, index) => {
+             if (index == '0') {
+               city = app.globalData.storLocalCity.city;
+               cityId = app.globalData.storLocalCity.id;
+             } else {
+               city += ',' + items.city;
+               cityId += ',' + items.cityId;
+             }
+           });
+           break
+         } else {
+           city = app.globalData.storLocalCity.city;
+           cityId = app.globalData.storLocalCity.id;
+         }
+       }
+     }else{
+        city = app.globalData.storLocalCity.city;
+        cityId = app.globalData.storLocalCity.id;
+     }
 
       this.setData({
         'reportList.city': city,
