@@ -1,4 +1,4 @@
-<!--pages/bindUser/bindUser.wxml-->
+<!-- pages/bindUser/bindUser.wxml -->
 <view class='main-box'>
   <ul class='bindList'>
     <li>
@@ -27,19 +27,16 @@
         <input placeholder-class="phcolor" type='text' disabled value='{{userInfo.sex}}' />
       </span>
     </li> -->
-    <li style='position:relative; border-bottom: 1rpx solid #e6e6e6;' >
+    <li style='position:relative; border-bottom: 1rpx solid #e6e6e6;'>
       <view class="item-box" style='border:0;height:98rpx;'>
         <span class='title'>手机号</span>
         <view class='phone-box' style='margin-right:{{isEdit? "160rpx":""}}'>
           <view class='phone-header-box' wx:if="{{isEdit}}">
             <picker bindchange="bindPickerNumberChange" value="{{numberIndex}}" range="{{phoneHeaderArray}}" range-key='city' disabled='{{noteResult}}'>
-              <view class="picker phone-header">
-                {{phoneHeaderArray[numberIndex].mobileFlag}}
-              </view>
+              <view class="picker phone-header">{{phoneHeaderArray[numberIndex].mobileFlag}}</view>
             </picker>
             <image src='../../images/godown.png'></image>
           </view>
-
           <span class="inp phone-inp">
             <input class='phone-num' placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='{{numberMaxLength}}' placeholder="请输入手机号" bindinput='phoneBind' />
           </span>
@@ -50,26 +47,26 @@
             <span wx:else class='noteCode' bindtap='noteCodeModalShow'>({{downTime}}s)</span>
           </view>
           <span wx:if="{{noteResult}}" class='noteCode' style='color:#0aba07'>
-            <icon type="success" size="14" /> 成功
+            <icon type="success" size="14" />
+            成功
           </span>
         </div>
       </view>
     </li>
-   
     <li class='item-picker'>
       <view class='item-box' style='border:0;'>
         <span class='title'>经纪人类型</span>
         <span style='float:right;'>
           <picker mode="selector" bindchange="bindPickerChange" range-key="" value='{{arrayIndex}}' range="{{array}}" disabled="{{!isEdit}}">
             <view class="picker">
-              <text wx:if="{{arrayIndex == null}}" style='color:#B2B2B2;'>请选择经纪人类型</text> {{array[arrayIndex]}}
+              <text wx:if="{{arrayIndex == null}}" style='color:#B2B2B2;'>请选择经纪人类型</text>
+              {{array[arrayIndex]}}
             </view>
           </picker>
         </span>
       </view>
     </li>
-
-    <li wx-if="{{arrayIndex == 1}}" style='margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;' >
+    <li wx-if="{{arrayIndex == 1}}" style='margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;'>
       <view class='item-box' style='border:0;'>
         <span class='title'>身份证号</span>
         <span class="inp">
@@ -77,7 +74,7 @@
         </span>
       </view>
     </li>
-     <li wx-if="{{arrayIndex == 0 || arrayIndex == 2}}" style="margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;">
+    <li wx-if="{{arrayIndex == 0 || arrayIndex == 2}}" style="margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;">
       <view class='item-box' style='border:0;'>
         <span class='title'>身份证号</span>
         <span class="inp">
@@ -85,15 +82,14 @@
         </span>
       </view>
     </li>
-     <!-- <li  style="margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;">
+    <li style="margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;">
       <view class='item-box' style='border:0;'>
         <span class='title'>绑定城市</span>
         <span class="inp" bindtap='cityBind'>
-          <input placeholder-class="phcolor" type='idcard' value='{{userInfo.cityName}}' placeholder="{{isEdit?'请绑定城市(非必填)':'未绑定'}}"     disabled="true"/>
+          <input placeholder-class="phcolor" type='idcard' value='{{userInfo.identyCityName}}' placeholder="{{isEdit?'请绑定城市(非必填)':'未绑定'}}" disabled="true" />
         </span>
       </view>
-    </li> -->
-
+    </li>
     <li wx-if="{{arrayIndex == 2}}" style='margin-top:20rpx; border-top: 1rpx solid #e6e6e6;'>
       <view class='item-box'>
         <span class='title'>渠道验证码</span>
@@ -119,10 +115,8 @@
       </view>
     </li>
   </ul>
-
   <button class='bindSub' wx:if='{{isEdit}}' bindtap='bindSub'>确定</button>
   <button class='amendSub' wx:if='{{!isEdit}}' bindtap='amendSub'>修改</button>
-
   <!-- 验证窗口 -->
   <i-modal i-class='modalClass' style='top:-100rpx' visible="{{noteCodeVisible}}" bind:ok="noteCodeModalOk" bind:cancel="noteCodeModalClose">
     <view style='font-size:32rpx;color:#111'>请输入手机验证码</view>
@@ -135,5 +129,4 @@
     <view style='font-siez:24rpx'>已发送:{{modalPhone}}</view>
   </i-modal>
 </view>
-
 <i-message id="message" />

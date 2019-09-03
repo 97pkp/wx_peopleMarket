@@ -1,0 +1,35 @@
+/* pages/citySelect/citySelect.wxss */
+
+.vPack {
+  box-sizing: border-box;
+  font-size: 30rpx;
+}
+
+.cityName {
+  display: inline-block;
+  width: 154rpx;
+  height: 56rpx;
+  line-height: 56rpx;
+  text-align: center;
+  background-color: #f7f7fa;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #8d91a2;
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.cityList {
+  display: block;
+  width: 100%;
+}
+
+.cityNameList {
+  padding: 20rpx 0 0rpx 30rpx;
+  background-color: #fff;
+}
+
+.selectColor {
+  color: #fff;
+  background-color: #4db3ff;
+}

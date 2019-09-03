@@ -23,8 +23,8 @@ Page({
       sex: '未知',
       wxid: '',
       phoneFlag: '+86',
-      // cityName: '',
-      // cityId: ''
+      identyCityName: '',
+      identyCity: ''
     },
     mobileFlag: '+86',
     trench: '', //留电渠道
@@ -89,7 +89,11 @@ Page({
       this.data.userInfo.myName = app.globalData.bindUserInfo.myname
       this.data.userInfo.phone = app.globalData.bindUserInfo.phone
       this.data.userInfo.sex = app.globalData.bindUserInfo.sex
-      this.data.userInfo.wxid = app.globalData.bindUserInfo.wxid
+      this.data.userInfo.wxid = app.globalData.bindUserInfo.identyCity
+      // 绑定城市中文名
+      this.data.userInfo.identyCityName = app.globalData.bindUserInfo.identyCityName;
+      // 绑定城市key
+      this.data.userInfo.identyCity = app.globalData.bindUserInfo.identyCity;
 
       for (let i = 0; i < this.data.phoneHeaderArray.length; i++) {
         if (this.data.phoneHeaderArray[i].mobileFlag == app.globalData.bindUserInfo.phoneFlag) {
@@ -142,8 +146,8 @@ Page({
     };
 
     if (app.globalData.bindCity.City != undefined) {
-      this.data.userInfo.cityName = app.globalData.bindCity.City.city;
-      this.data.userInfo.cityId = app.globalData.bindCity.City.id;
+      this.data.userInfo.identyCityName = app.globalData.bindCity.City.city;
+      this.data.userInfo.identyCity = app.globalData.bindCity.City.id;
       this.setData({
         userInfo: this.data.userInfo
       })
