@@ -905,6 +905,7 @@ Page({
 
   //去推荐
   goRecommend: util.throttle(function() {
+    debugger
     this.setData({
       pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
       isClickAttention: false

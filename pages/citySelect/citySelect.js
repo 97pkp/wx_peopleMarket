@@ -106,12 +106,14 @@ Page({
           let results = {};
           let result = [];
           preItem.item.map((item, index) => {
-            results = {
-              city: item.city,
-              cityId: item.id,
-              cityPreId: item.area
-            };
-            result.push(results);
+            if (item.city.indexOf('北京') != -1) {
+              results = {
+                city: item.city,
+                cityId: item.id,
+                cityPreId: item.area
+              };
+              result.push(results);
+            }
           });
           wx.setStorageSync('cityonly', result)
         }

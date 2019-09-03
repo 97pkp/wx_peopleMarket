@@ -2,7 +2,7 @@
 import apiSetting from 'http/apiSetting.js'
 import $http from 'http/http.js'
 App({
-  onLaunch: function() {
+  onLaunch: function () {
     let that = this
     // 获取本地存储的城市
     that.globalData.storLocalCity = wx.getStorageSync('storLocalCity') || null
@@ -32,6 +32,7 @@ App({
     bindUserInfo: {},
     userId: null,
     transienceCity: {},
+    bindCity: {},
     token: '',
     sessionKey: ''
   },
@@ -44,12 +45,12 @@ App({
       const updateManager = wx.getUpdateManager();
       // console.log('是否进入模拟更新');
       //检测版本更新
-      updateManager.onCheckForUpdate(function(res) {
+      updateManager.onCheckForUpdate(function (res) {
         // console.log('是否获取版本');
         // 请求完新版本信息的回调
         if (res.hasUpdate) {
           //监听小程序有版本更新事件
-          updateManager.onUpdateReady(function() {
+          updateManager.onUpdateReady(function () {
             wx.removeStorage({
               key: 'storLocalCity',
               success(res) {
@@ -59,7 +60,7 @@ App({
             //TODO 新的版本已经下载好，调用 applyUpdate 应用新版本并重启 （ 此处进行了自动更新操作）
             updateManager.applyUpdate();
           })
-          updateManager.onUpdateFailed(function() {
+          updateManager.onUpdateFailed(function () {
             // 新版本下载失败
             wx.showModal({
               title: '已经有新版本喽~',

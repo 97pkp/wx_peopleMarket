@@ -22,7 +22,9 @@ Page({
       phone: '',
       sex: '未知',
       wxid: '',
-      phoneFlag: '+86'
+      phoneFlag: '+86',
+      // cityName: '',
+      // cityId: ''
     },
     mobileFlag: '+86',
     trench: '', //留电渠道
@@ -48,21 +50,21 @@ Page({
 
     // 区号：+86(港:+852,澳:+853,台:+886)
     phoneHeaderArray: [{
-        city: '大陆',
-        mobileFlag: '+86'
-      },
-      {
-        city: '香港',
-        mobileFlag: '+852'
-      },
-      {
-        city: '澳门',
-        mobileFlag: '+853'
-      },
-      {
-        city: '台湾',
-        mobileFlag: '+886'
-      }
+      city: '大陆',
+      mobileFlag: '+86'
+    },
+    {
+      city: '香港',
+      mobileFlag: '+852'
+    },
+    {
+      city: '澳门',
+      mobileFlag: '+853'
+    },
+    {
+      city: '台湾',
+      mobileFlag: '+886'
+    }
     ],
     numberMaxLength: 11, //电话号最大长度
     numberIndex: 0, //客户电话区号选择默认下标   
@@ -71,7 +73,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     // console.log(app.globalData.bsindUserInfo)
     this.getProjectApiFindOtherDictValues()
     if (app.globalData.isCheck) {
@@ -126,38 +128,46 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
+  onReady: function () {
 
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function() {
+  onShow: function () {
     if (!this.data.isnote) {
       let diff = Math.round(new Date().getTime() / 1000) - this.data.onHideTime
       this.data.downTime = this.data.downTime - diff
+    };
+
+    if (app.globalData.bindCity.City != undefined) {
+      this.data.userInfo.cityName = app.globalData.bindCity.City.city;
+      this.data.userInfo.cityId = app.globalData.bindCity.City.id;
+      this.setData({
+        userInfo: this.data.userInfo
+      })
     }
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function() {
+  onHide: function () {
     this.data.onHideTime = Math.round(new Date().getTime() / 1000)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function() {
+  onUnload: function () {
     this.endSetInter()
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
 
   },
 
@@ -209,7 +219,7 @@ Page({
         wx.hideLoading()
         if (data.code == 0) {
           // 开启计时器
-          that.data.setInter = setInterval(function() {
+          that.data.setInter = setInterval(function () {
             that.data.downTime = that.data.downTime - 1
             if (that.data.downTime <= 0) {
               that.endSetInter()
@@ -299,6 +309,15 @@ Page({
   },
   idnoBind(e) {
     this.data.userInfo.idno = e.detail.value
+  },
+  //跳转选择绑定页面
+  cityBind(e) {
+    if (this.data.isEdit) {
+      wx.navigateTo({
+        url: '../bindcity/bindcity'
+      })
+    }
+
   },
   channelCodeBind(e) {
     let val = e.detail.value
@@ -428,30 +447,30 @@ Page({
         return
       }
     }
-    if (this.data.userInfo.idno){
-      let idno = this.data.userInfo.idno
-      if (idno.length !== 15 && idno.length !== 18 ){
-        $Message({
-          content: '请正确填写身份证号',
-          type: 'warning'
-        });
-        return
-      }
-    }
+    // if (this.data.userInfo.idno) {
+    //   let idno = this.data.userInfo.idno
+    //   if (idno.length !== 15 && idno.length !== 18) {
+    //     $Message({
+    //       content: '请正确填写身份证号',
+    //       type: 'warning'
+    //     });
+    //     return
+    //   }
+    // }
     if (this.data.arrayIndex == 2 && this.data.showTipCode.code !== 0) {
       wx.showModal({
         title: '修改失败',
         content: '后台' + this.data.showTipCode.message,
         showCancel: false,
         confirmText: "关闭",
-        success: function() {}
+        success: function () { }
       })
       return
     }
 
     let that = this
     let promise = this.data.userInfo
-    if (this.data.userInfo.sex != "男" && this.data.userInfo.sex != "女"){
+    if (this.data.userInfo.sex != "男" && this.data.userInfo.sex != "女") {
       promise.sex = '未知'
     }
     wx.showLoading()

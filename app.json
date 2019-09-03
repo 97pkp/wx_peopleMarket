@@ -18,7 +18,8 @@
     "pages/newsActivityList/newsActivityList",
     "pages/newsActivityInfo/newsActivityInfo",
     "pages/myApply/myApply",
-    "pages/webView/webView"
+    "pages/webView/webView",
+    "pages/bindcity/bindcity"
   ],
   "window": {
     "backgroundTextStyle": "light",
