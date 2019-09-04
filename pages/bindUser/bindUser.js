@@ -89,7 +89,7 @@ Page({
       this.data.userInfo.myName = app.globalData.bindUserInfo.myname
       this.data.userInfo.phone = app.globalData.bindUserInfo.phone
       this.data.userInfo.sex = app.globalData.bindUserInfo.sex
-      this.data.userInfo.wxid = app.globalData.bindUserInfo.identyCity
+      this.data.userInfo.wxid = app.globalData.bindUserInfo.wxid
       // 绑定城市中文名
       this.data.userInfo.identyCityName = app.globalData.bindUserInfo.identyCityName;
       // 绑定城市key
