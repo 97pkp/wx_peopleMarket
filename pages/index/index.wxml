@@ -1,4 +1,4 @@
-<!--index.wxml-->
+<!-- index.wxml -->
 <view class="container">
   <!-- header -->
   <view class='city-sel' bindtap='changeCity'>
@@ -24,7 +24,6 @@
       </swiper-item>
     </block>
   </swiper>
-
   <!-- 功能 -->
   <view class='gongneng-box'>
     <view class='goneneng'>
@@ -42,7 +41,6 @@
       </view>
     </view>
   </view>
-
   <!-- 新闻活动 -->
   <!-- wx:if="{{newsList.length}}" -->
   <view class='news-activity' wx:if="{{showNewsList.length}}">
@@ -64,10 +62,13 @@
               <view class='news-info'>
                 <view class='news-txt'>
                   <text wx:if="{{item.type==0}}">【新闻】</text>
-                  <text wx:if="{{item.type==1}}">【活动】</text> {{item.title}}
+                  <text wx:if="{{item.type==1}}">【活动】</text>
+                  {{item.title}}
                 </view>
                 <view class='date' wx:if="{{item.type==0}}">{{item.published_date}}</view>
-                <view class='date' wx:if="{{item.type==1}}">{{item.start_date}}-{{item.end_date}}</view>
+                <view class='date' wx:if="{{item.type==1}}">
+                  {{item.start_date}}-{{item.end_date}}
+                </view>
               </view>
             </view>
           </swiper-item>
@@ -75,7 +76,6 @@
       </swiper>
     </view>
   </view>
-
   <!-- 新闻活动弹屏 -->
   <view class='popup-view-box' catchtouchmove='notouch' wx:if="{{isHavePopupView}}" style='opacity:{{screenOpacity}}'>
     <view class='popup-view'>
@@ -88,7 +88,6 @@
       </view>
     </view>
   </view>
-
   <!-- 楼盘信息标题 -->
   <view class='hours build-info' wx:if="{{buildinfolist.length}}">
     <text>楼盘信息</text>
@@ -109,17 +108,19 @@
           <view class="issale-the-liquidation"></view>
       </block>
     </view> -->
-
     <view class='hours-info'>
       <view class='top-info'>
         <view class='hours-name'>
           <text>{{item.projectname_cswx}}</text>
           <view class='sale'>
             <!-- <text id="all-sale" class='t3 all-sale' wx:if="{{item.commissioninfo !='' && item.commissioninfo !=undefined}}">{{item.commissioninfo}}</text> -->
-            <text id="all-sale" class='t3 all-sale' wx:if="{{item.issale !='' && item.issale !=undefined}}">{{item.issale}}</text>
+            <text id="all-sale" class='t3 all-sale' wx:if="{{item.issale !='' && item.issale !=undefined}}">
+              {{item.issale}}
+            </text>
           </view>
         </view>
-        <view class='price'>主力均价：
+        <view class='price'>
+          主力均价：
           <text wx:if="{{item.mainpriceType!==3}}">{{item.mainprice}}</text>
           <text wx:if="{{item.mainpriceType==1}}">元/㎡</text>
           <text wx:if="{{item.mainpriceType==2}}">万元/套</text>
@@ -128,7 +129,9 @@
       </view>
       <view class='bottom-info'>
         <view class='tag'>
-          <text class='all-tag' wx:for='{{buildinfotaglist[index]}}' wx:key='{{index}}'>{{item}}</text>
+          <text class='all-tag' wx:for='{{buildinfotaglist[index]}}' wx:key='{{index}}'>
+            {{item}}
+          </text>
         </view>
         <!-- <view class='hours-address'>
           <text class='hours-address-icon iconfont iconweizhi'></text>
@@ -137,7 +140,6 @@
       </view>
     </view>
   </view>
-
   <!-- 周边信息标题 -->
   <view class='hours rim-info {{buildinfolist.length?"":"no-build-list"}}' wx:if="{{rimbuildinfolist.length}}">
     <text>周边信息</text>
@@ -152,7 +154,8 @@
         <view class='hours-name'>
           <text>{{item.projectname_cswx}}</text>
         </view>
-        <view class='price'>主力均价：
+        <view class='price'>
+          主力均价：
           <text wx:if="{{item.mainpriceType!==3}}">{{item.mainprice}}</text>
           <text wx:if="{{item.mainpriceType==1}}">元/㎡</text>
           <text wx:if="{{item.mainpriceType==2}}">万元/套</text>
@@ -161,7 +164,9 @@
       </view>
       <view class='bottom-info'>
         <view class='tag'>
-          <text class='all-tag' wx:for='{{rimbuildinfotaglist[index]}}' wx:key='{{index}}'>{{item}}</text>
+          <text class='all-tag' wx:for='{{rimbuildinfotaglist[index]}}' wx:key='{{index}}'>
+            {{item}}
+          </text>
         </view>
         <!-- <view class='hours-address'>
           <text class='hours-address-icon iconfont iconweizhi'></text>
@@ -171,23 +176,19 @@
     </view>
   </view>
 </view>
-
 <i-message id="message" />
 <i-modal visible="{{ isPermit }}" show-ok='{{!isPermit}}' show-cancel='{{!isPermit}}' bind:ok="handleClose2" bind:cancel="handleClose2">
   <view>无使用权限</view>
   <navigator class='wxexit' open-type="exit" target="miniProgram">确定</navigator>
 </i-modal>
-
-<!------用户授权弹窗------>
-<view wx:if="{{showBgpack}}" class='bgpack' catchtouchmove='notouch'>
+<!-- ----用户授权弹窗---- -->
+<view wx:if="{{showBgpack}}" class='bgpack bgpack-phone' catchtouchmove='notouch'>
   <view class='wicket'>
     <view style='text-align:center;margin-bottom:16rpx;font-size:36rpx'>温馨提示</view>
     <view style='text-align:center;color:#888;'>请允许小程序使用</view>
     <view style='text-align:center;color:#888;'>用户信息</view>
     <view style='margin-top:24px;border-top:rgba(0,0,0,0.10) 1px solid'>
-      <!-- <button bindtap="cancelTip">
-        取消
-      </button> -->
+      <button bindtap="cancelTip">取消</button>
       <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
         允许
       </button>
@@ -201,16 +202,13 @@
     <view style='text-align:center;color:#888;'>请允许小程序使用</view>
     <view style='text-align:center;color:#888;'>用户手机号</view>
     <view style='margin-top:24px;border-top:rgba(0,0,0,0.10) 1px solid'>
-      <button bindtap="cancelTip">
-        取消
-      </button>
+      <button bindtap="cancelTip">取消</button>
       <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
         允许
       </button>
     </view>
   </view>
 </view>
-
 <!-- 绑定用户信息弹窗 -->
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose" catchtouchmove='notouch'>
   <view>暂无绑定用户信息</view>

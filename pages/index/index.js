@@ -14,7 +14,8 @@ const wxMap = new QQMapWX({
 });
 let ifChange; //全局变量，判断进入小程序加载的方式：登录加载/切换城市加载/返回跳转加载
 let _ifChange = false; //用于判断是否是游戏弹屏返回小游戏
-let loginGetUserInfo=false ;   //用于判断是否是登录的时候获取授权
+let loginGetUserInfo = false;   //用于判断是否是登录的时候获取授权
+
 const {
   $Message
 } = require('../../dist/base/index');
@@ -102,7 +103,7 @@ Page({
     })
   },
   //跳转详情页
-  goInformation: util.throttle(function(e) {
+  goInformation: util.throttle(function (e) {
     let project_id = e.currentTarget.dataset.project_id
     this.setData({
       pageUrl: '../information/information?project_id=' + project_id,
@@ -113,7 +114,7 @@ Page({
   }, 500),
 
   //跳转新闻活动列表页
-  goNewsActivityList: util.throttle(function(e) {
+  goNewsActivityList: util.throttle(function (e) {
     this.setData({
       pageUrl: e.currentTarget.dataset.url,
       isNewsClick: true
@@ -123,7 +124,7 @@ Page({
   }, 500),
 
   //新闻活动直接跳转详情页
-  goNewsActivityInfo: util.throttle(function() {
+  goNewsActivityInfo: util.throttle(function () {
     let newsList = this.data.newsList
     let newsCurrent = this.data.newsCurrent
     this.setData({
@@ -134,7 +135,7 @@ Page({
     this.Users()
   }, 500),
 
-  onLoad: function(option) {
+  onLoad: function (option) {
     if (option != undefined && JSON.stringify(option) != "{}") {
       ifChange = option.ifChange;
     } else {
@@ -162,102 +163,105 @@ Page({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, userid
         let code = res.code
-        loginGetUserInfo=true
+        loginGetUserInfo = true
         //检查用户信息授权
         wx.getSetting({
           success(res) {
-            if (!res.authSetting['scope.userInfo']) {
-              that.setData({
-                showBgpack: true,
-              })
-            } else {
-              wx.showLoading({
-                title: '加载中',
-                mask: true,
-              })
-              wx.getUserInfo({
-                success: rest => {
-                  let promise = {
-                    code: code
-                  }
-                  let cityPromise = wx.getStorageSync("cityPromise") || {}
-                  promise.currentCity = cityPromise.currentCity
-                  promise.positionCity = cityPromise.positionCity
-                  promise.iv = rest.iv
-                  promise.encryptedData = rest.encryptedData
-                  $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
-                    console.log('openid:' + data.data.openid)
-                    console.log('status:' + data.data.status)
-                    app.globalData.token = data.data['vx-zhwx-token']
-                    app.globalData.openid = data.data.openid
-                    app.globalData.unionId = data.data.unionId
-                    app.globalData.status = data.data.status
-                    app.globalData.sessionKey = data.data.sessionKey
-                    if (data.data.isCheck == 0) {
-                      app.globalData.isCheck = true
-                    } else {
-                      app.globalData.isCheck = false
-                    }
-                    if (data.data.status == 401) {
-                      that.setData({
-                        isPermit: true
-                      })
-                    }
-                    app.globalData.userId = data.data.USERID
-                    that.getUserGetUserInfo(data.data.openid)
-        
-                    if (ifChange == undefined) {
-                      let promise = {
-                        unionid: app.globalData.unionId
-                        // unionid:'oygNC1U6jeX_1--7LPtEJEmfTDcg'
-                      }
-                      $http(apiSetting.userGetUserCity, promise).then((data) => {
-                        if (data.status && data.status == 404) {
-                          that.accreditOperate()
-                          return
-                        }
-                        let city = data.data.currentCity
-                        if (city == "未知") {
-                          city = ""
-                        }
-                        if (city) {
-                          app.globalData.gameUserCity = city
-                        }
-                        that.accreditOperate()
-                      }, (error) => {
-                        that.accreditOperate()
-                      })
-                    } else {
-                      that.accreditOperate()
-                    }
-                  }, (error) => {
-                    console.log(error)
-                  })
-                }
-              })
+            // if (!res.authSetting['scope.userInfo']) {
+            //   that.setData({
+            //     showBgpack: true,
+            //   })
+            // } else {
+            wx.showLoading({
+              title: '加载中',
+              mask: true,
+            })
+            // wx.getUserInfo({
+            //   success: rest => {
+            let promise = {
+              code: code
             }
+            let cityPromise = wx.getStorageSync("cityPromise") || {}
+            promise.currentCity = cityPromise.currentCity
+            promise.positionCity = cityPromise.positionCity
+            // promise.iv = rest.iv
+            // promise.encryptedData = rest.encryptedData
+            $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
+              console.log('openid:' + data.data.openid)
+              console.log('status:' + data.data.status)
+              app.globalData.token = data.data['vx-zhwx-token']
+              app.globalData.openid = data.data.openid
+              app.globalData.unionId = data.data.unionId
+              app.globalData.status = data.data.status
+              app.globalData.sessionKey = data.data.sessionKey
+              if (data.data.isCheck == 0) {
+                app.globalData.isCheck = true
+              } else {
+                app.globalData.isCheck = false
+              }
+              if (data.data.status == 401) {
+                that.setData({
+                  isPermit: true
+                })
+              }
+              app.globalData.userId = data.data.USERID
+              that.getUserGetUserInfo(data.data.openid)
+
+              if (ifChange == undefined) {
+
+                let promise = {
+                  unionid: app.globalData.unionId
+                  // unionid:'oygNC1U6jeX_1--7LPtEJEmfTDcg'
+                }
+                $http(apiSetting.userGetUserCity, promise).then((data) => {
+                  if (data.status && data.status == 404) {
+                    that.accreditOperate()
+                    return
+                  }
+                  let city = data.data.currentCity
+                  if (city == "未知") {
+                    city = ""
+                  }
+                  if (city) {
+                    app.globalData.gameUserCity = city
+                  }
+                  that.accreditOperate()
+                }, (error) => {
+                  that.accreditOperate()
+                })
+              } else {
+                that.accreditOperate()
+              }
+            }, (error) => {
+              console.log(error)
+            })
+            // }
+            // })
+            // }
           }
         })
 
       }
     })
   },
-  onShow: function() {
-    if (this.data.showBgpack){
-      return
-    }
-    let that =this 
-    wx.getSetting({
-      success(res) {
-        if (!res.authSetting['scope.userInfo']) {
-          that.setData({
-            showBgpack: true,
-          })
-          return
-        }
-      }
-    })
-    if (ifChange==3){
+  onShow: function () {
+    debugger
+    // if (this.data.showBgpack) {
+    //   return
+    // }
+    // let that = this
+    // debugger
+    // wx.getSetting({
+    //   success(res) {
+    //     if (!res.authSetting['scope.userInfo']) {
+    //       that.setData({
+    //         showBgpack: true,
+    //       })
+    //       return
+    //     }
+    //   }
+    // })
+    if (ifChange == 3) {
       wx.showLoading({
         title: '加载中',
       })
@@ -275,7 +279,7 @@ Page({
       })
       this.getUserCity()
     }
-  
+
     this.setData({
       showBgpack: false, //是否显示用户信息授权窗口
       showPhonepack: false, //是否显示手机号授权窗口
@@ -351,7 +355,7 @@ Page({
     let that = this
     wx.getLocation({
       type: 'wgs84',
-      success: function(res) {
+      success: function (res) {
         that.data.cityInfo.latitude = res.latitude.toString()
         that.data.cityInfo.longitude = res.longitude.toString()
         //经纬度逆解析获取城市名
@@ -360,7 +364,7 @@ Page({
             latitude: that.data.cityInfo.latitude,
             longitude: that.data.cityInfo.longitude
           },
-          success: function(res) {
+          success: function (res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
@@ -370,16 +374,16 @@ Page({
             that.getCityList(city.city)
             // that.getCityFindBuildInfoByCity()
           },
-          fail: function(res) {
+          fail: function (res) {
             // that.getCityFindBuildInfoByCity()
             that.getCityList()
           }
         })
       },
-      fail: function(res) {
+      fail: function (res) {
         that.getCityList()
       },
-      complete: function(res) {
+      complete: function (res) {
 
       }
     })
@@ -433,7 +437,7 @@ Page({
             // that.findBombScreenByCityId()
             // that.getNewsActivity()
             // that.getCityFindBuildInfoByCity()
-          
+
 
             that.findBombScreenByCityId()
             that.getNewsActivity()
@@ -442,7 +446,7 @@ Page({
           }
         }
       }
-      
+
       if (ifChange == 3 && !_ifChange) {
         that.getNowAddress(ifChange)
         return
@@ -486,7 +490,7 @@ Page({
       let cityList = data.data
       if (city) {
         for (let i = 0; i < cityList.length; i++) {
-          if (city.indexOf(cityList[i].city) !== -1 ) {
+          if (city.indexOf(cityList[i].city) !== -1) {
             if (ifChange !== 3) {
               wx.showModal({
                 title: '定位城市提示',
@@ -540,7 +544,7 @@ Page({
                 }
               })
               ifChange = undefined
-            }else{
+            } else {
               wx.setStorageSync('storLocalCity', cityList[i])
               that.setData({
                 'cityInfo.cityName': cityList[i].city
@@ -584,7 +588,7 @@ Page({
     let that = this
     wx.getLocation({
       type: 'wgs84',
-      success: function(res) {
+      success: function (res) {
         that.data.cityInfo.latitude = res.latitude.toString()
         that.data.cityInfo.longitude = res.longitude.toString()
         //经纬度逆解析获取城市名
@@ -593,7 +597,7 @@ Page({
             latitude: that.data.cityInfo.latitude,
             longitude: that.data.cityInfo.longitude
           },
-          success: function(res) {
+          success: function (res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
@@ -610,13 +614,13 @@ Page({
             // that.getCityList(city.city)
             // that.getCityFindBuildInfoByCity()
           },
-          fail: function(res) {
+          fail: function (res) {
             // that.getCityFindBuildInfoByCity()
             that.getCityList()
           }
         })
       },
-      fail: function(res) {
+      fail: function (res) {
         if (ifChange == 3) {
           _ifChange = true
         }
@@ -1258,7 +1262,7 @@ Page({
   },
 
   //点击弹屏进入详情页
-  goScreenInfo: util.throttle(function() {
+  goScreenInfo: util.throttle(function () {
     let that = this
     // type: 0：新闻，1：活动，2：项目，3：外链接，4：城市
     let bombScreen = this.data.bombScreen
@@ -1273,7 +1277,7 @@ Page({
         title: '活动已结束',
         showCancel: false,
         confirmText: "关闭",
-        success: function() {
+        success: function () {
           that.setData({
             bombScreen: '',
             isHavePopupView: false
@@ -1344,22 +1348,34 @@ Page({
       });
       return
     } else if (bombScreen.type == 3 && bombScreen.bomb_screen_url) {
+      debugger
+      wx.getSetting({
+        success(res) {
+          if (!res.authSetting['scope.userInfo']) {
+            that.setData({
+              showBgpack: true,
+            })
+          } else {
+
+            //url地址转码，防止网址出现中文后ios解析不出来显示白屏的问题
+            let href = bombScreen.bomb_screen_url
+            if (href.search('https://') == -1) {
+              if (href.search('http://') == -1) {
+                href = 'https://' + href
+              }
+            }
+            href = encodeURIComponent(href)
+            wx.navigateTo({
+              url: '../webView/webView?search=' + href,
+            })
+            ifChange = 3
+          }
+        }
+      })
       // this.setData({
       //   pageUrl: '../webView/webView?search=' + bombScreen.bomb_screen_url,
       // })
 
-      //url地址转码，防止网址出现中文后ios解析不出来显示白屏的问题
-      let href = bombScreen.bomb_screen_url
-      if (href.search('https://') == -1) {
-        if (href.search('http://') == -1) {
-          href = 'https://' + href
-        }
-      }
-      href = encodeURIComponent(href)
-      wx.navigateTo({
-        url: '../webView/webView?search=' + href,
-      })
-      ifChange = 3
     } else if (bombScreen.type == '2') {
       // this.setData({
       //   pageUrl: '../information/information?project_id=' + bombScreen.association_soures_id,
@@ -1410,7 +1426,7 @@ Page({
     }
   },
   //查看轮播图详情
-  lookBannerInfo: util.throttle(function(e) {
+  lookBannerInfo: util.throttle(function (e) {
     if (this.data.isBannerClick) return
     let bannerItem = e.target.dataset.item
     if (bannerItem.type === undefined || bannerItem.type == 2) return
@@ -1438,7 +1454,7 @@ Page({
   },
 
   // 页面跳转
-  pageTobind: util.throttle(function(e) {
+  pageTobind: util.throttle(function (e) {
     this.setData({
       pageUrl: e.target.dataset.url,
     })
@@ -1503,7 +1519,7 @@ Page({
     // 判断是否翻页
     if (this.data.rimBuildPage.isPage) {
       this.data.rimBuildPage.page++
-        this.getRimBuildInfo()
+      this.getRimBuildInfo()
     }
   },
 
@@ -1511,7 +1527,7 @@ Page({
   Users() {
     let that = this
     //检查用户信息授权
-   
+
     wx.getSetting({
       success(res) {
 
@@ -1520,7 +1536,7 @@ Page({
             showBgpack: true,
           })
         } else {
-          
+
           //获取缓存信息验证手机号授权
           let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
           if (JSON.stringify(wxDetailUserInfo) !== "{}") {
@@ -1575,6 +1591,8 @@ Page({
   },
   // 获取微信用户信息
   onGotUserInfo(e) {
+    this.setunionId(e.detail)
+
     if (!e.detail.userInfo) {
       return
     }
@@ -1585,15 +1603,64 @@ Page({
 
       showPhonepack: true,
       // showPhonepack: false,
-      
+
     })
-    if (loginGetUserInfo){
-      this.setData({ showPhonepack:false})
+    if (loginGetUserInfo) {
+      this.setData({ showPhonepack: false })
       this.onLoad()
-    }else{
-      this.setData({ showPhonepack: true})
+    } else {
+      this.setData({ showPhonepack: true })
     }
     this.getLocation()
+  },
+  //用户授权
+  setunionId(rest) {
+
+    wx.login({
+      success: res => {
+        // 发送 res.code 到后台换取 openId, sessionKey, userid
+        let code = res.code
+        let promise = {
+          code: code
+        }
+        let cityPromise = wx.getStorageSync("cityPromise") || {}
+        promise.currentCity = cityPromise.currentCity
+        promise.positionCity = cityPromise.positionCity
+        promise.iv = rest.iv
+        promise.encryptedData = rest.encryptedData
+        $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
+          app.globalData.unionId = data.data.unionId
+          app.globalData.status = data.data.status
+          if (ifChange == undefined) {
+
+            let promise = {
+              unionid: app.globalData.unionId
+              // unionid:'oygNC1U6jeX_1--7LPtEJEmfTDcg'
+            }
+            $http(apiSetting.userGetUserCity, promise).then((data) => {
+              if (data.status && data.status == 404) {
+                that.accreditOperate()
+                return
+              }
+              let city = data.data.currentCity
+              if (city == "未知") {
+                city = ""
+              }
+              if (city) {
+                app.globalData.gameUserCity = city
+              }
+              that.accreditOperate()
+            }, (error) => {
+              that.accreditOperate()
+            })
+          }
+        }, (error) => {
+          console.log(error)
+        })
+      }
+    }, (error) => {
+      console.log(error)
+    })
   },
   //获取手机号
   getPhoneNumber(e) {
@@ -1669,6 +1736,7 @@ Page({
   cancelTip() {
     this.setData({
       showPhonepack: false,
+      showBgpack: false,
     })
     // if(loginGetUserInfo){
     //   wx.showLoading({
