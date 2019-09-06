@@ -245,12 +245,12 @@ Page({
     })
   },
   onShow: function () {
-    debugger
+    
     // if (this.data.showBgpack) {
     //   return
     // }
     // let that = this
-    // debugger
+    // 
     // wx.getSetting({
     //   success(res) {
     //     if (!res.authSetting['scope.userInfo']) {
@@ -1348,7 +1348,7 @@ Page({
       });
       return
     } else if (bombScreen.type == 3 && bombScreen.bomb_screen_url) {
-      debugger
+      
       wx.getSetting({
         success(res) {
           if (!res.authSetting['scope.userInfo']) {
