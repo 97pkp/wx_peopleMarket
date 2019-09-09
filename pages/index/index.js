@@ -182,6 +182,7 @@ Page({
               code: code
             }
             let cityPromise = wx.getStorageSync("cityPromise") || {}
+            
             promise.currentCity = cityPromise.currentCity
             promise.positionCity = cityPromise.positionCity
             // promise.iv = rest.iv
@@ -367,6 +368,7 @@ Page({
           success: function (res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
+            debugger
             _storage.positionCity = city.city
             _storage.currentCity = city.city
             wx.setStorageSync('cityPromise', _storage)
@@ -393,6 +395,7 @@ Page({
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
+    debugger
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
@@ -411,6 +414,7 @@ Page({
               'cityInfo.cityName': app.globalData.gameUserCity
             })
             let cityPromise = wx.getStorageSync("cityPromise") || {}
+            debugger
             cityPromise.currentCity = app.globalData.gameUserCity
             wx.setStorageSync("cityPromise", cityPromise)
             that.findBombScreenByCityId()
@@ -432,6 +436,7 @@ Page({
               'cityInfo.cityName': cityList[i].city
             })
             let cityPromise = wx.getStorageSync("cityPromise") || {}
+            debugger
             cityPromise.currentCity = app.globalData.gameUserCity
             wx.setStorageSync("cityPromise", cityPromise)
             // that.findBombScreenByCityId()
@@ -452,13 +457,26 @@ Page({
         return
       }
       if (that.data.cityInfo) {
+        debugger
+        let result = [], results = {};
+        cityList.map((preItem, index) => {
+          if (preItem.city.indexOf('北京') != -1) {
+            results = {
+              city: preItem.city,
+              cityId: preItem.id,
+              cityPreId: preItem.area
+            };
+            result.push(results);
+          }
+        })
+        wx.setStorageSync('cityonly', result)
         that.setData({
           'cityInfo.cityName': cityList[0].city
         })
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
-
+debugger
         _storage.currentCity = cityList[0].city
         wx.setStorageSync('cityPromise', _storage)
       }
@@ -1615,7 +1633,7 @@ Page({
   },
   //用户授权
   setunionId(rest) {
-
+    const that=this;
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, userid
