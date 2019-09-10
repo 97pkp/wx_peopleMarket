@@ -82,14 +82,14 @@
         </span>
       </view>
     </li>
-    <!-- <li style="margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;">
+     <li style="margin-top:20rpx;border-top: 1rpx solid #e6e6e6;border-bottom: 1rpx solid #e6e6e6;">
       <view class='item-box' style='border:0;'>
         <span class='title'>绑定城市</span>
         <span class="inp" bindtap='cityBind'>
           <input placeholder-class="phcolor" type='idcard' value='{{userInfo.identyCityName}}' placeholder="{{isEdit?'请绑定城市(非必填)':'未绑定'}}" disabled="true" />
         </span>
       </view>
-    </li> -->
+    </li> 
     <li wx-if="{{arrayIndex == 2}}" style='margin-top:20rpx; border-top: 1rpx solid #e6e6e6;'>
       <view class='item-box'>
         <span class='title'>渠道验证码</span>
