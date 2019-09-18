@@ -1,26 +1,32 @@
-<!--pages/information/information.wxml-->
+<!-- pages/information/information.wxml -->
 <view class="information {{visible2?'preventTouchMove':''}}">
   <!-- banner图 -->
   <view class='num' wx:if="{{bannerlength>0 && _videoPath==''}}">
-    <text>{{bannerindex+1}}</text>/{{bannerlength}}
+    <text>{{bannerindex+1}}</text>
+    /{{bannerlength}}
   </view>
   <view class='num' wx:if="{{bannerlength<=0 && _videoPath==''}}">
-    <text>{{bannerindex}}</text>/{{bannerlength}}
+    <text>{{bannerindex}}</text>
+    /{{bannerlength}}
   </view>
   <view class='num' wx:if="{{bannerlength>0 && _videoPath!='' && !isVideo}}">
-    <text>{{bannerindex}}</text>/{{bannerlength}}
+    <text>{{bannerindex}}</text>
+    /{{bannerlength}}
   </view>
   <view class='num' wx:if="{{bannerlength<=0 && _videoPath!='' && !isVideo}}">
-    <text>{{bannerindex}}</text>/{{bannerlength}}
+    <text>{{bannerindex}}</text>
+    /{{bannerlength}}
   </view>
-
   <view class='img-video-sel' bindtap='selImgVdo'>
-    <view class="video-tag {{isVideo?'fffBg':''}}" data-type='{{0}}' wx:if="{{_videoPath!==''}}">视频</view>
-    <view class="img-tag {{!isVideo?'fffBg':''}}" data-type='{{1}}' wx:if="{{_videoPath!==''}}">图片</view>
+    <view class="video-tag {{isVideo?'fffBg':''}}" data-type='{{0}}' wx:if="{{_videoPath!==''}}">
+      视频
+    </view>
+    <view class="img-tag {{!isVideo?'fffBg':''}}" data-type='{{1}}' wx:if="{{_videoPath!==''}}">
+      图片
+    </view>
   </view>
   <!-- 视频播放元素 -->
   <video wx:if="{{isLoadVideo}}" id='myvideo' class='{{fullScreen?"show":"hide"}}' autoplay='{{true}}' src="{{videoPath}}" bindfullscreenchange="fullScreen" controls="{{true}}" show-center-play-btn='{{false}}' custom-cache='{{false}}' vslide-gesture-in-fullscreen='{{false}}'></video>
-
   <swiper wx:if="{{true}}" autoplay="{{false}}" interval="{{interval}}" duration="{{duration}}" bindchange='bannerChange' current='{{bannerindex}}' style='z-index:10'>
     <!-- 视频展示块 -->
     <block wx:if="{{_videoPath!==''}}">
@@ -42,9 +48,6 @@
       </swiper-item>
     </block>
   </swiper>
-
-
-
   <!-- 详情 -->
   <view class='info'>
     <view class='name-money'>
@@ -57,13 +60,14 @@
         <text class='hours-money' wx:if="{{mainpriceType!==3}}">{{mainprice}}</text>
         <view wx:if="{{mainpriceType===1}}">元/㎡</view>
         <view wx:if="{{mainpriceType===2}}">万元/套</view>
-        <text wx:if="{{mainpriceType===3}}" style='color:#999999;margin-left:10rpx;font-size:32rpx;'>价格待定</text>
+        <text wx:if="{{mainpriceType===3}}" style='color:#999999;margin-left:10rpx;font-size:32rpx;'>
+          价格待定
+        </text>
         <view class='tanhao' bindtap="handleOpen2" data-type='{{0}}'>
           <image src='../../images/tanhao.png'></image>
         </view>
       </view>
     </view>
-
     <!-- 标签 -->
     <view class='tag' wx:if='{{labelsList.length}}'>
       <view class="all-tag" wx:for='{{labelsList}}' wx:key='{{index}}'>{{item.labels}}</view>
@@ -73,14 +77,16 @@
       <view class='add1' wx:if='{{salesaddr!=""}}'>
         <text class='title1'>售楼处地址</text>
         <text class='title2'>{{salesaddr}}</text>
-        <view bindtap='pageToMap' data-type='1'>导航
+        <view bindtap='pageToMap' data-type='1'>
+          导航
           <image src='../../images/right.png'></image>
         </view>
       </view>
       <view class='add2' wx:if='{{showhall!=""}}'>
         <text class='title1'>展厅地址</text>
         <text class='title2'>{{showhall}}</text>
-        <view bindtap='pageToMap' data-type='2'>导航
+        <view bindtap='pageToMap' data-type='2'>
+          导航
           <image src='../../images/right.png'></image>
         </view>
       </view>
@@ -106,6 +112,26 @@
           <text>{{item.houserhold}}</text>
           <text>{{item.area}}</text>
           <text>{{item.layout}}</text>
+        </view>
+      </view>
+    </view>
+    <!-- 围观人数 -->
+    <view class='onlookers' wx:if="{{onlookersListImg}}">
+      <view class="onlookers-title">
+        <view class="lookers-title">
+          <image class="title-image" src="../../images/onlookersList.png"></image>
+          {{onlookersListCount}}人围观
+        </view>
+      </view>
+      <view class='onlookers-list' bindtap='onlookersList'>
+        <view wx:for="{{onlookersListImg}}" wx:key='{{index}}'>
+          <image wx:if="{{index <10}}" class='list-image' src="{{item.head_img==''?defaultImg:item.head_img}}"  mode="aspectFill" binderror='errorBombScreen' data-index='{{index}}'></image>
+          <view wx:else class='list-image list-view'>
+            <view class="list-text">
+              <image class='list-image ' src="{{item.head_img==''?defaultImg:item.head_img}}"  mode="aspectFill" binderror='errorBombScreen' data-index='{{index}}'></image>
+            </view>
+            <view class="list-text-more">更多</view>
+          </view>
         </view>
       </view>
     </view>
@@ -135,7 +161,8 @@
     <view class='huxing' wx:if='{{hourselist.length}}'>
       <view class='top'>
         <text>户型（{{hourselist.length}}）</text>
-        <view bindtap='goHousetype'>查看全部
+        <view bindtap='goHousetype'>
+          查看全部
           <text class='iconfont iconjiantou'></text>
         </view>
       </view>
@@ -145,7 +172,8 @@
       <view class='img' bindtap='goHousetype'>
         <image mode="aspectFill" src="{{upload_file_path==''?defaultImg:upload_file_path}}" binderror="erroImage1" data-index='{{index}}'></image>
         <view class='explain'>
-          <view class='totle' wx:if='{{price}}'>{{price}}
+          <view class='totle' wx:if='{{price}}'>
+            {{price}}
             <text wx:if="{{pricetype==1}}">元/m²</text>
             <text wx:if="{{pricetype==2}}">万元/套</text>
           </view>
@@ -161,7 +189,8 @@
     <view class='hours-imgs' wx:if='{{isbuildsimg}}'>
       <view class='top'>
         <text class='title'>楼盘图</text>
-        <view bindtap='goBuildimg'>查看全部
+        <view bindtap='goBuildimg'>
+          查看全部
           <text class='iconfont iconjiantou'></text>
         </view>
       </view>
@@ -210,9 +239,7 @@
       </view>
       <text>分享</text>
     </button>
-    <view class='connect' bindtap='toPhone'>
-      联系我们
-    </view>
+    <view class='connect' bindtap='toPhone'>联系我们</view>
   </view>
   <!-- 悬浮窗 -->
   <view class='floating'>
@@ -225,29 +252,27 @@
     </view>
   </view>
 </view>
-  
 <!-- 主力均价提示 -->
-<view class='model-view' wx:if='{{visible2}}' >
+<view class='model-view' wx:if='{{visible2}}'>
   <view class='shadow'></view>
   <view class='model-content'>
-    <view wx:if='{{mainpriceOrCommission===0 && mainpricedescription}}'>{{mainpricedescription}}</view>
+    <view wx:if='{{mainpriceOrCommission===0 && mainpricedescription}}'>
+      {{mainpricedescription}}
+    </view>
     <view wx:if='{{mainpriceOrCommission===0 && !mainpricedescription}}'>暂无价格提示</view>
     <view wx:if='{{mainpriceOrCommission===1 && commissioninfo}}'>{{commissioninfo}}</view>
     <view wx:if='{{mainpriceOrCommission===1 && !commissioninfo}}'>暂无佣金规则</view>
     <view class='bottom' bindtap='handleClose2' catchtouchmove='stopMove'>关闭</view>
   </view>
 </view>
-
-<!------用户授权弹窗------>
+<!-- ----用户授权弹窗---- -->
 <view wx:if="{{showBgpack}}" class='bgpack' catchtouchmove='notouch'>
   <view class='wicket'>
     <view style='text-align:center;margin-bottom:16rpx;font-size:36rpx'>温馨提示</view>
     <view style='text-align:center;color:#888;'>请允许小程序使用</view>
     <view style='text-align:center;color:#888;'>用户信息</view>
     <view style='margin-top:24px;border-top:rgba(0,0,0,0.10) 1px solid'>
-      <button bindtap="cancelTip">
-        取消
-      </button>
+      <button bindtap="cancelTip">取消</button>
       <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
         允许
       </button>
@@ -261,16 +286,13 @@
     <view style='text-align:center;color:#888;'>请允许小程序使用</view>
     <view style='text-align:center;color:#888;'>用户手机号</view>
     <view style='margin-top:24px;border-top:rgba(0,0,0,0.10) 1px solid'>
-      <button bindtap="cancelTip">
-        取消
-      </button>
+      <button bindtap="cancelTip">取消</button>
       <button style='color:#20A0FF;border-left:rgba(0,0,0,0.10) 1px solid' open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">
         允许
       </button>
     </view>
   </view>
 </view>
-
 <!-- 绑定用户信息弹窗 -->
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
   <view>暂无绑定用户信息</view>

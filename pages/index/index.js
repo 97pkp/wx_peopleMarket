@@ -105,6 +105,22 @@ Page({
   //跳转详情页
   goInformation: util.throttle(function (e) {
     let project_id = e.currentTarget.dataset.project_id
+    let wxUserInfo = wx.getStorageSync('wxUserInfo');
+
+    let param = {
+      openId: app.globalData.openid,
+      headImg: wxUserInfo.avatarUrl,
+      nickName: wxUserInfo.nickName,
+      projectId: project_id
+    }
+
+    $http(apiSetting.apiAddOnlookers, param).then((data) => {
+      if (data) {
+        console.log("围观人数保存成功")
+      }
+    }, (error) => {
+      console.log("围观人数保存失败")
+    })
     this.setData({
       pageUrl: '../information/information?project_id=' + project_id,
       isBuildClick: true
@@ -136,6 +152,7 @@ Page({
   }, 500),
 
   onLoad: function (option) {
+    console.log("option*********" + option.q)
     if (option != undefined && JSON.stringify(option) != "{}") {
       ifChange = option.ifChange;
     } else {
@@ -182,7 +199,7 @@ Page({
               code: code
             }
             let cityPromise = wx.getStorageSync("cityPromise") || {}
-            
+
             promise.currentCity = cityPromise.currentCity
             promise.positionCity = cityPromise.positionCity
             // promise.iv = rest.iv
@@ -246,7 +263,7 @@ Page({
     })
   },
   onShow: function () {
-    
+
     // if (this.data.showBgpack) {
     //   return
     // }
@@ -368,7 +385,7 @@ Page({
           success: function (res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
-            
+
             _storage.positionCity = city.city
             _storage.currentCity = city.city
             wx.setStorageSync('cityPromise', _storage)
@@ -395,7 +412,7 @@ Page({
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
-    
+
     promise.currentCity = cityPromise.currentCity
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
@@ -414,7 +431,7 @@ Page({
               'cityInfo.cityName': app.globalData.gameUserCity
             })
             let cityPromise = wx.getStorageSync("cityPromise") || {}
-            
+
             cityPromise.currentCity = app.globalData.gameUserCity
             wx.setStorageSync("cityPromise", cityPromise)
             that.findBombScreenByCityId()
@@ -436,7 +453,7 @@ Page({
               'cityInfo.cityName': cityList[i].city
             })
             let cityPromise = wx.getStorageSync("cityPromise") || {}
-            
+
             cityPromise.currentCity = app.globalData.gameUserCity
             wx.setStorageSync("cityPromise", cityPromise)
             // that.findBombScreenByCityId()
@@ -457,7 +474,7 @@ Page({
         return
       }
       if (that.data.cityInfo) {
-        
+
         let result = [], results = {};
         cityList.map((preItem, index) => {
           if (preItem.city.indexOf('北京') != -1) {
@@ -844,6 +861,7 @@ Page({
           this.getNewsActivity()
         } else {
           if (this.data.newsList.length) {
+
             this.findAttachRelationById(this.data.newsList.length)
           } else {
             this.data.newsLoadOK = true
@@ -904,6 +922,7 @@ Page({
           this.setData({
             newsList: _allArr
           })
+
           this.findAttachRelationById(_allArr.length)
         } else {
           if (_newsArr.length >= 3) {
@@ -921,6 +940,7 @@ Page({
           this.setData({
             newsList: _allArr
           })
+
           this.findAttachRelationById(_allArr.length)
         }
       } else {
@@ -1051,6 +1071,7 @@ Page({
             })
           }
         }
+
         this.findAttachRelationById(_allArr.length)
       }
     })
@@ -1091,12 +1112,14 @@ Page({
       id: _newsList[_t].id
     }
     let _arr = this.data._imgList
+
     $http(apiSetting.newsactivityFindAttachRelationById, promise).then((data) => {
       _arr.push(data.data[0])
       this.setData({
         _imgList: _arr,
         t: _t + 1
       })
+
       this.findAttachRelationById(newsAtvListLength)
     }), (error) => {
       console.log(error)
@@ -1179,6 +1202,7 @@ Page({
           that.setData({
             'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
           })
+
           that.findBombScreenByCityId()
         }
         return
@@ -1211,6 +1235,7 @@ Page({
           that.setData({
             'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
           })
+
           that.findBombScreenByCityId()
         }
         return
@@ -1221,6 +1246,7 @@ Page({
               that.setData({
                 'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
               })
+
               that.findBombScreenByCityId()
             }
             return
@@ -1231,6 +1257,7 @@ Page({
               that.setData({
                 'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
               })
+
               that.findBombScreenByCityId()
             }
             return
@@ -1241,6 +1268,7 @@ Page({
               that.setData({
                 'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
               })
+
               that.findBombScreenByCityId()
             }
             return
@@ -1250,6 +1278,7 @@ Page({
                 that.setData({
                   'bombScreenReq.city_area_id': app.globalData.storLocalCity.id
                 })
+
                 that.findBombScreenByCityId()
               }
               return
@@ -1356,6 +1385,7 @@ Page({
               newsLoadOK: false, // 新闻活动请求完成
               rimBuildLoadOK: false, // 周边楼盘请求完成
             })
+
             this.findBombScreenByCityId()
             this.getNewsActivity()
             this.getCitySessionFindBuildInfoByCity()
@@ -1366,9 +1396,10 @@ Page({
       });
       return
     } else if (bombScreen.type == 3 && bombScreen.bomb_screen_url) {
-      
+
       wx.getSetting({
         success(res) {
+
           if (!res.authSetting['scope.userInfo']) {
             that.setData({
               showBgpack: true,
@@ -1614,8 +1645,10 @@ Page({
     if (!e.detail.userInfo) {
       return
     }
+
     wx.setStorageSync('wxUserInfo', e.detail.userInfo)
     this.userUpdata()
+
     this.setData({
       showBgpack: false,
 
@@ -1633,7 +1666,7 @@ Page({
   },
   //用户授权
   setunionId(rest) {
-    const that=this;
+    const that = this;
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, userid

@@ -44,7 +44,8 @@ Page({
 
     mainpriceOrCommission: 0, //0代表显示主力均价提示，1表示佣金规则
     phone: '', //联系我们-电话
-
+    onlookersListImg: [],//围观人数
+    onlookersListCount: '', // 围观总数
     /*
       项目信息
      */
@@ -83,21 +84,21 @@ Page({
     buildsRequestArr: ['项目主图', '实景图', '效果图', '配套图', '规划图'],
     //楼盘主图,实景图,效果图,配套图,规划图数据
     buildsimg: [{
-        name: '实景图',
-        imgs: []
-      },
-      {
-        name: '效果图',
-        imgs: []
-      },
-      {
-        name: '配套图',
-        imgs: []
-      },
-      {
-        name: '规划图',
-        imgs: []
-      },
+      name: '实景图',
+      imgs: []
+    },
+    {
+      name: '效果图',
+      imgs: []
+    },
+    {
+      name: '配套图',
+      imgs: []
+    },
+    {
+      name: '规划图',
+      imgs: []
+    },
     ],
 
     /*
@@ -298,11 +299,17 @@ Page({
     });
   },
 
+  //观看人员列表跳转
+  onlookersList() {
+    wx.navigateTo({
+      url: '../onlookersList/onlookersList?project_id=' + this.data.project_id
+    })
+  },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function(options) {
+  onLoad: function (options) {
     let that = this
     wx.showLoading({
       title: '加载中',
@@ -332,6 +339,7 @@ Page({
     this.getClauseAndRule(); //获取免责条款
     this.isAttentionProject(); //判断是否关注项目
     this.getShowVideo(project_id); //获取展示视频
+    this.getOnLookersList(project_id)//查询围观列表
   },
   //查询免责条款
   getClauseAndRule() {
@@ -565,57 +573,57 @@ Page({
         name: '开发商',
         value: projectdetails.developer
       }, {
-        name: '物业公司',
-        value: projectdetails.propertycompany
-      }, {
-        name: '开盘时间',
-        value: projectdetails.opening_date
-      }, {
-        name: '交房时间',
-        value: projectdetails.delivery_date
-      }, {
-        name: '产权年限',
-        value: projectdetails.years
-      }, {
-        name: '建筑类别',
-        value: projectdetails.buildingtype
-      }, {
-        name: '装修状态',
-        value: projectdetails.isup
-      }, {
-        name: '物业费',
-        value: projectdetails.propertyexpenses
-      }, {
-        name: '所属区县',
-        value: projectdetails.district
-      }, {
-        name: '建筑面积',
-        value: projectdetails.floorarea
-      }, {
-        name: '主面积',
-        value: projectdetails.mainarea
-      }, {
-        name: '绿化情况',
-        value: projectdetails.greencoverage
-      }, {
-        name: '建筑规划',
-        value: projectdetails.panning
-      }, {
-        name: '咨询电话',
-        value: projectdetails.phone
-      }, {
-        name: '容积率',
-        value: projectdetails.plotratio
-      }, {
-        name: '预售许可证',
-        value: projectdetails.presalepermit
-      }, {
-        name: '楼盘地址',
-        value: projectdetails.projectaddr
-      }, {
-        name: '物业类别',
-        value: projectdetails.propertytype
-      }, )
+          name: '物业公司',
+          value: projectdetails.propertycompany
+        }, {
+          name: '开盘时间',
+          value: projectdetails.opening_date
+        }, {
+          name: '交房时间',
+          value: projectdetails.delivery_date
+        }, {
+          name: '产权年限',
+          value: projectdetails.years
+        }, {
+          name: '建筑类别',
+          value: projectdetails.buildingtype
+        }, {
+          name: '装修状态',
+          value: projectdetails.isup
+        }, {
+          name: '物业费',
+          value: projectdetails.propertyexpenses
+        }, {
+          name: '所属区县',
+          value: projectdetails.district
+        }, {
+          name: '建筑面积',
+          value: projectdetails.floorarea
+        }, {
+          name: '主面积',
+          value: projectdetails.mainarea
+        }, {
+          name: '绿化情况',
+          value: projectdetails.greencoverage
+        }, {
+          name: '建筑规划',
+          value: projectdetails.panning
+        }, {
+          name: '咨询电话',
+          value: projectdetails.phone
+        }, {
+          name: '容积率',
+          value: projectdetails.plotratio
+        }, {
+          name: '预售许可证',
+          value: projectdetails.presalepermit
+        }, {
+          name: '楼盘地址',
+          value: projectdetails.projectaddr
+        }, {
+          name: '物业类别',
+          value: projectdetails.propertytype
+        })
       //筛选有值的详情项
       let _arr = []
       for (let i = 0; i < _projectInfo.length; i++) {
@@ -708,6 +716,27 @@ Page({
     }, (error) => {
       console.log(error)
     });
+  },
+  //查询围观列表
+  getOnLookersList(projectId) {
+    let param = {
+      projectId: projectId,
+      pageSize: 11,
+      pageNum: 0
+    }
+    $http(apiSetting.apiOnlookersList, param).then((data) => {
+     
+      if (data.code == 0) {
+        this.setData({
+          onlookersListImg: data.data.list,
+          onlookersListCount: data.data.viewCount
+        })
+      }
+    }, (error) => {
+      console.log(error)
+    })
+
+
   },
   // 查看更多户型，跳转到户型列表页
   goHousetype() {
@@ -904,8 +933,8 @@ Page({
   },
 
   //去推荐
-  goRecommend: util.throttle(function() {
-    debugger
+  goRecommend: util.throttle(function () {
+   
     this.setData({
       pageUrl: '../recommend/recommend?project_id=' + this.data.project_id,
       isClickAttention: false
@@ -1012,6 +1041,7 @@ Page({
   },
   //项目主图错误
   erroImage2(e) {
+   
     if (e.type == 'error') {
       this.data.imgUrls[e.target.dataset.index] = this.data.defaultImg
       this.setData({
@@ -1044,8 +1074,19 @@ Page({
     }
   },
 
+  //围观图片出错
+  errorBombScreen(e) {
+   
+    if (e.type == 'error') {
+      this.data.onlookersListImg[e.target.dataset.index].head_img = this.data.defaultImg
+      this.setData({
+        onlookersListImg: this.data.onlookersListImg
+      })
+    }
+  },
+
   //转发
-  onShareAppMessage: function(res) {
+  onShareAppMessage: function (res) {
     let project_id = this.data.project_id // 分享产品的project_id
     if (res.from === 'button') { // 来自页面内转发按钮
       console.log(res.target)
@@ -1059,7 +1100,7 @@ Page({
   // 下拉刷新
   onPullDownRefresh() {
     //禁止刷新
-    if(this.data.visible2){
+    if (this.data.visible2) {
       wx.stopPullDownRefresh()
       return
     }

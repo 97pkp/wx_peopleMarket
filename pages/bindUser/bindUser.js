@@ -2,6 +2,7 @@
 const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
+import validationUtils from '../../utils/validationUtils.js'
 const {
   $Message
 } = require('../../dist/base/index');
@@ -311,9 +312,13 @@ Page({
     })
     this.data.userInfo.phone = e.detail.value
   },
+  //身份证
   idnoBind(e) {
-    this.data.userInfo.idno = e.detail.value
+    this.data.userInfo.idno =e.detail.value
   },
+
+
+ 
   //跳转选择绑定页面
   cityBind(e) {
     if (this.data.isEdit) {
@@ -436,6 +441,17 @@ Page({
       if (this.data.userInfo.idno == "") {
         $Message({
           content: '请输入身份证号',
+          type: 'warning'
+        });
+        return
+      };
+   
+    }
+    if (this.data.userInfo.idno != ""){
+      let idnoVaidation = validationUtils.checkZhReplace(validationUtils.emojiReplace(this.data.userInfo.idno))
+      if (idnoVaidation=='') {
+        $Message({
+          content: '身份证号不能包含表情字符和中文',
           type: 'warning'
         });
         return

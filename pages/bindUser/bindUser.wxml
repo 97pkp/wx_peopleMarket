@@ -70,7 +70,7 @@
       <view class='item-box' style='border:0;'>
         <span class='title'>身份证号</span>
         <span class="inp">
-          <input placeholder-class="phcolor" type='idcard' value='{{userInfo.idno}}' placeholder="请输入身份证号" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
+          <input placeholder-class="phcolor" type='text' value='{{userInfo.idno}}' placeholder="请输入身份证号" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
         </span>
       </view>
     </li>
@@ -78,7 +78,7 @@
       <view class='item-box' style='border:0;'>
         <span class='title'>身份证号</span>
         <span class="inp">
-          <input placeholder-class="phcolor" type='idcard' value='{{userInfo.idno}}' placeholder="{{isEdit?'请输入身份证号(非必填)':'未绑定'}}" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
+          <input placeholder-class="phcolor" type='text' value='{{userInfo.idno}}' placeholder="{{isEdit?'请输入身份证号(非必填)':'未绑定'}}" disabled="{{!isEdit}}" maxlength='18' bindinput='idnoBind' />
         </span>
       </view>
     </li>
@@ -86,7 +86,7 @@
       <view class='item-box' style='border:0;'>
         <span class='title'>绑定城市</span>
         <span class="inp" bindtap='cityBind'>
-          <input placeholder-class="phcolor" type='idcard' value='{{userInfo.identyCityName}}' placeholder="{{isEdit?'请绑定城市(非必填)':'未绑定'}}" disabled="true" />
+          <input placeholder-class="phcolor" type='text' value='{{userInfo.identyCityName}}' placeholder="{{isEdit?'请绑定城市(非必填)':'未绑定'}}" disabled="true" />
         </span>
       </view>
     </li> 

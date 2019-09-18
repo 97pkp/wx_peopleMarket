@@ -1,0 +1,57 @@
+/* pages/onlookersList/onlookersList.wxss */
+@import '../../utils/icon.wxss';
+.onlookersList {
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 32rpx 0 80rpx;
+}
+
+.onlookers {
+  border: 0 solid #E5E5E5;
+  border-bottom: 0.5rpx solid #E5E5E5
+}
+
+.onlookers-view {
+  width: 100%;
+  overflow-x: hidden;
+  display: flex;
+  display: -webkit-flex;
+  margin: 20rpx 0 24rpx 0;
+}
+
+.onlookers-count {
+  display: inline-flex;
+  display: -webkit-inline-flex;
+  font-size: 31rpx;
+  color: #333333;
+  letter-spacing: middle;
+  flex:1;
+  align-items: center;
+}
+
+.onlookers-time {
+  width:auto;
+  display: flex;
+  display: -webkit-flex;
+  /* align-items: right; */
+  align-items: center;
+}
+
+.onlookers-name {
+  display: flex;
+  display: -webkit-flex;
+  margin-left: 22rpx;
+}
+
+.onlookers-image {
+  width: 90rpx;
+  height: 90rpx;
+  vertical-align: middle;
+  border: 0;
+  border-radius: 50%;
+}
+
+.onlookers-time-text {
+  text-align: right;
+  width: 100%;
+}

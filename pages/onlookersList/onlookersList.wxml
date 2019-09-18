@@ -1,0 +1,16 @@
+<!-- pages/onlookersList/onlookersList.wxml -->
+<view class="onlookersList container">
+    <scroll-view scroll-y="true"  style='height:{{scrollHeight}}px;' class="onlookersList-scroll"  bindscrolltolower="loadmore" scroll-top="{{scrollTop}}">
+        <view class="onlookers" wx:for="{{onlookersListImg}}" wx:key="{{index}}" wx:if="{{onlookersListImg.length}}">
+            <view class="onlookers-view">
+                <view class="onlookers-count ">
+                    <image class="onlookers-image" src="{{item.head_img==''?defaultImg:item.head_img}}"binderror='errorBombScreen' data-index='{{index}}'></image>
+                    <view class="onlookers-count onlookers-name">{{item.nick_name}}</view>
+                </view>
+                <view class="onlookers-count onlookers-time">
+                    <view class="onlookers-time-text">{{item.view_date}}</view>
+                </view>
+            </view>
+        </view>
+    </scroll-view>
+</view>

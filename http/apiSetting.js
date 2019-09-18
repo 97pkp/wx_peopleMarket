@@ -213,6 +213,17 @@ const serviceModule = {
     url: '/api/coupon/receivedList',
     method: 'post'
   },
+  //添加围观人数
+  apiAddOnlookers: {
+    url: '/user/addViewlog',
+    method: 'post'
+  },
+  // 围观人数列表
+  apiOnlookersList: {
+    url: '/user/queryViewlog',
+    method: 'post'
+  },
+
 }
 const ApiSetting = { ...serviceModule
 }
