@@ -14,7 +14,7 @@ Page({
     defaultImg: '../../images/defaultImg.png', //默认图才能相对路径
     scrollTop: 100,
     onlookersListImg: [],//获取最新数据
-    onlookersResult:'',//记录历史数据
+    onlookersResult:'',//记录数据总数
     scrollHeight: 0,
     pageSize: 10,
     pageNum: 0,
@@ -102,7 +102,8 @@ Page({
       mask: true,
     });
     $http(apiSetting.apiOnlookersList, param).then((data) => {
-      wx.hideLoading()
+      wx.hideLoading();
+
       if (data.code == 0 && data.data.list.length > 0) {
         this.stopLoadMoreTiem = false;
         let result = data.data.list,
@@ -112,13 +113,14 @@ Page({
           resultPush = {
             head_img: item.head_img,
             nick_name: item.nick_name,
-            view_date: util.getDateDiff(util.formatTime(new Date(item.view_date)))
+            view_date: util.getDateDiff(item.view_date)
           };
           results.push(resultPush)
         });
         let list = this.data.onlookersListImg.concat(results);
         this.setData({
-          onlookersListImg: list
+          onlookersListImg: list,
+          onlookersResult: data.data.viewCount
         })
       }
     }, (error) => {
@@ -128,7 +130,8 @@ Page({
   },
   //下拉加载更多
   loadmore() {
-    if (this.data.stopLoadMoreTiem) {
+    
+    if (this.data.stopLoadMoreTiem || this.data.onlookersResult == this.data.onlookersListImg.length) {
       return;
     }
     this.setData({
@@ -138,7 +141,7 @@ Page({
   },
   //图片出错
   errorBombScreen(e) {
-    debugger
+    
     if (e.type == 'error') {
       this.data.onlookersListImg[e.target.dataset.index].head_img = this.data.defaultImg
       this.setData({
