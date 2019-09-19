@@ -34,9 +34,9 @@ const serviceModule = {
     url: '/bombscreen/findBombScreenByCityId',
     method: 'post'
   },
-  
+
   //查询是否是游戏用户
-  userGetUserCity:{
+  userGetUserCity: {
     url: '/user/getUserCity',
     method: 'post'
   },
@@ -223,9 +223,14 @@ const serviceModule = {
     url: '/user/queryViewlog',
     method: 'post'
   },
-
+  // 扫二维码
+  bindUserCity: {
+    url: '/user/bindUserCity',
+    method: 'post'
+  },
 }
-const ApiSetting = { ...serviceModule
+const ApiSetting = {
+  ...serviceModule
 }
 
 export default ApiSetting

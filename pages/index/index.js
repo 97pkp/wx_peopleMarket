@@ -15,7 +15,7 @@ const wxMap = new QQMapWX({
 let ifChange; //全局变量，判断进入小程序加载的方式：登录加载/切换城市加载/返回跳转加载
 let _ifChange = false; //用于判断是否是游戏弹屏返回小游戏
 let loginGetUserInfo = false;   //用于判断是否是登录的时候获取授权
-
+let scanningOption="";//扫二维码得到的参数
 const {
   $Message
 } = require('../../dist/base/index');
@@ -160,6 +160,10 @@ Page({
         ifChange = 1
       }
     }
+    //扫二维码
+    if (option.q) {
+      scanningOption = option.q
+    }
 
     let that = this
     // wx.showLoading({
@@ -221,7 +225,11 @@ Page({
                 that.setData({
                   isPermit: true
                 })
-              }
+              };
+              if (scanningOption && app.globalData.openid){
+                
+                that.bindUserCity(scanningOption);
+               }
               app.globalData.userId = data.data.USERID
               that.getUserGetUserInfo(data.data.openid)
 
@@ -1851,6 +1859,20 @@ Page({
     }, (error) => {
       console.log(error)
     });
+  },
+  //扫二维码绑定
+  bindUserCity(scanningOption) {
+    let param = {
+      openId: app.globalData.openid,
+      url: scanningOption
+    };
+    $http(apiSetting.bindUserCity, param).then((data) => {
+      if (data.code==0) {
+        console.log("bindUserCity**" + data.code)
+      }
+    }, (error) => {
+      console.log("bindUserCity**" + error)
+    })
   },
   //滑动事件
   notouch() {

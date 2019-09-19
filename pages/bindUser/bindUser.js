@@ -2,7 +2,9 @@
 const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
+import util from '../../utils/util.js'
 import validationUtils from '../../utils/validationUtils.js'
+debugger
 const {
   $Message
 } = require('../../dist/base/index');
@@ -445,11 +447,17 @@ Page({
         });
         return
       };
-   
     }
+    //禁止输入表情
     if (this.data.userInfo.idno != ""){
-      let idnoVaidation = validationUtils.checkZhReplace(validationUtils.emojiReplace(this.data.userInfo.idno))
-      if (idnoVaidation=='') {
+      let idnoVaidation ="",idnoOne="",idnoTwo="";
+      idnoOne = validationUtils.emojiReplace(this.data.userInfo.idno).replace(/\s*/g, "");
+      console.log("idnoOne****" + idnoOne)
+      if (idnoOne){
+        idnoTwo = validationUtils.checkZhReplace(this.data.userInfo.idno).replace(/\s*/g, "");
+      };
+      console.log("idnoTwo****" + idnoTwo)
+      if (idnoOne == '' && idnoTwo=='') {
         $Message({
           content: '身份证号不能包含表情字符和中文',
           type: 'warning'
