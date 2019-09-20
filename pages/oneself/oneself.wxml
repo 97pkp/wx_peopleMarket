@@ -75,6 +75,6 @@
 </view>
 
 <!-- 绑定用户信息弹窗 -->
-<i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
+<i-modal visible="{{ showBindUserInfo }}" ok-text="完善信息" bind:ok="visibleOk" bind:cancel="visibleOkClose">
   <view class='showTitle'>请完善个人信息，方便为您提供更好的服务</view>
 </i-modal>

@@ -38,7 +38,7 @@
             <image src='../../images/godown.png'></image>
           </view>
           <span class="inp phone-inp">
-            <input class='phone-num' placeholder-class="phcolor" type='number' value='{{userInfo.phone}}' disabled='{{noteResult}}' maxlength='{{numberMaxLength}}' placeholder="请输入手机号" bindinput='phoneBind' />
+            <input class='phone-num' placeholder-class="phcolor" type='number' value='{{userInfo.phone}}'  disabled='{{!isEdit}}' maxlength='{{numberMaxLength}}' placeholder="请输入手机号" bindinput='phoneBind' />
           </span>
         </view>
         <div wx:if="{{isEdit}}">

@@ -79,11 +79,23 @@ Page({
   onLoad: function (options) {
     // console.log(app.globalData.bsindUserInfo)
     this.getProjectApiFindOtherDictValues();
-debugger
+    let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+    let  wxPhoneNumber="";
+    if (wxDetailUserInfo.wxPhoneNumber){
+      if (wxDetailUserInfo.wxPhoneNumber.length==11){
+        wxPhoneNumber = wxDetailUserInfo.wxPhoneNumber.substr(0, 3) + "****" + wxDetailUserInfo.wxPhoneNumber.substr(7);
+      } else if (wxDetailUserInfo.wxPhoneNumber.length == 8){
+        wxPhoneNumber = wxDetailUserInfo.wxPhoneNumber.substr(0, 2) + "****" + wxDetailUserInfo.wxPhoneNumber.substr(6);
+      }else{
+        wxPhoneNumber = wxDetailUserInfo.wxPhoneNumber.substr(0, 3) + "****" + wxDetailUserInfo.wxPhoneNumber.substr(7);
+      }
+    }
    this.setData({
+     "userInfo.phone": wxPhoneNumber,
+     "modalPhone": wxPhoneNumber,
      'userInfo.identyCityName': app.globalData.bindUserInfo.identyCityName
    });
-   debugger
+    this.data.userInfo.phone=wxDetailUserInfo.wxPhoneNumber
     if (app.globalData.isCheck) {
       // 经纪人账号
       this.data.userInfo.agencyAccount = app.globalData.bindUserInfo.agencyAccount
@@ -455,7 +467,7 @@ debugger
     }
     //禁止输入表情
     if (this.data.userInfo.idno != ""){
-      debugger
+      
       let idnoVaidation ="",idnoOne="",idnoTwo="";
       idnoOne = validationUtils.emojiReplace(this.data.userInfo.idno);
       if (idnoOne){

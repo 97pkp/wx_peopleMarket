@@ -71,5 +71,8 @@ page {
   border-radius: 4rpx;
   text-align: center;
 }
-
+.showTitle{
+  padding:30px;
+color:#333;
+}
 

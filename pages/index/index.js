@@ -152,7 +152,6 @@ Page({
   }, 500),
 
   onLoad: function(option) {
-    console.log("option*********" + option.q)
     if (option != undefined && JSON.stringify(option) != "{}") {
       ifChange = option.ifChange;
     } else {
@@ -162,7 +161,7 @@ Page({
     }
     //扫二维码
     
-    if (option.scene) {
+    if (option != undefined  && option.scene) {
       let scene = decodeURIComponent(option.scene);
       console.log("scene***************" + scene)
       scanningOption = scene;
