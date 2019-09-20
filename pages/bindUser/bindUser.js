@@ -4,7 +4,7 @@ import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import util from '../../utils/util.js'
 import validationUtils from '../../utils/validationUtils.js'
-debugger
+
 const {
   $Message
 } = require('../../dist/base/index');
@@ -78,7 +78,12 @@ Page({
    */
   onLoad: function (options) {
     // console.log(app.globalData.bsindUserInfo)
-    this.getProjectApiFindOtherDictValues()
+    this.getProjectApiFindOtherDictValues();
+debugger
+   this.setData({
+     'userInfo.identyCityName': app.globalData.bindUserInfo.identyCityName
+   });
+   debugger
     if (app.globalData.isCheck) {
       // 经纪人账号
       this.data.userInfo.agencyAccount = app.globalData.bindUserInfo.agencyAccount
@@ -422,13 +427,13 @@ Page({
     }
 
     // 短信是否验证通过
-    if (!this.data.noteResult) {
-      $Message({
-        content: '请进行短信验证',
-        type: 'warning'
-      });
-      return
-    }
+    // if (!this.data.noteResult) {
+    //   $Message({
+    //     content: '请进行短信验证',
+    //     type: 'warning'
+    //   });
+    //   return
+    // }
 
     // 是否选择经济人类型
     if (this.data.arrayIndex == null) {
@@ -450,14 +455,13 @@ Page({
     }
     //禁止输入表情
     if (this.data.userInfo.idno != ""){
+      debugger
       let idnoVaidation ="",idnoOne="",idnoTwo="";
-      idnoOne = validationUtils.emojiReplace(this.data.userInfo.idno).replace(/\s*/g, "");
-      console.log("idnoOne****" + idnoOne)
+      idnoOne = validationUtils.emojiReplace(this.data.userInfo.idno);
       if (idnoOne){
-        idnoTwo = validationUtils.checkZhReplace(this.data.userInfo.idno).replace(/\s*/g, "");
+        idnoTwo = validationUtils.checkZhReplace(idnoOne);
       };
-      console.log("idnoTwo****" + idnoTwo)
-      if (idnoOne == '' && idnoTwo=='') {
+      if (idnoOne || idnoTwo) {
         $Message({
           content: '身份证号不能包含表情字符和中文',
           type: 'warning'

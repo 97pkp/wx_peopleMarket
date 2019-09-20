@@ -339,7 +339,7 @@ Page({
     this.getClauseAndRule(); //获取免责条款
     this.isAttentionProject(); //判断是否关注项目
     this.getShowVideo(project_id); //获取展示视频
-    this.getOnLookersList(project_id)//查询围观列表
+    // this.getOnLookersList(project_id)//查询围观列表
   },
   //查询免责条款
   getClauseAndRule() {

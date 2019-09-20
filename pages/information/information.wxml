@@ -116,7 +116,7 @@
       </view>
     </view>
     <!-- 围观人数 -->
-    <view class='onlookers' wx:if="{{onlookersListImg}}">
+    <!-- <view class='onlookers' wx:if="{{onlookersListImg}}">
       <view class="onlookers-title">
         <view class="lookers-title">
           <image class="title-image" src="../../images/onlookersList.png"></image>
@@ -134,7 +134,7 @@
           </view>
         </view>
       </view>
-    </view>
+    </view> -->
     <!-- 楼盘亮点 -->
     <view class='hours-lightspot' wx:if='{{brightspotsList.length}}'>
       <text class='title'>楼盘亮点</text>
@@ -295,5 +295,5 @@
 </view>
 <!-- 绑定用户信息弹窗 -->
 <i-modal visible="{{ showBindUserInfo }}" ok-text="绑定用户" bind:ok="visibleOk" bind:cancel="visibleOkClose">
-  <view>暂无绑定用户信息</view>
+  <view class='showTitle'>请完善个人信息，方便为您提供更好的服务</view>
 </i-modal>

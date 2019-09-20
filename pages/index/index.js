@@ -14,8 +14,9 @@ const wxMap = new QQMapWX({
 });
 let ifChange; //全局变量，判断进入小程序加载的方式：登录加载/切换城市加载/返回跳转加载
 let _ifChange = false; //用于判断是否是游戏弹屏返回小游戏
-let loginGetUserInfo = false;   //用于判断是否是登录的时候获取授权
-let scanningOption="";//扫二维码得到的参数
+let loginGetUserInfo = false; //用于判断是否是登录的时候获取授权
+let scanningOption = ""; //扫二维码得到的参数
+let bindCityResult = "";
 const {
   $Message
 } = require('../../dist/base/index');
@@ -103,24 +104,23 @@ Page({
     })
   },
   //跳转详情页
-  goInformation: util.throttle(function (e) {
+  goInformation: util.throttle(function(e) {
     let project_id = e.currentTarget.dataset.project_id
-    let wxUserInfo = wx.getStorageSync('wxUserInfo');
+    // let wxUserInfo = wx.getStorageSync('wxUserInfo');
 
-    let param = {
-      openId: app.globalData.openid,
-      headImg: wxUserInfo.avatarUrl,
-      nickName: wxUserInfo.nickName,
-      projectId: project_id
-    }
-
-    $http(apiSetting.apiAddOnlookers, param).then((data) => {
-      if (data) {
-        console.log("围观人数保存成功")
-      }
-    }, (error) => {
-      console.log("围观人数保存失败")
-    })
+    // let param = {
+    //   openId: app.globalData.openid,
+    //   headImg: wxUserInfo.avatarUrl,
+    //   nickName: wxUserInfo.nickName,
+    //   projectId: project_id
+    // }
+    // $http(apiSetting.apiAddOnlookers, param).then((data) => {
+    //   if (data) {
+    //     console.log("围观人数保存成功")
+    //   }
+    // }, (error) => {
+    //   console.log("围观人数保存失败")
+    // })
     this.setData({
       pageUrl: '../information/information?project_id=' + project_id,
       isBuildClick: true
@@ -130,7 +130,7 @@ Page({
   }, 500),
 
   //跳转新闻活动列表页
-  goNewsActivityList: util.throttle(function (e) {
+  goNewsActivityList: util.throttle(function(e) {
     this.setData({
       pageUrl: e.currentTarget.dataset.url,
       isNewsClick: true
@@ -140,7 +140,7 @@ Page({
   }, 500),
 
   //新闻活动直接跳转详情页
-  goNewsActivityInfo: util.throttle(function () {
+  goNewsActivityInfo: util.throttle(function() {
     let newsList = this.data.newsList
     let newsCurrent = this.data.newsCurrent
     this.setData({
@@ -151,7 +151,7 @@ Page({
     this.Users()
   }, 500),
 
-  onLoad: function (option) {
+  onLoad: function(option) {
     console.log("option*********" + option.q)
     if (option != undefined && JSON.stringify(option) != "{}") {
       ifChange = option.ifChange;
@@ -161,8 +161,13 @@ Page({
       }
     }
     //扫二维码
-    if (option.q) {
-      scanningOption = option.q
+    
+    if (option.scene) {
+      let scene = decodeURIComponent(option.scene);
+      console.log("scene***************" + scene)
+      scanningOption = scene;
+    } else {
+      scanningOption = "";
     }
 
     let that = this
@@ -208,6 +213,7 @@ Page({
             promise.positionCity = cityPromise.positionCity
             // promise.iv = rest.iv
             // promise.encryptedData = rest.encryptedData
+
             $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
               console.log('openid:' + data.data.openid)
               console.log('status:' + data.data.status)
@@ -226,10 +232,10 @@ Page({
                   isPermit: true
                 })
               };
-              if (scanningOption && app.globalData.openid){
-                
+              if (scanningOption && app.globalData.openid) {
+
                 that.bindUserCity(scanningOption);
-               }
+              }
               app.globalData.userId = data.data.USERID
               that.getUserGetUserInfo(data.data.openid)
 
@@ -238,7 +244,7 @@ Page({
                 let promise = {
                   unionid: app.globalData.unionId
                   // unionid:'oygNC1U6jeX_1--7LPtEJEmfTDcg'
-                }
+                };
                 $http(apiSetting.userGetUserCity, promise).then((data) => {
                   if (data.status && data.status == 404) {
                     that.accreditOperate()
@@ -247,7 +253,7 @@ Page({
                   let city = data.data.currentCity
                   if (city == "未知") {
                     city = ""
-                  }
+                  };
                   if (city) {
                     app.globalData.gameUserCity = city
                   }
@@ -270,7 +276,7 @@ Page({
       }
     })
   },
-  onShow: function () {
+  onShow: function() {
 
     // if (this.data.showBgpack) {
     //   return
@@ -329,6 +335,7 @@ Page({
         city = ""
       }
       if (city) {
+
         that.getCityList(city)
       } else {
         that.getNowAddress()
@@ -362,7 +369,12 @@ Page({
                 that.getMapLocation();
               },
               fail(res) { //不同意位置权限授权
-                that.getCityList()
+
+                if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
+                  that.getCityList(bindCityResult)
+                } else {
+                  that.getCityList()
+                }
               }
             })
           } else { //位置权限已经授权
@@ -381,7 +393,7 @@ Page({
     let that = this
     wx.getLocation({
       type: 'wgs84',
-      success: function (res) {
+      success: function(res) {
         that.data.cityInfo.latitude = res.latitude.toString()
         that.data.cityInfo.longitude = res.longitude.toString()
         //经纬度逆解析获取城市名
@@ -390,27 +402,38 @@ Page({
             latitude: that.data.cityInfo.latitude,
             longitude: that.data.cityInfo.longitude
           },
-          success: function (res) {
+          success: function(res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
 
             _storage.positionCity = city.city
             _storage.currentCity = city.city
             wx.setStorageSync('cityPromise', _storage)
+
             //传入城市，判断是否有城市字典
             that.getCityList(city.city)
             // that.getCityFindBuildInfoByCity()
           },
-          fail: function (res) {
+          fail: function(res) {
             // that.getCityFindBuildInfoByCity()
-            that.getCityList()
+
+            if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
+              that.getCityList(bindCityResult)
+            } else {
+              that.getCityList()
+            }
           }
         })
       },
-      fail: function (res) {
-        that.getCityList()
+      fail: function(res) {
+
+        if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
+          that.getCityList(bindCityResult)
+        } else {
+          that.getCityList()
+        }
       },
-      complete: function (res) {
+      complete: function(res) {
 
       }
     })
@@ -419,12 +442,11 @@ Page({
   getCityList(city) {
     let that = this
     let promise = {}
-    let cityPromise = wx.getStorageSync("cityPromise") || {}
-
-    promise.currentCity = cityPromise.currentCity
+    let cityPromise = wx.getStorageSync("cityPromise") || {};
     promise.positionCity = cityPromise.positionCity
     promise.loginby = app.globalData.userId
     $http(apiSetting.cityFindCityItems, promise).then((data) => {
+
       let cityList = data.data
       // 如果游戏用户绑定过城市，且在城市列表可以找到，则把当前绑定城市作为默认城市
       if (app.globalData.gameUserCity) {
@@ -483,7 +505,8 @@ Page({
       }
       if (that.data.cityInfo) {
 
-        let result = [], results = {};
+        let result = [],
+          results = {};
         cityList.map((preItem, index) => {
           if (preItem.city.indexOf('北京') != -1) {
             results = {
@@ -503,6 +526,7 @@ Page({
         let _storage = wx.getStorageSync('cityPromise') || {}
 
         _storage.currentCity = cityList[0].city
+
         wx.setStorageSync('cityPromise', _storage)
       }
       that.findBombScreenByCityId()
@@ -575,6 +599,7 @@ Page({
                     app.globalData.storLocalCity = cityList[i]
                     let _storage = wx.getStorageSync('cityPromise') || {}
                     _storage.currentCity = cityList[i].city
+
                     wx.setStorageSync('cityPromise', _storage)
 
                     that.findBombScreenByCityId()
@@ -595,6 +620,7 @@ Page({
               app.globalData.storLocalCity = cityList[i]
               let _storage = wx.getStorageSync('cityPromise') || {}
               _storage.currentCity = cityList[i].city
+
               wx.setStorageSync('cityPromise', _storage)
 
               that.findBombScreenByCityId()
@@ -615,6 +641,7 @@ Page({
         let _storage = wx.getStorageSync('cityPromise') || {}
 
         _storage.currentCity = cityList[0].city
+
         wx.setStorageSync('cityPromise', _storage)
       }
       that.findBombScreenByCityId()
@@ -631,7 +658,7 @@ Page({
     let that = this
     wx.getLocation({
       type: 'wgs84',
-      success: function (res) {
+      success: function(res) {
         that.data.cityInfo.latitude = res.latitude.toString()
         that.data.cityInfo.longitude = res.longitude.toString()
         //经纬度逆解析获取城市名
@@ -640,13 +667,18 @@ Page({
             latitude: that.data.cityInfo.latitude,
             longitude: that.data.cityInfo.longitude
           },
-          success: function (res) {
+          success: function(res) {
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
             _storage.positionCity = city.city
             wx.setStorageSync('cityPromise', _storage)
             if (city.city != _storage.positionCity || city.city != _storage.currentCity) {
-              that.getSessionCityList(city.city)
+
+              if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
+                that.getCityList(bindCityResult)
+              } else {
+                that.getSessionCityList(city.city)
+              }
             } else {
               that.findBombScreenByCityId()
               that.getNewsActivity()
@@ -657,17 +689,27 @@ Page({
             // that.getCityList(city.city)
             // that.getCityFindBuildInfoByCity()
           },
-          fail: function (res) {
+          fail: function(res) {
             // that.getCityFindBuildInfoByCity()
-            that.getCityList()
+
+            if (scanningOption && ifChange != 3 && ifChange != 2 && !_ifChange) {
+              that.getCityList(bindCityResult)
+            } else {
+              that.getCityList()
+            }
           }
         })
       },
-      fail: function (res) {
+      fail: function(res) {
         if (ifChange == 3) {
           _ifChange = true
         }
-        that.getCityList()
+
+        if (scanningOption && ifChange != 3 && ifChange != 2 && !_ifChange) {
+          that.getCityList(bindCityResult)
+        } else {
+          that.getCityList()
+        }
       }
     })
   },
@@ -1317,7 +1359,7 @@ Page({
   },
 
   //点击弹屏进入详情页
-  goScreenInfo: util.throttle(function () {
+  goScreenInfo: util.throttle(function() {
     let that = this
     // type: 0：新闻，1：活动，2：项目，3：外链接，4：城市
     let bombScreen = this.data.bombScreen
@@ -1332,7 +1374,7 @@ Page({
         title: '活动已结束',
         showCancel: false,
         confirmText: "关闭",
-        success: function () {
+        success: function() {
           that.setData({
             bombScreen: '',
             isHavePopupView: false
@@ -1381,6 +1423,7 @@ Page({
               app.globalData.storLocalCity = cityList[i]
               let _storage = wx.getStorageSync('cityPromise') || {}
               _storage.currentCity = cityList[i].city
+
               wx.setStorageSync('cityPromise', _storage)
             }
             this.setData({
@@ -1483,7 +1526,7 @@ Page({
     }
   },
   //查看轮播图详情
-  lookBannerInfo: util.throttle(function (e) {
+  lookBannerInfo: util.throttle(function(e) {
     if (this.data.isBannerClick) return
     let bannerItem = e.target.dataset.item
     if (bannerItem.type === undefined || bannerItem.type == 2) return
@@ -1511,7 +1554,7 @@ Page({
   },
 
   // 页面跳转
-  pageTobind: util.throttle(function (e) {
+  pageTobind: util.throttle(function(e) {
     this.setData({
       pageUrl: e.target.dataset.url,
     })
@@ -1576,7 +1619,7 @@ Page({
     // 判断是否翻页
     if (this.data.rimBuildPage.isPage) {
       this.data.rimBuildPage.page++
-      this.getRimBuildInfo()
+        this.getRimBuildInfo()
     }
   },
 
@@ -1665,10 +1708,14 @@ Page({
 
     })
     if (loginGetUserInfo) {
-      this.setData({ showPhonepack: false })
+      this.setData({
+        showPhonepack: false
+      })
       this.onLoad()
     } else {
-      this.setData({ showPhonepack: true })
+      this.setData({
+        showPhonepack: true
+      })
     }
     this.getLocation()
   },
@@ -1867,7 +1914,8 @@ Page({
       url: scanningOption
     };
     $http(apiSetting.bindUserCity, param).then((data) => {
-      if (data.code==0) {
+      if (data.code == 0) {
+        bindCityResult = data.data.name
         console.log("bindUserCity**" + data.code)
       }
     }, (error) => {
