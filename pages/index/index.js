@@ -232,12 +232,10 @@ Page({
                 })
               };
               if (scanningOption && app.globalData.openid) {
-
                 that.bindUserCity(scanningOption);
               }
               app.globalData.userId = data.data.USERID
               that.getUserGetUserInfo(data.data.openid)
-
               if (ifChange == undefined) {
 
                 let promise = {
@@ -345,13 +343,17 @@ Page({
 
   // 位置授权操作
   accreditOperate() {
+    console.log("进入位置授权accreditOperate")
     let that = this;
     // 判断本地是否有数据
     if (app.globalData.storLocalCity && ifChange === undefined) {
+      console.log("位置授权操作**+getNowAddress")
+      
       that.getNowAddress()
       // that.data.cityInfo.cityName = app.globalData.storLocalCity.city
       // that.getCityFindBuildInfoByCity()
     } else if (app.globalData.storLocalCity && ifChange == '1') {
+      
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
       that.findBombScreenByCityId()
       that.getNewsActivity()
@@ -365,13 +367,16 @@ Page({
             wx.authorize({
               scope: 'scope.userLocation',
               success(res) { //同意位置权限授权
+                console.log("同意位置权限授权")
                 that.getMapLocation();
               },
               fail(res) { //不同意位置权限授权
-
+                console.log("不同意位置权限授权")
                 if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
+                  console.log("不同意位置权限授权++getCityList(bindCityResult)" + bindCityResult)
                   that.getCityList(bindCityResult)
                 } else {
+                  console.log("不同意位置权限授权++getCityList")
                   that.getCityList()
                 }
               }
@@ -410,6 +415,7 @@ Page({
             wx.setStorageSync('cityPromise', _storage)
 
             //传入城市，判断是否有城市字典
+            console.log("传入城市，判断是否有城市字典****" + city.city)
             that.getCityList(city.city)
             // that.getCityFindBuildInfoByCity()
           },
@@ -417,8 +423,10 @@ Page({
             // that.getCityFindBuildInfoByCity()
 
             if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
+              console.log("传入城市getCityList**bindCityResult**" + bindCityResult)
               that.getCityList(bindCityResult)
             } else {
+              console.log("传入城市getCityList****")
               that.getCityList()
             }
           }
@@ -453,6 +461,7 @@ Page({
           if (app.globalData.gameUserCity.indexOf(cityList[i].city) != -1) {
             wx.setStorageSync('storLocalCity', cityList[i])
             app.globalData.storLocalCity = cityList[i]
+            
             // 查询城市参数
             that.setData({
               'cityInfo.latitude': '',
@@ -474,7 +483,9 @@ Page({
         for (let i = 0; i < cityList.length; i++) {
           if (city.indexOf(cityList[i].city) !== -1) {
             wx.setStorageSync('storLocalCity', cityList[i])
+            
             app.globalData.storLocalCity = cityList[i]
+            
             // 查询城市参数
             that.setData({
               'cityInfo.latitude': '',
@@ -499,6 +510,8 @@ Page({
       }
 
       if (ifChange == 3 && !_ifChange) {
+        console.log("获取城市列表信息+getNowAddress**" + ifChange)
+        
         that.getNowAddress(ifChange)
         return
       }
@@ -517,9 +530,11 @@ Page({
           }
         })
         wx.setStorageSync('cityonly', result)
+        
         that.setData({
           'cityInfo.cityName': cityList[0].city
         })
+        
         wx.setStorageSync('storLocalCity', cityList[0])
         app.globalData.storLocalCity = cityList[0]
         let _storage = wx.getStorageSync('cityPromise') || {}
@@ -539,6 +554,7 @@ Page({
 
   //获取缓存判断是否有该字段
   getSessionCityList(city) {
+    console.log("进入获取缓存判断是否有该字段+++" + city)
     let that = this
     let promise = {}
     let cityPromise = wx.getStorageSync("cityPromise") || {}
@@ -584,6 +600,7 @@ Page({
                     })
 
                     let boomScreen_ids = app.globalData.boomScreen_ids
+                   
                     let storLocalCity = app.globalData.storLocalCity
                     for (let i = 0; i < boomScreen_ids.length; i++) {
                       if (storLocalCity.id == boomScreen_ids[i].boomScreen_history_id) {
@@ -592,6 +609,7 @@ Page({
                     }
                     app.globalData.boomScreen_ids = boomScreen_ids
                     wx.setStorageSync('storLocalCity', cityList[i])
+                    
                     that.setData({
                       'cityInfo.cityName': cityList[i].city
                     })
@@ -612,7 +630,9 @@ Page({
               })
               ifChange = undefined
             } else {
+            
               wx.setStorageSync('storLocalCity', cityList[i])
+              
               that.setData({
                 'cityInfo.cityName': cityList[i].city
               })
@@ -631,7 +651,8 @@ Page({
           }
         }
       }
-      if (that.data.cityInfo.cityName) {
+      
+      if (that.data.cityInfo) {
         that.setData({
           'cityInfo.cityName': cityList[0].city
         })
@@ -674,8 +695,10 @@ Page({
             if (city.city != _storage.positionCity || city.city != _storage.currentCity) {
 
               if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
+                
                 that.getCityList(bindCityResult)
               } else {
+                console.log("getSessionCityList**经纬度逆解析获取城市名***" + city.city)
                 that.getSessionCityList(city.city)
               }
             } else {
@@ -715,6 +738,7 @@ Page({
 
   getCitySessionFindBuildInfoByCity() {
     let that = this
+    
     that.setData({
       'cityInfo.cityName': '',
       'cityInfo.latitude': '',
@@ -1412,6 +1436,7 @@ Page({
         for (let i = 0; i < cityList.length; i++) {
           if (cityList[i].id == bombScreen.affiliation_cityareaid) {
             app.globalData.storLocalCity = cityList[i]
+            
             if (this.data.cityInfo.cityName) {
               this.setData({
                 'cityInfo.cityName': cityList[i].city,

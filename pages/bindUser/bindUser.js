@@ -439,13 +439,13 @@ Page({
     }
 
     // 短信是否验证通过
-    // if (!this.data.noteResult) {
-    //   $Message({
-    //     content: '请进行短信验证',
-    //     type: 'warning'
-    //   });
-    //   return
-    // }
+    if (!this.data.noteResult) {
+      $Message({
+        content: '请进行短信验证',
+        type: 'warning'
+      });
+      return
+    }
 
     // 是否选择经济人类型
     if (this.data.arrayIndex == null) {
@@ -470,9 +470,8 @@ Page({
       
       let idnoVaidation ="",idnoOne="",idnoTwo="";
       idnoOne = validationUtils.emojiReplace(this.data.userInfo.idno);
-      if (idnoOne){
-        idnoTwo = validationUtils.checkZhReplace(idnoOne);
-      };
+
+      idnoTwo = validationUtils.checkZhReplace(this.data.userInfo.idno);
       if (idnoOne || idnoTwo) {
         $Message({
           content: '身份证号不能包含表情字符和中文',
@@ -482,15 +481,15 @@ Page({
       }
     }
 
-    if (this.data.arrayIndex == 2) {
-      if (this.data.userInfo.showAgencyAccount == "") {
-        $Message({
-          content: '请正确填写渠道验证码',
-          type: 'warning'
-        });
-        return
-      }
-    }
+    // if (this.data.arrayIndex == 2) {
+    //   if (this.data.userInfo.showAgencyAccount == "") {
+    //     $Message({
+    //       content: '请正确填写渠道验证码',
+    //       type: 'warning'
+    //     });
+    //     return
+    //   }
+    // }
     // if (this.data.userInfo.idno) {
     //   let idno = this.data.userInfo.idno
     //   if (idno.length !== 15 && idno.length !== 18) {
