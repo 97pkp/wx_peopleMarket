@@ -248,7 +248,7 @@ swiper .main-img {
 
 .info .address .title2 {
   display: block;
-  width: 402rpx;
+  width: 400rpx;
   height: 100%;
   font-size: 28rpx;
   font-family: 'PingFang-SC-Regular';
@@ -261,11 +261,12 @@ swiper .main-img {
 
 .info .address>view view {
   display: flex;
+  display: -webkit-flex;
   align-items: center;
   color: #8d91a2;
   font-size: 24rpx;
   font-family: 'PingFang-SC-Medium';
-  margin-right: 7rpx;
+  /* margin-right: 7rpx; */
 }
 
 .info .address view image {
@@ -369,7 +370,7 @@ swiper .main-img {
 }
 
 .info .hours-type .bottom-list .type text:nth-of-type(2) {
-  min-width: 250rpx;
+  min-width: 187rpx;
   font-size: 28rpx;
   color: #333;
   /* float: left; */

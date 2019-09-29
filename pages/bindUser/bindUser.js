@@ -260,6 +260,17 @@ Page({
             isnote: false,
             noteCodeVisible: true
           })
+        } else if (data.code == '-2') {
+          $Message({
+            content: '验证码超过时间，请重新获取验证码',
+            type: 'warning'
+          });
+          that.noteCodeModalClose();
+        } else if (data.code == '-10') {
+          $Message({
+            content: '请在130秒后重新获取验证码',
+            type: 'warning'
+          });
         } else {
           $Message({
             content: data.message,
@@ -300,9 +311,15 @@ Page({
           noteCodeVisible: false,
           noteResult: true
         })
-      } else {
-
-      }
+      } else if (data.code =='-2'){
+          $Message({
+            content: '验证码超过时间，请重新获取验证码',
+            type: 'warning'
+          });
+          that.noteCodeModalClose();
+      }else{
+    
+        }
     })
   },
 
@@ -324,6 +341,12 @@ Page({
 
   myNameBind(e) {
     this.data.userInfo.myName = e.detail.value
+  },
+  phoneFocus(e){
+    debugger
+    this.setData({
+      "userInfo.phone": this.data.userInfo.phone
+    })
   },
   phoneBind(e) {
     this.setData({

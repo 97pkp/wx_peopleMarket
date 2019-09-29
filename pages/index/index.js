@@ -1157,7 +1157,12 @@ Page({
       let _arr1 = this.data._imgList
       for (let i = 0; i < _arr1.length; i++) {
         if (_arr1[i] !== null && _arr1[i] !== undefined) {
-          _arr1[i].upload_file_path = this.data.imgpath + _arr1[i].upload_file_path
+          if (_arr1[i].upload_file_path.indexOf("https") >= 0 || _arr1[i].upload_file_path.indexOf("http") >= 0){
+            _arr1[i].upload_file_path = _arr1[i].upload_file_path
+          }else{
+            _arr1[i].upload_file_path = this.data.imgpath + _arr1[i].upload_file_path
+          }
+         
         } else {
           _arr1[i] = {
             upload_file_path: this.data.imgpath
