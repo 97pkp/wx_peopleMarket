@@ -160,6 +160,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    debugger
     if (!this.data.isnote) {
       let diff = Math.round(new Date().getTime() / 1000) - this.data.onHideTime
       this.data.downTime = this.data.downTime - diff
@@ -178,6 +179,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
+    debugger
     this.data.onHideTime = Math.round(new Date().getTime() / 1000)
   },
 
@@ -243,10 +245,13 @@ Page({
         wx.hideLoading()
         if (data.code == 0) {
           // 开启计时器
+          wx.setStorageSync("downTimeInterval", new Date().valueOf())
+          
           that.data.setInter = setInterval(function () {
             that.data.downTime = that.data.downTime - 1
             if (that.data.downTime <= 0) {
               that.endSetInter()
+              wx.setStorageSync("downTimeInterval","")
               that.setData({
                 isnote: true,
                 downTime: 180
@@ -255,11 +260,14 @@ Page({
             that.setData({
               downTime: that.data.downTime
             })
+            
           }, 1000)
+          
           that.setData({
             isnote: false,
             noteCodeVisible: true
           })
+          
         } else if (data.code == '-2') {
           $Message({
             content: '验证码超过时间，请重新获取验证码',
@@ -267,10 +275,21 @@ Page({
           });
           that.noteCodeModalClose();
         } else if (data.code == '-10') {
-          $Message({
-            content: '请在130秒后重新获取验证码',
-            type: 'warning'
-          });
+          let downTimeInterval= wx.getStorageSync("downTimeInterval");
+          let newDateTime = new Date().valueOf();
+          let timeInterval = 180- parseInt((newDateTime - downTimeInterval) / 1000) ;
+          if (downTimeInterval != "" && timeInterval>0){
+            $Message({
+              content: '请在' + timeInterval + '秒后重新获取验证码',
+              type: 'warning'
+            });
+          }else{
+            $Message({
+              content: '请在130秒后重新获取验证码',
+              type: 'warning'
+            });
+          }
+        
         } else {
           $Message({
             content: data.message,
@@ -343,7 +362,6 @@ Page({
     this.data.userInfo.myName = e.detail.value
   },
   phoneFocus(e){
-    debugger
     this.setData({
       "userInfo.phone": this.data.userInfo.phone
     })
@@ -536,21 +554,52 @@ Page({
 
     let that = this
     let promise = this.data.userInfo
+    
     if (this.data.userInfo.sex != "男" && this.data.userInfo.sex != "女") {
       promise.sex = '未知'
     }
-    wx.showLoading()
-    $http(apiSetting.userIdentifyUser, promise).then((data) => {
-      if (data.code == 0) {
-        that.getUserGetUserInfo(app.globalData.openid)
-      } else {
-        $Message({
-          content: data.message,
-          type: 'error'
-        });
-        wx.hideLoading()
-      }
-    })
+    wx.showLoading();
+    
+    if (promise.wxid == "" || promise.wxid == null) {
+      
+      wx.login({
+        success: res => {
+          let promise1 = {
+            code: res.code
+          }
+          $http(apiSetting.userDecodeUserInfo, promise1).then((data) => {
+            promise.wxid = data.data.openid;
+
+            $http(apiSetting.userIdentifyUser, promise).then((data) => {
+              if (data.code == 0) {
+                that.getUserGetUserInfo(app.globalData.openid)
+              } else {
+                $Message({
+                  content: data.message,
+                  type: 'error'
+                });
+                wx.hideLoading()
+              }
+            })
+          }, (error) => {
+            console.log(error)
+          });
+        }
+      })
+    }else{
+      $http(apiSetting.userIdentifyUser, promise).then((data) => {
+        if (data.code == 0) {
+          that.getUserGetUserInfo(app.globalData.openid)
+        } else {
+          $Message({
+            content: data.message,
+            type: 'error'
+          });
+          wx.hideLoading()
+        }
+      })
+    }
+
   },
 
 

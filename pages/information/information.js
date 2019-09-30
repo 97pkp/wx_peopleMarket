@@ -950,7 +950,7 @@ Page({
 
 
   //点击导航，判断授权
-  pageToMap(e) {
+  pageToMap: util.throttle(function (e) {
     let that = this
     wx.getSetting({
       success(res) {
@@ -969,7 +969,7 @@ Page({
         }
       }
     })
-  },
+  }, 1500),
   //打开内置地图
   openMapInWx(type) {
     let that = this

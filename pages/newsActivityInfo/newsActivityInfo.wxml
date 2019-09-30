@@ -5,6 +5,7 @@
 <view class='news-date news-atv-date' wx:if='{{type==0}}'>{{newsAtvInfo.published_date}}</view>
 <!-- <view class='atv-date news-atv-date' wx:if='{{type==1}}'>{{newsAtvInfo.start_date}} 至 {{newsAtvInfo.end_date}}</view> -->
 <view class='news-body'>
+
   <template is="wxParse" data="{{wxParseData:article.nodes}}"/>
 </view>
 

@@ -142,11 +142,13 @@ Page({
           }
         }
       }
+      
       this.setData({
         newsAtvInfo: newsAtvItem,
         settingsEnroll: newsAtvItem.settings_enroll
       })
       let article = newsAtvItem.content
+      
       WxParse.wxParse('article', 'html', article, this, 5);
       wx.hideLoading()
     }, (error) => {

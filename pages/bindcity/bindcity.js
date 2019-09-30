@@ -119,7 +119,6 @@ Page({
 
   // 页面跳转
   pageTobind() {
-    debugger
     let _this = this;
     app.globalData.bindCity = {
       City: _this.data.localCity

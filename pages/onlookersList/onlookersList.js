@@ -110,7 +110,6 @@ Page({
           results = [], resultPush = "";
         
         result.map((item, index) => {
-          debugger
           resultPush = {
             head_img: item.head_img,
             nick_name: item.nick_name,

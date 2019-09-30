@@ -73,3 +73,6 @@ image{
 .signUp .sign-up-date{
   margin-bottom: 32rpx;
 }
+.ql-align-center{
+  text-align: center;
+}

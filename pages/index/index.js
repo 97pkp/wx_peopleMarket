@@ -399,7 +399,8 @@ Page({
       type: 'wgs84',
       success: function(res) {
         that.data.cityInfo.latitude = res.latitude.toString()
-        that.data.cityInfo.longitude = res.longitude.toString()
+        that.data.cityInfo.longitude = res.longitude.toString();
+        console.log("获取位置***" + that.data.cityInfo.longitude + "获取位置时间"+ new Date());
         //经纬度逆解析获取城市名
         wxMap.reverseGeocoder({
           location: {
@@ -407,6 +408,7 @@ Page({
             longitude: that.data.cityInfo.longitude
           },
           success: function(res) {
+            console.log("经纬度逆解析获取城市名****" + new Date())
             let city = res.result.address_component
             let _storage = wx.getStorageSync('cityPromise') || {}
 
@@ -421,7 +423,7 @@ Page({
           },
           fail: function(res) {
             // that.getCityFindBuildInfoByCity()
-
+            console.log("经纬度逆解析获取城市名****" + new Date())
             if (scanningOption && ifChange != 3 && ifChange == undefined && ifChange != 2 && !_ifChange) {
               console.log("传入城市getCityList**bindCityResult**" + bindCityResult)
               that.getCityList(bindCityResult)
@@ -1656,19 +1658,18 @@ Page({
   Users() {
     let that = this
     //检查用户信息授权
-
     wx.getSetting({
       success(res) {
-
         if (!res.authSetting['scope.userInfo']) {
           that.setData({
             showBgpack: true,
           })
         } else {
-
           //获取缓存信息验证手机号授权
-          let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+          let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {};
+          console.log("获取缓存信息验证手机号授权+wxDetailUserInfo *****" + JSON.stringify(wxDetailUserInfo))
           if (JSON.stringify(wxDetailUserInfo) !== "{}") {
+            console.log("获取缓存信息验证手机号授权+wxDetailUserInfo.wxPhoneNumber ***" + wxDetailUserInfo.wxPhoneNumber);
             if (wxDetailUserInfo.wxPhoneNumber && wxDetailUserInfo.wxPhoneNumber != '') {
               that.setData({
                 showPhonepack: false
@@ -1705,11 +1706,13 @@ Page({
                 }
               }
             } else {
+              
               that.setData({
                 showPhonepack: true
               })
             }
           } else {
+            
             that.setData({
               showPhonepack: true
             })
@@ -1728,20 +1731,24 @@ Page({
 
     wx.setStorageSync('wxUserInfo', e.detail.userInfo)
     this.userUpdata()
-
+    
     this.setData({
       showBgpack: false,
 
-      showPhonepack: true,
+      // showPhonepack: true,
       // showPhonepack: false,
 
     })
-    if (loginGetUserInfo) {
+      let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
+    console.log("loginGetUserInfo +1744***" + wxDetailUserInfo)
+    // if (loginGetUserInfo) {
+    if (wxDetailUserInfo.wxPhoneNumber) {
       this.setData({
         showPhonepack: false
       })
       this.onLoad()
     } else {
+      
       this.setData({
         showPhonepack: true
       })
@@ -1803,6 +1810,7 @@ Page({
     that.setData({
       showPhonepack: false
     })
+    console.log("获取手机号+ e.detail.errMsg***" + e.detail.errMsg)
     if (e.detail.errMsg == 'getPhoneNumber:ok') {
       let promise = {
         encryptedData: e.detail.encryptedData,
@@ -1814,7 +1822,8 @@ Page({
       $http(apiSetting.userGetWxPhone, promise).then((data) => {
         let phoneData = JSON.parse(data.data)
         let wxDetailUserInfo = wx.getStorageSync("wxDetailUserInfo") || {}
-        wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber
+        wxDetailUserInfo.wxPhoneNumber = phoneData.phoneNumber;
+        console.log("获取手机号+ phoneData.phoneNumber***" + phoneData.phoneNumber)
         wx.setStorageSync('wxDetailUserInfo', wxDetailUserInfo)
         that.userUpdata()
         if (that.data.isBuildClick || that.data.isNewsClick || that.data.isBannerClick) {
@@ -1850,6 +1859,7 @@ Page({
         console.log(error)
       });
     } else {
+      
       that.setData({
         showPhonepack: true
       })
