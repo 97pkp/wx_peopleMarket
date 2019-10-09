@@ -96,7 +96,7 @@
   <!-- 楼盘详情 -->
   <view wx:if="{{buildinfolist.length}}" class='hours-list {{buildinfolist.length===index+1?"last-hourse-list":"hours-list"}}' bindtap='goInformation' data-project_id='{{item.projectid_id}}' data-imgurl='{{item.pictureurl}}' wx:for='{{buildinfolist}}' wx:key='index'>
     <view class='img'>
-      <image mode="aspectFill" src='{{item.pictureurl==""?defaultImg:item.pictureurl}}' binderror="erroImage3" data-index='{{index}}'></image>
+      <image mode="aspectFill" lazy-load="{{true}}"  src='{{item.pictureurl==""?defaultImg:item.pictureurl}}' binderror="erroImage3" data-index='{{index}}'></image>
     </view>
     <!-- <view class='img-icon-type' wx:if='{{item.issale !="" && item.issale != undefined}}'>
       <block wx:if="{{item.issale=='热销'}}" >

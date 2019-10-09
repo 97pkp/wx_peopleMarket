@@ -160,7 +160,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    debugger
     if (!this.data.isnote) {
       let diff = Math.round(new Date().getTime() / 1000) - this.data.onHideTime
       this.data.downTime = this.data.downTime - diff
@@ -179,7 +178,6 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    debugger
     this.data.onHideTime = Math.round(new Date().getTime() / 1000)
   },
 
@@ -211,7 +209,33 @@ Page({
         content: '请输入手机号',
         type: 'warning'
       });
-      return
+      return false
+    };
+    let mobilePhone = this.data.userInfo.phone.replace(/\s/g, "")
+    if (this.data.mobileFlag =='+86'){//大陆
+      if (mobilePhone.length!=11){
+        $Message({
+          content: '请输入正确的手机号码',
+          type: 'warning'
+        });
+        return  false
+      }
+    } else if (this.data.mobileFlag == '+852' || this.data.mobileFlag == '+853') {//香港//澳门
+      if (mobilePhone.length != 8) {
+        $Message({
+          content: '请输入正确的手机号码',
+          type: 'warning'
+        });
+        return false
+      }
+    } else if (this.data.mobileFlag == '+886') {//台湾
+ if (mobilePhone.length!=10){
+   $Message({
+     content: '请输入正确的手机号码',
+     type: 'warning'
+   });
+   return false
+      }
     }
     wx.showLoading({
       title: '正在发送',
@@ -230,7 +254,8 @@ Page({
           }
 
           $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
-            app.globalData.openid = data.data.openid
+            app.globalData.openid = data.data.openid;
+            app.globalData.sessionKey = data.data.sessionKey
             this.getNoteCode()
           }, (error) => {
             console.log(error)
@@ -312,6 +337,13 @@ Page({
 
   noteCodeModalOk() {
     let that = this
+    if (that.data.userInfo.phone == '' || that.data.userInfo.phone == null){
+      $Message({
+        content: '请输入验证码',
+        type: 'warning'
+      });
+      return false 
+    }
     let promise = {
       mobile: that.data.userInfo.phone,
       code: this.data.noteCodeVal,
@@ -362,11 +394,17 @@ Page({
     this.data.userInfo.myName = e.detail.value
   },
   phoneFocus(e){
+    console.log("phoneFocus"+e)
     this.setData({
       "userInfo.phone": this.data.userInfo.phone
     })
   },
+  //自定义
+  phoneBindlongtap(e){
+    console.log("phoneBindlongtap" + e)
+  },
   phoneBind(e) {
+    console.log("phoneBind" + e.detail.value)
     this.setData({
       modalPhone: e.detail.value
     })
@@ -569,7 +607,7 @@ Page({
           }
           $http(apiSetting.userDecodeUserInfo, promise1).then((data) => {
             promise.wxid = data.data.openid;
-
+            app.globalData.sessionKey = data.data.sessionKey;
             $http(apiSetting.userIdentifyUser, promise).then((data) => {
               if (data.code == 0) {
                 that.getUserGetUserInfo(app.globalData.openid)
@@ -629,7 +667,8 @@ Page({
 
   //电话地区选择
   bindPickerNumberChange(e) {
-    if (this.data.numberIndex == e.detail.value) return
+    console.log("bindPickerNumberChange"+e) 
+       if (this.data.numberIndex == e.detail.value) return
     this.setData({
       numberIndex: e.detail.value,
       'userInfo.phoneFlag': this.data.phoneHeaderArray[e.detail.value].mobileFlag,

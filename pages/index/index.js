@@ -1772,7 +1772,8 @@ Page({
         promise.encryptedData = rest.encryptedData
         $http(apiSetting.userDecodeUserInfo, promise).then((data) => {
           app.globalData.unionId = data.data.unionId
-          app.globalData.status = data.data.status
+          app.globalData.status = data.data.status;
+          app.globalData.sessionKey = data.data.sessionKey;
           if (ifChange == undefined) {
 
             let promise = {
