@@ -60,7 +60,7 @@
         <text class='hours-money' wx:if="{{mainpriceType!==3}}">{{mainprice}}</text>
         <view wx:if="{{mainpriceType===1}}">元/㎡</view>
         <view wx:if="{{mainpriceType===2}}">万元/套</view>
-        <text wx:if="{{mainpriceType===3}}" style='color:#999999;margin-left:10rpx;font-size:32rpx;'>
+        <text wx:if="{{mainpriceType===3}}" style='color:#999999;margin-left:10rpx;font-size:32rpx;line-height: 25rpx;height: 54rpx;'>
           价格待定
         </text>
         <view class='tanhao' bindtap="handleOpen2" data-type='{{0}}'>
