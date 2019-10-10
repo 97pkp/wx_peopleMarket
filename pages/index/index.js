@@ -356,6 +356,7 @@ Page({
       
       that.data.cityInfo.cityName = app.globalData.storLocalCity.city
       that.findBombScreenByCityId()
+      
       that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     } else if (ifChange == 3) { //弹屏小游戏返回首页
@@ -475,6 +476,7 @@ Page({
             cityPromise.currentCity = app.globalData.gameUserCity
             wx.setStorageSync("cityPromise", cityPromise)
             that.findBombScreenByCityId()
+            
             that.getNewsActivity()
             that.getCityFindBuildInfoByCity()
             return
@@ -504,6 +506,7 @@ Page({
 
 
             that.findBombScreenByCityId()
+            
             that.getNewsActivity()
             that.getCityFindBuildInfoByCity()
             return
@@ -546,10 +549,12 @@ Page({
         wx.setStorageSync('cityPromise', _storage)
       }
       that.findBombScreenByCityId()
+      
       that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
+      
       wx.hideLoading() //城市列表获取失败，停止等待
     });
   },
@@ -562,6 +567,7 @@ Page({
     let cityPromise = wx.getStorageSync("cityPromise") || {}
     if ('positionCity' in cityPromise && cityPromise.positionCity.indexOf(cityPromise.currentCity) != -1) {
       that.findBombScreenByCityId()
+      
       that.getNewsActivity()
       that.getCityFindBuildInfoByCity()
       return
@@ -622,6 +628,7 @@ Page({
                     wx.setStorageSync('cityPromise', _storage)
 
                     that.findBombScreenByCityId()
+                    
                     that.getNewsActivity()
                     that.getCityFindBuildInfoByCity()
                     return
@@ -645,6 +652,7 @@ Page({
               wx.setStorageSync('cityPromise', _storage)
 
               that.findBombScreenByCityId()
+              
               that.getNewsActivity()
               that.getCityFindBuildInfoByCity()
               return
@@ -667,10 +675,12 @@ Page({
         wx.setStorageSync('cityPromise', _storage)
       }
       that.findBombScreenByCityId()
+      
       that.getNewsActivity()
       that.getCitySessionFindBuildInfoByCity()
     }, (error) => {
       console.log(error)
+      
       wx.hideLoading() //获取城市列表失败，停止等待
     });
 
@@ -705,6 +715,7 @@ Page({
               }
             } else {
               that.findBombScreenByCityId()
+              
               that.getNewsActivity()
               that.getCityFindBuildInfoByCity()
             }
@@ -854,7 +865,7 @@ Page({
       })
 
       // 获取周边楼盘
-      this.getRimBuildInfo()
+      // this.getRimBuildInfo()
     }, (error) => {
       console.log(error)
     });
@@ -878,6 +889,7 @@ Page({
         rimbuildinfo = [...that.data.rimbuildinfolist, ...data.list]
       } else {
         that.data.rimBuildLoadOK = true
+        
         if (that.data.newsLoadOK && that.data.rimBuildLoadOK) {
           ifChange = undefined
           wx.hideLoading()
@@ -908,6 +920,7 @@ Page({
       })
 
       that.data.rimBuildLoadOK = true
+      
       if (that.data.newsLoadOK && that.data.rimBuildLoadOK) {
         wx.hideLoading()
       }
@@ -928,6 +941,7 @@ Page({
       login_by: app.globalData.userId
     }
     $http(apiSetting.newsactivityFindNewsActivitys, promise).then((data) => {
+      wx.hideLoading()
       if (data.code === -1 || !data.list || !data.list.length) {
         if (this.data.city_area_id == "全部") {
           this.setData({
@@ -935,10 +949,21 @@ Page({
           })
           this.getNewsActivity()
         } else {
+          
           if (this.data.newsList.length) {
-
-            this.findAttachRelationById(this.data.newsList.length)
+            wx.hideLoading()
+            //将图片挂在到户型列表上
+            let newsList = this.data.newsList;
+            for (let i = 0; i < newsList.length; i++) {
+              newsList[i].upload_file_path = this.data.imgpath + newsList[i].attachment_path
+            }
+            this.setData({
+              newsList: newsList,
+              showNewsList: newsList
+            })
+            // this.findAttachRelationById(this.data.newsList.length)
           } else {
+            
             this.data.newsLoadOK = true
             if (this.data.newsLoadOK && this.data.rimBuildLoadOK) {
               wx.hideLoading()
@@ -997,8 +1022,16 @@ Page({
           this.setData({
             newsList: _allArr
           })
-
-          this.findAttachRelationById(_allArr.length)
+          //将图片挂在到户型列表上
+          let newsList = this.data.newsList
+          for (let i = 0; i < _allArr.length; i++) {
+            newsList[i].upload_file_path = this.data.imgpath + newsList[i].attachment_path
+          }
+          this.setData({
+            newsList: newsList,
+            showNewsList: newsList
+          })
+          // this.findAttachRelationById(_allArr.length)
         } else {
           if (_newsArr.length >= 3) {
             if (_activityArr.length >= 3) {
@@ -1015,8 +1048,17 @@ Page({
           this.setData({
             newsList: _allArr
           })
+          //将图片挂在到户型列表上
+          let newsList = this.data.newsList
+          for (let i = 0; i < _allArr.length; i++) {
+            newsList[i].upload_file_path = this.data.imgpath + newsList[i].attachment_path
+          }
+          this.setData({
+            newsList: newsList,
+            showNewsList: newsList
+          })
 
-          this.findAttachRelationById(_allArr.length)
+          // this.findAttachRelationById(_allArr.length)
         }
       } else {
         let newsArr = this.data.newsList
@@ -1146,8 +1188,16 @@ Page({
             })
           }
         }
-
-        this.findAttachRelationById(_allArr.length)
+        //将图片挂在到户型列表上
+        let newsList = this.data.newsList
+        for (let i = 0; i < newsList.length; i++) {
+          newsList[i].upload_file_path = this.data.imgpath + newsList[i].attachment_path
+        }
+        this.setData({
+          newsList: newsList,
+          showNewsList: newsList
+        })
+        // this.findAttachRelationById(_allArr.length)
       }
     })
   },
@@ -1217,7 +1267,7 @@ Page({
   //新闻活动图片加载失败
   errorImgNews(e) {
     if (e.type == 'error') {
-      this.data.newsList[e.target.dataset.index].imgArr.upload_file_path = this.data.defaultImg
+      this.data.newsList[e.target.dataset.index].upload_file_path = this.data.defaultImg
       this.setData({
         newsList: this.data.newsList,
         showNewsList: this.data.newsList

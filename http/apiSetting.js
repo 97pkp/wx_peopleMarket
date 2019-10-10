@@ -5,7 +5,7 @@ const serviceModule = {
   },
   //新闻活动列表
   newsactivityFindNewsActivitys: {
-    url: '/newsactivity/findNewsActivitys',
+    url: '/newsactivity/findWxNewsActivitys',
     method: 'post'
   },
   //查询某一项新闻活动

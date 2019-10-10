@@ -6,7 +6,7 @@
   </i-tabs>
   <view class='content' wx:if="{{current=='news'}}">
     <view class='news-item' wx:for="{{resList}}" wx:key="{{index}}" wx:value="{{item}}" bindtap='goNewsAtvInfo' data-atvID='{{item.id}}' data-type='{{item.type}}'>
-      <image src='{{item.imgArr.upload_file_path}}' binderror='errorImg' data-index='{{index}}'></image>
+      <image src='{{item.upload_file_path}}' binderror='errorImg' data-index='{{index}}'></image>
         <view class='news-info'>
           <view class='news-txt'>
             <text>【新闻】{{item.title}}</text>

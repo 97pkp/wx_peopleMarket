@@ -60,7 +60,7 @@
         <block wx:for="{{showNewsList}}" wx:key="{{index}}">
           <swiper-item>
             <view class='swiper-box'>
-              <image src='{{item.imgArr.upload_file_path}}' binderror='errorImgNews' data-index='{{index}}'></image>
+              <image src='{{item.upload_file_path}}' binderror='errorImgNews' data-index='{{index}}'></image>
               <view class='news-info'>
                 <view class='news-txt'>
                   <text wx:if="{{item.type==0}}">【新闻】</text>

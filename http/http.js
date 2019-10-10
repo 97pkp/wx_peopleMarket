@@ -7,10 +7,10 @@ const url = 'http://haiketest.coli688.com:8090/zhwx-api'
 // const url = 'http://39.98.191.16/zhwx-api'
 
 
-let $httpServer = function(opts, data) {
+let $httpServer = function (opts, data) {
   // console.log(getApp().globalData.token)
   let token = getApp().globalData.token
-  let promise = new Promise(function(resolve, reject) {
+  let promise = new Promise(function (resolve, reject) {
     return wx.request({
       url: url + opts.url,
       data: data,

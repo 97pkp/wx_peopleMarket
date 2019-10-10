@@ -24,7 +24,7 @@ Page({
     //请求参数列表
     requestList: {
       type: '0',
-      city_area_id: '全部',
+      city_area_id: '全部,',
       project_id: '',
       login_by: app.globalData.userId
     },
@@ -38,6 +38,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+    if (app.globalData.storLocalCity){
+      this.data.requestList.city_area_id='全部,' + app.globalData.storLocalCity.id;
+    }
     this.getNewsActivity()
   },
 
@@ -47,7 +50,7 @@ Page({
     this.setData({
       current: detail.key,
       'requestPage.page': 1,
-      'requestList.city_area_id': "全部",
+      'requestList.city_area_id': '全部,' + app.globalData.storLocalCity.id,
       resList: [],
       _resList: [],
       isPage: true,
@@ -87,27 +90,36 @@ Page({
     $http(reqPath, promise).then((data) => {
       let dataArr = data.list
       // 如果全部请求数据为空，则初始分页请求下标，做本城市精确请求
+      
       if (!data.list || !dataArr.length) {
-        if (that.data.requestList.city_area_id == "全部") {
-          that.setData({ 'requestPage.page': 1, 'requestList.city_area_id': app.globalData.storLocalCity.id })
-          that.getNewsActivity()
-          return
-        } else {
-          let _concatArr = that.data._concatArr
-          if (!_concatArr.length) {
-            that.setData({ isPage: false })
-            wx.hideLoading()
-            return
-          }
-        }
-      } else if (dataArr.length < 20) {
-        if (that.data.requestList.city_area_id == "全部") {
-          that.data._concatArr = that.data._concatArr.concat(dataArr)
-          that.setData({ 'requestPage.page': 1, 'requestList.city_area_id': app.globalData.storLocalCity.id, _concatArr: that.data._concatArr })
-          that.getNewsActivity()
-          return
-        }
+        that.data._concatArr = that.data._concatArr.concat(dataArr)
+        that.setData({ 'requestPage.page': 1, 'requestList.city_area_id': app.globalData.storLocalCity.id, _concatArr: that.data._concatArr })
       }
+
+      
+      // if (!data.list || !dataArr.length) {
+      //   if (that.data.requestList.city_area_id == "全部") {
+      //     that.setData({ 'requestPage.page': 1, 'requestList.city_area_id': app.globalData.storLocalCity.id })
+      //     
+      //     that.getNewsActivity()
+      //     return
+      //   } else {
+      //     let _concatArr = that.data._concatArr
+      //     if (!_concatArr.length) {
+      //       that.setData({ isPage: false })
+      //       wx.hideLoading()
+      //       return
+      //     }
+      //   }
+      // } else if (dataArr.length < 20) {
+      //   if (that.data.requestList.city_area_id == "全部") {
+      //     that.data._concatArr = that.data._concatArr.concat(dataArr)
+      //     that.setData({ 'requestPage.page': 1, 'requestList.city_area_id': app.globalData.storLocalCity.id, _concatArr: that.data._concatArr })
+      //     
+      //     that.getNewsActivity()
+      //     return
+      //   }
+      // }
 
       let newsList = []     //新闻数据
       let activityList = []     //活动数据
@@ -159,9 +171,11 @@ Page({
       if (that.data.current == 'news') {
         let _arr = [...that.data._resList, ...newsList]   //将原数据与新数据拼接
         that.setData({ _resList: _arr })
+        
         that.findAttachRelationById(newsList.length)
       } else if (that.data.current == 'activity') {
         let _arr = [...that.data.resList, ...activityList]
+        
         // 如果全部请求到的数据小于20条，则通过城市id请求当前城市的；否则存取当前数据，获取图片并展示
         that.setData({ _resList: _arr })
         that.findAttachRelationById(newsList.length)
@@ -169,49 +183,68 @@ Page({
     })
   },
   //获取新闻活动缩略图
-  findAttachRelationById() {
+
+  findAttachRelationById(){
+    wx.hideLoading()
     let _resList = this.data._resList
-    let _t = this.data.t
-    //数据请求完成，把图片路径挂载到数据上
-    let prevIndex = this.data.prevIndex
-    if (prevIndex + _t >= _resList.length) {
-      let _arr1 = this.data._imgList
-      for (let i = prevIndex; i < _arr1.length; i++) {
-        if (_arr1[i] !== null && _arr1[i] !== undefined) {
-          _arr1[i].upload_file_path = this.data.imgpath + _arr1[i].upload_file_path
-        } else {
-          _arr1[i] = {
-            upload_file_path: this.data.imgpath
-          }
-        }
+    let _t = this.data.ts
+    _resList.map((item,index)=>{
+      if (item.attachment_path !== null && item.attachment_path !== undefined) {
+        _resList[index].upload_file_path = this.data.imgpath + _resList[index].attachment_path
+      }else{
+        _resList[index].upload_file_path = this.data.imgpath
       }
-      //将图片挂在到户型列表上
-      for (let i = prevIndex; i < _resList.length; i++) {
-        _resList[i].imgArr = _arr1[i]
-      }
-      this.setData({
+    });
+    this.setData({
         resList: _resList,
         _resList: _resList,
         prevIndex: _resList.length
       })
-      wx.hideLoading()
-      return
-    }
-
-    // if (prevIndex + _t >= _resList.length) return
-    let promise = { id: _resList[prevIndex + _t].id }
-    let _arr = this.data._imgList
-    $http(apiSetting.newsactivityFindAttachRelationById, promise).then((data) => {
-      _arr.push(data.data[0])
-      this.setData({
-        _imgList: _arr,
-        t: _t + 1
-      })
-      this.findAttachRelationById()
-    }), (error) => {
-      console.log(error)
-    }
   },
+  // findAttachRelationById() {
+  //   
+  //   let _resList = this.data._resList
+  //   let _t = this.data.t
+  //   //数据请求完成，把图片路径挂载到数据上
+  //   let prevIndex = this.data.prevIndex
+  //   if (prevIndex + _t >= _resList.length) {
+  //     let _arr1 = this.data._imgList
+  //     for (let i = prevIndex; i < _arr1.length; i++) {
+  //       if (_arr1[i] !== null && _arr1[i] !== undefined) {
+  //         _arr1[i].upload_file_path = this.data.imgpath + _arr1[i].upload_file_path
+  //       } else {
+  //         _arr1[i] = {
+  //           upload_file_path: this.data.imgpath
+  //         }
+  //       }
+  //     }
+  //     //将图片挂在到户型列表上
+  //     for (let i = prevIndex; i < _resList.length; i++) {
+  //       _resList[i].imgArr = _arr1[i]
+  //     }
+  //     this.setData({
+  //       resList: _resList,
+  //       _resList: _resList,
+  //       prevIndex: _resList.length
+  //     })
+  //     wx.hideLoading()
+  //     return
+  //   }
+
+  //   // if (prevIndex + _t >= _resList.length) return
+  //   let promise = { id: _resList[prevIndex + _t].id }
+  //   let _arr = this.data._imgList
+  //   $http(apiSetting.newsactivityFindAttachRelationById, promise).then((data) => {
+  //     _arr.push(data.data[0])
+  //     this.setData({
+  //       _imgList: _arr,
+  //       t: _t + 1
+  //     })
+  //     this.findAttachRelationById()
+  //   }), (error) => {
+  //     console.log(error)
+  //   }
+  // },
 
 //----------------------------------------------------------------------------------------------
   //获取全部城市的新闻活动信息
@@ -425,7 +458,7 @@ Page({
   //缩略图加载失败
   errorImg(e) {
     if (e.type == 'error') {
-      this.data.resList[e.target.dataset.index].imgArr.upload_file_path = this.data.defaultImg
+      this.data.resList[e.target.dataset.index].upload_file_path = this.data.defaultImg
       this.setData({
         resList: this.data.resList
       })
