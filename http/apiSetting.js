@@ -228,6 +228,11 @@ const serviceModule = {
     url: '/user/bindUserCity',
     method: 'post'
   },
+  // 推荐检测
+  checkCustomInfo: {
+    url: '/recommend/checkCustomInfo',
+    method: 'post'
+  },
 }
 const ApiSetting = {
   ...serviceModule

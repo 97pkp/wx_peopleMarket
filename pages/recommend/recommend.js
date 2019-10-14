@@ -3,6 +3,7 @@ const app = getApp()
 import apiSetting from '../../http/apiSetting.js'
 import $http from '../../http/http.js'
 import appid from '../../http/appID.js'
+import util from '../../utils/util.js'
 
 const {
   $Message
@@ -434,7 +435,7 @@ Page({
   },
 
   //确认推荐
-  bindSub() {
+  bindSub: util.throttle(function (e){
     let that = this
     if (this.data.reportList.customName == "") {
       $Message({
@@ -459,12 +460,40 @@ Page({
     }
     let promise = this.data.reportList
     promise.referType = this.data.arrayNum[this.data.phoneTypeIndex].name
-    this.setData({
-      subDisabled: true
-    })
+    // this.setData({
+    //   subDisabled: true
+    // })
     let cityPromise = wx.getStorageSync("cityPromise")
-    promise.currentCity = cityPromise.currentCity
-    promise.positionCity = cityPromise.positionCity
+    promise.currentCity = cityPromise.currentCity;
+    promise.positionCity = cityPromise.positionCity;
+    $http(apiSetting.checkCustomInfo, promise).then((data) => {
+      if (data.code == 0) {//检测成功,直接调用推荐接口
+        that.recommendAddAgencyCustom(promise)
+      } else if (data.code == -3) {//检测失败弹框，直接调用推荐接口
+        wx.showModal({
+          title: '提示',
+          content: data.message,
+          cancelColor: '#999999',
+          confirmColor: '#77C4FF',
+          success(res) {
+            if (res.confirm) {
+              that.recommendAddAgencyCustom(promise)
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      } else {//取消
+        $Message({
+          content: data.message,
+          type: 'warning'
+        });
+      }
+    })
+  }, 500),
+// 推荐接口
+  recommendAddAgencyCustom(promise){
+    let that=this;
     $http(apiSetting.recommendAddAgencyCustom, promise).then((data) => {
       if (!data.code) {
         let successProjectId = data.data.successProjects
