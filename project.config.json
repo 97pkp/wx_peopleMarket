@@ -7,7 +7,7 @@
 		"urlCheck": false,
 		"es6": true,
 		"enhance": false,
-		"postcss": false,
+		"postcss": true,
 		"minified": false,
 		"newFeature": true,
 		"coverView": true,
@@ -25,7 +25,7 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.6.6",
-	"appid": "wx2c76d1701fb83748",
+	"appid": "wx2289fdf73d2ca3a9",
 	"projectname": "wx_peopleMarket",
 	"debugOptions": {
 		"hidedInDevtools": []
@@ -51,7 +51,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": 1,
 			"list": [
 				{
 					"id": 0,
@@ -59,6 +59,13 @@
 					"pathName": "pages/index/index",
 					"query": "",
 					"scene": null
+				},
+				{
+					"id": 1,
+					"name": "扫描二维码",
+					"pathName": "pages/index/index",
+					"query": "scene=http://haiketest.coli688.com:8081/cityName/0-166-924-186-/110100",
+					"scene": 1011
 				}
 			]
 		}

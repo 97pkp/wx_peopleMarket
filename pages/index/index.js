@@ -1441,7 +1441,7 @@ Page({
   //点击弹屏进入详情页
   goScreenInfo: util.throttle(function() {
     let that = this
-    // type: 0：新闻，1：活动，2：项目，3：外链接，4：城市
+    // type: 0：新闻，1：活动，2：项目，3：外链接，4：城市,5:跳转小程序
     let bombScreen = this.data.bombScreen
     bombScreen.display_end_date = bombScreen.display_end_date.replace(/-/g, '/')
     let endDate = new Date(bombScreen.display_end_date).getTime()
@@ -1571,6 +1571,25 @@ Page({
       wx.navigateTo({
         url: '../newsActivityInfo/newsActivityInfo?atvid=' + bombScreen.association_soures_id + "&type=" + bombScreen.type,
       })
+    } else if (bombScreen.type == 5 ){//打开小程序
+      console.log("appid" + appid)
+      wx.navigateToMiniProgram({
+        appId: "wx91d27dbf599dff74",
+        path: 'pages/shop/index/index?venderId=10059952&EA_PTAG=17078.27.194',
+        extraData: {
+          foo: 'bar'
+        },
+        envVersion: 'release',
+        success(res) {
+          // 打开成功
+          console.log("打开成功")
+        },
+        fail(res) {
+          // 打开成功
+          console.log("打开失败")
+        },
+      })
+
     }
     // this.Users()
   }, 500),
